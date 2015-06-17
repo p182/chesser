@@ -38,38 +38,5 @@
         android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
         android:onClick="backButton" />
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/wrook2"
-        android:src="@drawable/wrook"
-        android:clickable="false"
-        android:onClick="piecesOnClick"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="24dp"
-        android:layout_marginLeft="283dp" />
 
-
-    <ImageView
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:id="@+id/imageView3"
-        android:src="@drawable/selected"
-        android:clickable="false"
-        android:layout_marginBottom="135dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="61dp" />
-    <ImageView
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:id="@+id/imageView4"
-        android:src="@drawable/selected"
-        android:clickable="false"
-        android:layout_marginBottom="174dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="100dp" />
 </RelativeLayout>
