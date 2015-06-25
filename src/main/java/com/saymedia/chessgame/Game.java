@@ -1,6 +1,5 @@
 package com.saymedia.chessgame;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -8,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
-import java.util.Random;
 
 
 public class Game extends ActionBarActivity {
@@ -24,20 +21,20 @@ public class Game extends ActionBarActivity {
 
     public int pressedId;
 
-    public void select(){
+    public void selectSquares(){
         int j;
         int i;
         int l=1;
         for(j=1; j<9; j++){
             for(i=1; i<8; i++){
-                    creatSelected("selected", i, j, l*100);
+                creatSelectedSquare(i, j, l*100);
                 l++;
             }
-            creatSelected("selected", i, j, l*100);
+            creatSelectedSquare(i, j, l * 100);
             l++;
         }
 
-        creatSelected("selected", 1, 1, 65*100);
+        creatSelectedSquare(1, 1, 65 * 100);
         ImageView v = (ImageView) findViewById(pressedId);
         ViewGroup.LayoutParams rlp = v.getLayoutParams();
         ImageView s = (ImageView) findViewById(65*100);
@@ -70,9 +67,11 @@ public class Game extends ActionBarActivity {
         }
     }
 
-    public void creatSelected(String pname, int x, int y, int id){
+    public void creatSelectedSquare(int x, int y, int id){
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
+        ImageView image = new SelectedSquare(getApplicationContext(),id);
+/*
         ImageView image = new ImageView(getApplicationContext());
 
         switch (pname){
@@ -80,23 +79,26 @@ public class Game extends ActionBarActivity {
             case "nonselected": image.setImageResource(R.drawable.nonselected); break;
         }
 
-        image.setLayoutParams(place(x, y));
+        image.setLayoutParams(getPlaceParams(x, y));
         image.setVisibility(View.VISIBLE);
+        image.setId(id);
+*/
+        image.setLayoutParams(getPlaceParams(x, y));
+
         image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 selectedOnClick(v);
             }
         });
 
-        image.setId(id);
         rl.addView(image);
     }
 
     public void creatPiece(String pname, int x, int y, int id){
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
-        ImageView image = new ImageView(getApplicationContext());
-
+        ImageView image = new Piece(getApplicationContext(), pname,id);
+/*
         switch (pname){
             case "bbishop": image.setImageResource(R.drawable.bbishop); break;
             case "bking": image.setImageResource(R.drawable.bking); break;
@@ -112,16 +114,17 @@ public class Game extends ActionBarActivity {
             case "wrook": image.setImageResource(R.drawable.wrook); break;
         }
 
-        image.setLayoutParams(place(x, y));
         image.setVisibility(View.VISIBLE);
+
+        image.bringToFront();
+        image.setId(id);
+*/
         image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 piecesOnClick(v);
             }
         });
-
-        image.bringToFront();
-        image.setId(id);
+        image.setLayoutParams(getPlaceParams(x, y));
         rl.addView(image);
     }
 
@@ -135,7 +138,7 @@ public class Game extends ActionBarActivity {
         return (int)(dp * density);
     }
 
-    public RelativeLayout.LayoutParams place(int x , int y){
+    public RelativeLayout.LayoutParams getPlaceParams(int x, int y){
 
         double X = 24;
         double Y = 25;
@@ -174,7 +177,7 @@ public class Game extends ActionBarActivity {
 
     public void piecesOnClick(View v){
         pressedId = v.getId();
-        select();
+        selectSquares();
     }
 
 
