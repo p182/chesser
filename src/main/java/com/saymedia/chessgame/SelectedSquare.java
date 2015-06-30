@@ -8,13 +8,19 @@ import android.widget.ImageView;
  * Created by SayMedia on 24/06/2015.
  */
 public class SelectedSquare extends ImageView {
-    public SelectedSquare(Context c, int id){
+    public SelectedSquare(Context c, int X, int Y, int id){
         super(c);
         this.setImageResource(R.drawable.selected);
         this.setVisibility(View.VISIBLE);
         this.setId(id);
+
+        x = X;
+        y = Y;
     };
 
-//    Context c =
+
+    public int x = 0;
+    public int y = 0;
+
 
 }

@@ -19,26 +19,78 @@ public class Game extends ActionBarActivity {
 
     }
 
-    public int pressedId;
+    public static Piece pressed;
 
-    public void selectSquares(){
-        int j;
-        int i;
-        int l=1;
-        for(j=1; j<9; j++){
-            for(i=1; i<8; i++){
-                creatSelectedSquare(i, j, l*100);
+    public static Piece wr1 , br1;
+    public static Piece wr2 , br2;
+    public static Piece wn1 , bn1;
+    public static Piece wn2 , bn2;
+    public static Piece wb1 , bb1;
+    public static Piece wb2 , bb2;
+    public static Piece wk , bk;
+    public static Piece wq , bq;
+    public static Piece wp1 , bp1;
+    public static Piece wp2 , bp2;
+    public static Piece wp3 , bp3;
+    public static Piece wp4 , bp4;
+    public static Piece wp5 , bp5;
+    public static Piece wp6 , bp6;
+    public static Piece wp7 , bp7;
+    public static Piece wp8 , bp8;
+
+
+    public void selectSquares(String c, Piece p){
+
+/*
+        if(c.equals("else")) {
+            int j;
+            int i;
+            int l = 1;
+            for (j = 1; j < 9; j++) {
+                for (i = 1; i < 8; i++) {
+                    creatSelectedSquare(i, j, l * 100);
+                    l++;
+                }
+                creatSelectedSquare(i, j, l * 100);
                 l++;
             }
-            creatSelectedSquare(i, j, l * 100);
-            l++;
-        }
 
-        creatSelectedSquare(1, 1, 65 * 100);
-        ImageView v = (ImageView) findViewById(pressedId);
-        ViewGroup.LayoutParams rlp = v.getLayoutParams();
-        ImageView s = (ImageView) findViewById(65*100);
-        s.setLayoutParams(rlp);
+            creatSelectedSquare(p.x, p.y, 65 * 100);
+/*
+            ImageView v = (ImageView) findViewById(pressedId);
+            ViewGroup.LayoutParams rlp = v.getLayoutParams();
+            ImageView s = (ImageView) findViewById(65 * 100);
+            s.setLayoutParams(rlp);
+*/
+//        }
+
+
+            String[] array = c.split(",");
+
+            for(int i=0; i<array.length; i++){
+                String pars = array[i];
+                int x = pars.charAt(0) - 48;
+                int y = pars.charAt(1) - 48;
+                creatSelectedSquare(x, y, (i+1) * 100);
+            }
+
+/*
+            int i=1;
+            for(String pars : array) {
+                int x = pars.charAt(0) - 48;
+                int y = pars.charAt(1) - 48;
+                creatSelectedSquare(x, y, i * 100);
+                i++;
+            }
+*/
+
+//            System.out.println(x); System.out.println(y);
+
+            creatSelectedSquare(p.x, p.y, 65 * 100);
+            creatSelectedSquare(p.x, p.y, 66 * 100);
+            p.bringToFront();
+
+
     }
 
     public void setupPieces(){
@@ -54,6 +106,7 @@ public class Game extends ActionBarActivity {
             creatPiece("wpawn", i, 2, (i+8));
         }
 
+
         creatPiece("brook", 1, 8, 17);
         creatPiece("bknight", 2, 8, 18);
         creatPiece("bbishop", 3, 8, 19);
@@ -65,12 +118,13 @@ public class Game extends ActionBarActivity {
         for(int i=1; i<9; i++) {
             creatPiece("bpawn", i, 7, (i+24));
         }
+
     }
 
     public void creatSelectedSquare(int x, int y, int id){
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
-        ImageView image = new SelectedSquare(getApplicationContext(),id);
+        SelectedSquare image = new SelectedSquare(getApplicationContext(), x, y, id);
 /*
         ImageView image = new ImageView(getApplicationContext());
 
@@ -85,11 +139,13 @@ public class Game extends ActionBarActivity {
 */
         image.setLayoutParams(getPlaceParams(x, y));
 
-        image.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                selectedOnClick(v);
-            }
-        });
+        image.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        selectedOnClick(v);
+                    }
+                }
+        );
 
         rl.addView(image);
     }
@@ -97,7 +153,8 @@ public class Game extends ActionBarActivity {
     public void creatPiece(String pname, int x, int y, int id){
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
-        ImageView image = new Piece(getApplicationContext(), pname,id);
+        Piece p = new Piece(getApplicationContext(), x, y, pname,id);
+
 /*
         switch (pname){
             case "bbishop": image.setImageResource(R.drawable.bbishop); break;
@@ -119,13 +176,52 @@ public class Game extends ActionBarActivity {
         image.bringToFront();
         image.setId(id);
 */
-        image.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+
+        p.setOnClickListener(new Piece.OnClickListener()  {
+            public void onClick(View v){
                 piecesOnClick(v);
             }
         });
-        image.setLayoutParams(getPlaceParams(x, y));
-        rl.addView(image);
+        p.setLayoutParams(getPlaceParams(x, y));
+        rl.addView(p);
+
+        switch (id){
+            case 1: wr1 = p; break;
+            case 2: wn1 = p; break;
+            case 3: wb1 = p; break;
+            case 4: wq = p; break;
+            case 5: wk = p; break;
+            case 6: wb2 = p; break;
+            case 7: wn2 = p; break;
+            case 8: wr2 = p; break;
+            case 9: wp1 = p; break;
+            case 10: wp2 = p; break;
+            case 11: wp3 = p; break;
+            case 12: wp4 = p; break;
+            case 13: wp5 = p; break;
+            case 14: wp6 = p; break;
+            case 15: wp7 = p; break;
+            case 16: wp8 = p; break;
+
+
+            case 17: br1 = p; break;
+            case 18: bn1 = p; break;
+            case 19: bb1 = p; break;
+            case 20: bq = p; break;
+            case 21: bk = p; break;
+            case 22: bb2 = p; break;
+            case 23: bn2 = p; break;
+            case 24: br2 = p; break;
+            case 25: bp1 = p; break;
+            case 26: bp2 = p; break;
+            case 27: bp3 = p; break;
+            case 28: bp4 = p; break;
+            case 29: bp5 = p; break;
+            case 30: bp6 = p; break;
+            case 31: bp7 = p; break;
+            case 32: bp8 = p; break;
+        }
+
     }
 
     public void backButton(View v){
@@ -175,22 +271,46 @@ public class Game extends ActionBarActivity {
         return L;
     }
 
+
     public void piecesOnClick(View v){
-        pressedId = v.getId();
-        selectSquares();
+
+        RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
+        for(int id=100; id<6700; id+=100){
+            rl.removeView(findViewById(id));
+        }
+
+
+        Piece p = (Piece)v;
+
+        pressed = p;
+        int id = pressed.getId();
+
+        String c;
+
+
+        if(id>8 && id<17){
+            c = p.pawnMoves();
+            selectSquares(c , p);
+        }
+        if(id==1 || id==8){
+            c = p.rookMoves();
+            selectSquares(c , p);
+        }
     }
 
 
-    public void selectedOnClick(View s){
-        ImageView v = (ImageView) findViewById(pressedId);
 
-        ViewGroup.LayoutParams rlp = s.getLayoutParams();
+    public void selectedOnClick(View v){
 
-        v.setLayoutParams(rlp);
+        SelectedSquare s = (SelectedSquare)v;
+
+        pressed.x = s.x;
+        pressed.y = s.y;
+
+        pressed.setLayoutParams(getPlaceParams(s.x , s.y));
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
-        int id = 0;
-        for(id=100; id<6600; id+=100){;
+        for(int id=100; id<6700; id+=100){
             rl.removeView(findViewById(id));
         }
     }
