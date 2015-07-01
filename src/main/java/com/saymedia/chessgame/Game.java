@@ -38,53 +38,55 @@ public class Game extends ActionBarActivity {
     public static Piece wp7 , bp7;
     public static Piece wp8 , bp8;
 
+    public String getAllWCoordinates(String s){
+        String[] c =  { wr1.c(),wr2.c(),wn1.c(),wn2.c(),wb1.c(),wb2.c(),wk.c(),wq.c(),
+                        wp1.c(),wp2.c(),wp3.c(),wp4.c(),wp5.c(),wp6.c(),wp7.c(),wp8.c()};
 
-    public void selectSquares(String c, Piece p){
+//        System.out.println(c[0]);
 
-/*
-        if(c.equals("else")) {
-            int j;
-            int i;
-            int l = 1;
-            for (j = 1; j < 9; j++) {
-                for (i = 1; i < 8; i++) {
-                    creatSelectedSquare(i, j, l * 100);
-                    l++;
+        String[] array = s.split(",");
+
+        String sBetter = "";
+
+        boolean b = true;
+        int m =0;
+
+        for(int i=0; i<array.length; i++){
+            for(int t=0; t<c.length; t++){
+//                System.out.println(array[i]+"'"+c[t]);
+                if (array[i].equals(c[t])){
+                    if(pressed.x != (array[i].charAt(0)-48)) {
+                        m = (pressed.y - (array[i].charAt(1) - 48)) / (pressed.x - (array[i].charAt(0) - 48));
+                    }
+                    System.out.println(m);
+                    b=false;
                 }
-                creatSelectedSquare(i, j, l * 100);
-                l++;
             }
+            if(b!=false && (pressed.y - (array[i].charAt(1)-48))/(pressed.x - (array[i].charAt(0)-48)) != m) {
+                if (sBetter.equals("")) {
+                    sBetter = array[i];
+                } else {
+                    sBetter = sBetter + "," + array[i];
+                }
+            }
+            b=true;
+        }
 
-            creatSelectedSquare(p.x, p.y, 65 * 100);
-/*
-            ImageView v = (ImageView) findViewById(pressedId);
-            ViewGroup.LayoutParams rlp = v.getLayoutParams();
-            ImageView s = (ImageView) findViewById(65 * 100);
-            s.setLayoutParams(rlp);
-*/
-//        }
+        return sBetter;
+    }
 
+    public void selectSquares(String s, Piece p){
 
-            String[] array = c.split(",");
+//            String c = getAllWCoordinates(s);
+
+            String[] array = s.split(",");
 
             for(int i=0; i<array.length; i++){
                 String pars = array[i];
                 int x = pars.charAt(0) - 48;
                 int y = pars.charAt(1) - 48;
-                creatSelectedSquare(x, y, (i+1) * 100);
+                creatSelectedSquare(x, y, (i + 1) * 100);
             }
-
-/*
-            int i=1;
-            for(String pars : array) {
-                int x = pars.charAt(0) - 48;
-                int y = pars.charAt(1) - 48;
-                creatSelectedSquare(x, y, i * 100);
-                i++;
-            }
-*/
-
-//            System.out.println(x); System.out.println(y);
 
             creatSelectedSquare(p.x, p.y, 65 * 100);
             creatSelectedSquare(p.x, p.y, 66 * 100);
@@ -125,18 +127,7 @@ public class Game extends ActionBarActivity {
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
         SelectedSquare image = new SelectedSquare(getApplicationContext(), x, y, id);
-/*
-        ImageView image = new ImageView(getApplicationContext());
 
-        switch (pname){
-            case "selected": image.setImageResource(R.drawable.selected);break;
-            case "nonselected": image.setImageResource(R.drawable.nonselected); break;
-        }
-
-        image.setLayoutParams(getPlaceParams(x, y));
-        image.setVisibility(View.VISIBLE);
-        image.setId(id);
-*/
         image.setLayoutParams(getPlaceParams(x, y));
 
         image.setOnClickListener(
@@ -153,29 +144,7 @@ public class Game extends ActionBarActivity {
     public void creatPiece(String pname, int x, int y, int id){
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
-        Piece p = new Piece(getApplicationContext(), x, y, pname,id);
-
-/*
-        switch (pname){
-            case "bbishop": image.setImageResource(R.drawable.bbishop); break;
-            case "bking": image.setImageResource(R.drawable.bking); break;
-            case "bknight": image.setImageResource(R.drawable.bknight); break;
-            case "bpawn": image.setImageResource(R.drawable.bpawn); break;
-            case "bqueen": image.setImageResource(R.drawable.bqueen); break;
-            case "brook": image.setImageResource(R.drawable.brook); break;
-            case "wbishop": image.setImageResource(R.drawable.wbishop); break;
-            case "wking": image.setImageResource(R.drawable.wking); break;
-            case "wknight": image.setImageResource(R.drawable.wknight); break;
-            case "wpawn": image.setImageResource(R.drawable.wpawn); break;
-            case "wqueen": image.setImageResource(R.drawable.wqueen); break;
-            case "wrook": image.setImageResource(R.drawable.wrook); break;
-        }
-
-        image.setVisibility(View.VISIBLE);
-
-        image.bringToFront();
-        image.setId(id);
-*/
+        Piece p = new Piece(getApplicationContext(), x, y, pname, id);
 
         p.setOnClickListener(new Piece.OnClickListener()  {
             public void onClick(View v){
@@ -296,6 +265,29 @@ public class Game extends ActionBarActivity {
             c = p.rookMoves();
             selectSquares(c , p);
         }
+        if(id==3 || id==6){
+            c = p.bishopMoves();
+            selectSquares(c , p);
+        }
+        if(id==4){
+            c = p.queenMoves();
+            selectSquares(c , p);
+        }
+        if(id==5){
+            c = p.kingMoves();
+            selectSquares(c , p);
+        }
+        if(id==2 || id==7){
+            c = p.knightMoves();
+            selectSquares(c , p);
+        }
+
+
+//        System.out.println(Piece.s);
+
+        Piece.s = "";
+
+
     }
 
 

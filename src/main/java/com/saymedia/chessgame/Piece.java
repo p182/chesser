@@ -39,44 +39,107 @@ public class Piece extends ImageView{
 
     public int x = 0;
     public int y = 0;
+    public String c(){String s = x+""+y; return s;}
+
+    public static String s = "";
+
+    void addDestination(int a, int b){
+        if(a>0 && a<9 && b>0 && b<9){
+            if(s.equals("")){s = a+""+b;}
+            else {s =  s+","+a+""+b;}
+        }
+    }
 
 
-
+    /** Returns a string array of all the coordinates a pawn can move to. */
     public String pawnMoves(){
-        String s;
-        int Y = 8;
-        if(y!=8){
-            Y = y + 1;
-        }
 
-        s = x+""+Y;
+        addDestination(x,y+1);
 
-        if(y==2){
-            int Y2 = y +2;
-            s =s + "," +x+""+Y2;
-        }
+        if(y==2){addDestination(x,y+2);}
+
         return s;
     }
 
+    /** Returns a string array of all the coordinates a rook can move to. */
     public String rookMoves(){
-        String s = "";
         for(int i = 1; i<9; i++){
-            if(i!=y){
-                if(s.equals("")){s = x+""+i;}
-                else {s =  s+","+x+""+i;}
-            }
+            if(i!=y){addDestination(x,i);}
         }
 
         for(int i = 1; i<9; i++){
-            if(i!=x){
-                if(s.equals("")){s = i+""+y;}
-                else {s =  s+","+i+""+y;}
-            }
+            if(i!=x){addDestination(i,y);}
         }
 
+        return s;
+    }
+
+    /** Returns a string array of all the coordinates a knight can move to. */
+    public String knightMoves(){
+        addDestination(x-1, y+2);
+        addDestination(x+1, y+2);
+        addDestination(x-1, y-2);
+        addDestination(x+1, y-2);
+        addDestination(x-2, y+1);
+        addDestination(x+2, y+1);
+        addDestination(x-2, y-1);
+        addDestination(x+2, y-1);
 
         System.out.println(s);
         return s;
     }
+
+    /** Returns a string array of all the coordinates a bishop can move to. */
+    public String bishopMoves(){
+        int n = y -x;
+        for(int i = 1; i<9; i++){
+            if(i!=x){addDestination(i,i+n);}
+        }
+
+        n = y +x;
+        for(int i = 1; i<9; i++){
+            if(i!=x){addDestination(i,-i+n);}
+        }
+
+        return s;
+    }
+
+    /** Returns a string array of all the coordinates a king can move to. */
+    public String kingMoves(){
+        addDestination(x+1, y);
+        addDestination(x-1, y);
+        addDestination(x, y+1);
+        addDestination(x, y-1);
+        addDestination(x+1, y+1);
+        addDestination(x+1, y-1);
+        addDestination(x-1, y-1);
+        addDestination(x - 1, y + 1);
+
+        return s;
+    }
+
+    /** Returns a string array of all the coordinates a queen can move to. */
+    public String queenMoves(){
+        for(int i = 1; i<9; i++){
+            if(i!=y){addDestination(x,i);}
+        }
+
+        for(int i = 1; i<9; i++){
+            if(i!=x){addDestination(i,y);}
+        }
+
+        int n = y -x;
+        for(int i = 1; i<9; i++){
+            if(i!=x){addDestination(i,i+n);}
+        }
+
+        n = y +x;
+        for(int i = 1; i<9; i++){
+            if(i!=x){addDestination(i,-i+n);}
+        }
+
+        return s;
+    }
+
 
 }
