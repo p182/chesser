@@ -38,61 +38,86 @@ public class Game extends ActionBarActivity {
     public static Piece wp7 , bp7;
     public static Piece wp8 , bp8;
 
-    public String getAllWCoordinates(String s){
-        String[] c =  { wr1.c(),wr2.c(),wn1.c(),wn2.c(),wb1.c(),wb2.c(),wk.c(),wq.c(),
+    public Piece findPieceByCoordinates(String c){
+        if(c.equals(br1.c())){return br1;}
+        if(c.equals(br2.c())){return br2;}
+        if(c.equals(bn1.c())){return bn1;}
+        if(c.equals(bn2.c())){return bn2;}
+        if(c.equals(bb1.c())){return bb1;}
+        if(c.equals(bb2.c())){return bb2;}
+        if(c.equals(bk.c())){return bk;}
+        if(c.equals(bq.c())){return bq;}
+        if(c.equals(bp1.c())){return bp1;}
+        if(c.equals(bp2.c())){return bp2;}
+        if(c.equals(bp3.c())){return bp3;}
+        if(c.equals(bp4.c())){return bp4;}
+        if(c.equals(bp5.c())){return bp5;}
+        if(c.equals(bp6.c())){return bp6;}
+        if(c.equals(bp7.c())){return bp7;}
+        if(c.equals(bp8.c())){return bp8;}
+        else{return null;}
+    }
+    public void removeAponent(){
+        String[] bc =  { br1.c(),br2.c(),bn1.c(),bn2.c(),bb1.c(),bb2.c(),bk.c(),bq.c(),
+                bp1.c(),bp2.c(),bp3.c(),bp4.c(),bp5.c(),bp6.c(),bp7.c(),bp8.c()};
+
+        String s = pressed.c();
+        for(int t=0; t<bc.length; t++){
+            if (s.equals(bc[t])){
+                Piece p = findPieceByCoordinates(bc[t]);
+                System.out.println(p);
+                p.x = 0;
+                System.out.println(p);
+                p.y = 0;
+                RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
+                rl.removeView(p);
+
+            }
+        }
+    }
+
+    public static boolean[] checkCoordinate(String s){
+        String[] wc =  { wr1.c(),wr2.c(),wn1.c(),wn2.c(),wb1.c(),wb2.c(),wk.c(),wq.c(),
                         wp1.c(),wp2.c(),wp3.c(),wp4.c(),wp5.c(),wp6.c(),wp7.c(),wp8.c()};
 
-//        System.out.println(c[0]);
+        String[] bc =  { br1.c(),br2.c(),bn1.c(),bn2.c(),bb1.c(),bb2.c(),bk.c(),bq.c(),
+                bp1.c(),bp2.c(),bp3.c(),bp4.c(),bp5.c(),bp6.c(),bp7.c(),bp8.c()};
 
-        String[] array = s.split(",");
+//        System.out.println(bc[12]);
 
-        String sBetter = "";
-
+        boolean w = true;
         boolean b = true;
-        int m =0;
 
-        for(int i=0; i<array.length; i++){
-            for(int t=0; t<c.length; t++){
-//                System.out.println(array[i]+"'"+c[t]);
-                if (array[i].equals(c[t])){
-                    if(pressed.x != (array[i].charAt(0)-48)) {
-                        m = (pressed.y - (array[i].charAt(1) - 48)) / (pressed.x - (array[i].charAt(0) - 48));
-                    }
-                    System.out.println(m);
-                    b=false;
-                }
+        for(int t=0; t<wc.length; t++){
+            if (s.equals(wc[t])){
+                w=false;
             }
-            if(b!=false && (pressed.y - (array[i].charAt(1)-48))/(pressed.x - (array[i].charAt(0)-48)) != m) {
-                if (sBetter.equals("")) {
-                    sBetter = array[i];
-                } else {
-                    sBetter = sBetter + "," + array[i];
-                }
+        }
+        for(int t=0; t<bc.length; t++){
+            if (s.equals(bc[t])){
+                b=false;
             }
-            b=true;
         }
 
-        return sBetter;
+        boolean[] B = {w,b};
+        return B;
     }
 
     public void selectSquares(String s, Piece p){
-
-//            String c = getAllWCoordinates(s);
-
+        if(!s.equals("")) {
             String[] array = s.split(",");
 
-            for(int i=0; i<array.length; i++){
+            for (int i = 0; i < array.length; i++) {
                 String pars = array[i];
                 int x = pars.charAt(0) - 48;
                 int y = pars.charAt(1) - 48;
                 creatSelectedSquare(x, y, (i + 1) * 100);
             }
+        }
 
-            creatSelectedSquare(p.x, p.y, 65 * 100);
-            creatSelectedSquare(p.x, p.y, 66 * 100);
-            p.bringToFront();
-
-
+        creatSelectedSquare(p.x, p.y, 65 * 100);
+        creatSelectedSquare(p.x, p.y, 66 * 100);
+        p.bringToFront();
     }
 
     public void setupPieces(){
@@ -222,6 +247,7 @@ public class Game extends ActionBarActivity {
             case 6: L.leftMargin = dp(X) + 5*dp(d); break;
             case 7: L.leftMargin = dp(X) + 6*dp(d); break;
             case 8: L.leftMargin = dp(X) + 7*dp(d); break;
+            case 0: L.leftMargin = 0; break;
 
         }
 
@@ -234,6 +260,7 @@ public class Game extends ActionBarActivity {
             case 6: L.bottomMargin = dp(Y) + 5*dp(d); break;
             case 7: L.bottomMargin = dp(Y) + 6*dp(d); break;
             case 8: L.bottomMargin = dp(Y) + 7*dp(d); break;
+            case 0: L.leftMargin = 0; break;
 
         }
 
@@ -299,11 +326,15 @@ public class Game extends ActionBarActivity {
         pressed.x = s.x;
         pressed.y = s.y;
 
+
         pressed.setLayoutParams(getPlaceParams(s.x , s.y));
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
         for(int id=100; id<6700; id+=100){
             rl.removeView(findViewById(id));
         }
+
+
+        removeAponent();
     }
 }

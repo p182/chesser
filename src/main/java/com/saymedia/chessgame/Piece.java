@@ -43,6 +43,7 @@ public class Piece extends ImageView{
 
     public static String s = "";
 
+    /** Adds safely a coordinate to the string. */
     void addDestination(int a, int b){
         if(a>0 && a<9 && b>0 && b<9){
             if(s.equals("")){s = a+""+b;}
@@ -54,21 +55,66 @@ public class Piece extends ImageView{
     /** Returns a string array of all the coordinates a pawn can move to. */
     public String pawnMoves(){
 
-        addDestination(x,y+1);
+        String S = x+""+(y+1);
+        boolean w = Game.checkCoordinate(S)[0];
+        boolean b = Game.checkCoordinate(S)[1];
+        if(w&&b){addDestination(x, y+1);}
 
-        if(y==2){addDestination(x,y+2);}
+        if(y==2){
+            S = x+""+(y+2);
+            w = Game.checkCoordinate(S)[0];
+            b = Game.checkCoordinate(S)[1];
+            if(w&&b){addDestination(x, y+2);}
+        }
+
+        S = x-1+""+(y+1);
+        b = Game.checkCoordinate(S)[1];
+        if(!b){addDestination(x-1, y+1);}
+        S = x+1+""+(y+1);
+        b = Game.checkCoordinate(S)[1];
+        if(!b){addDestination(x+1, y+1);}
 
         return s;
     }
 
     /** Returns a string array of all the coordinates a rook can move to. */
     public String rookMoves(){
-        for(int i = 1; i<9; i++){
-            if(i!=y){addDestination(x,i);}
+        for(int i = y+1; i<9; i++) {
+            String S = x + "" + i;
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(x, i);
+            if(!b){break;}
+        }
+        for(int i = y-1; i>-1; i--) {
+            String S = x + "" + i;
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(x, i);
+            if(!b){break;}
         }
 
-        for(int i = 1; i<9; i++){
-            if(i!=x){addDestination(i,y);}
+        for(int i = x+1; i<9; i++){
+            String S = i+""+y;
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(i, y);
+            if(!b){break;}
+        }
+        for(int i = x-1; i>-1; i--){
+            String S = i+""+y;
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(i, y);
+            if(!b){break;}
         }
 
         return s;
@@ -76,29 +122,82 @@ public class Piece extends ImageView{
 
     /** Returns a string array of all the coordinates a knight can move to. */
     public String knightMoves(){
-        addDestination(x-1, y+2);
-        addDestination(x+1, y+2);
-        addDestination(x-1, y-2);
-        addDestination(x+1, y-2);
-        addDestination(x-2, y+1);
-        addDestination(x+2, y+1);
-        addDestination(x-2, y-1);
-        addDestination(x+2, y-1);
+        String S = x-1+""+(y+2);
+        boolean w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x-1, y+2);}
 
-        System.out.println(s);
+        S = x+1+""+(y+2);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x+1, y+2);}
+
+        S = x-1+""+(y-2);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x-1, y-2);}
+
+        S = x+1+""+(y-2);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x+1, y-2);}
+
+        S = x-2+""+(y+1);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x-2, y+1);}
+
+        S = x+2+""+(y+1);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x+2, y+1);}
+
+        S = x-2+""+(y-1);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x-2, y-1);}
+
+        S = x+2+""+(y-1);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x+2, y-1);}
+
         return s;
     }
 
     /** Returns a string array of all the coordinates a bishop can move to. */
     public String bishopMoves(){
+
         int n = y -x;
-        for(int i = 1; i<9; i++){
-            if(i!=x){addDestination(i,i+n);}
+        for(int i = x+1; i<9; i++) {
+            String S = i + "" + (i+n);
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(i,i+n);
+            if(!b){break;}
+        }
+        for(int i = x-1; i>-1; i--) {
+            String S = i + "" + (i+n);
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(i,i+n);
+            if(!b){break;}
         }
 
         n = y +x;
-        for(int i = 1; i<9; i++){
-            if(i!=x){addDestination(i,-i+n);}
+        for(int i = x+1; i<9; i++) {
+            String S = i + "" + (-i+n);
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(i,-i+n);
+            if(!b){break;}
+        }
+        for(int i = x-1; i>-1; i--) {
+            String S = i + "" + (-i+n);
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(i,-i+n);
+            if(!b){break;}
         }
 
         return s;
@@ -106,36 +205,121 @@ public class Piece extends ImageView{
 
     /** Returns a string array of all the coordinates a king can move to. */
     public String kingMoves(){
-        addDestination(x+1, y);
-        addDestination(x-1, y);
-        addDestination(x, y+1);
-        addDestination(x, y-1);
-        addDestination(x+1, y+1);
-        addDestination(x+1, y-1);
-        addDestination(x-1, y-1);
-        addDestination(x - 1, y + 1);
+        String S = x+1+""+y;
+        boolean w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x+1, y);}
+
+        S = x-1+""+y;
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x-1, y);}
+
+        S = x+""+(y+1);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x, y+1);}
+
+        S = x+""+(y-1);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x, y-1);}
+
+        S = x+1+""+(y+1);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x+1, y+1);}
+
+        S = x+1+""+(y-1);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x+1, y-1);}
+
+        S = x-1+""+(y+1);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x-1, y+1);}
+
+        S = x-1+""+(y+1);
+        w = Game.checkCoordinate(S)[0];
+        if(w){addDestination(x-1, y-1);}
 
         return s;
     }
 
     /** Returns a string array of all the coordinates a queen can move to. */
     public String queenMoves(){
-        for(int i = 1; i<9; i++){
-            if(i!=y){addDestination(x,i);}
+
+        for(int i = y+1; i<9; i++) {
+            String S = x + "" + i;
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(x, i);
+            if(!b){break;}
+        }
+        for(int i = y-1; i>-1; i--) {
+            String S = x + "" + i;
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(x, i);
+            if(!b){break;}
         }
 
-        for(int i = 1; i<9; i++){
-            if(i!=x){addDestination(i,y);}
+        for(int i = x+1; i<9; i++){
+            String S = i+""+y;
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(i, y);
+            if(!b){break;}
         }
+        for(int i = x-1; i>-1; i--){
+            String S = i+""+y;
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(i, y);
+            if(!b){break;}
+        }
+
 
         int n = y -x;
-        for(int i = 1; i<9; i++){
-            if(i!=x){addDestination(i,i+n);}
+        for(int i = x+1; i<9; i++) {
+            String S = i + "" + (i+n);
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(i,i+n);
+            if(!b){break;}
+        }
+        for(int i = x-1; i>-1; i--) {
+            String S = i + "" + (i+n);
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(i,i+n);
+            if(!b){break;}
         }
 
         n = y +x;
-        for(int i = 1; i<9; i++){
-            if(i!=x){addDestination(i,-i+n);}
+        for(int i = x+1; i<9; i++) {
+            String S = i + "" + (-i+n);
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(i,-i+n);
+            if(!b){break;}
+        }
+        for(int i = x-1; i>-1; i--) {
+            String S = i + "" + (-i+n);
+            boolean w = Game.checkCoordinate(S)[0];
+            boolean b = Game.checkCoordinate(S)[1];
+
+            if(!w){break;}
+            addDestination(i,-i+n);
+            if(!b){break;}
         }
 
         return s;
