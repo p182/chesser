@@ -16,8 +16,8 @@ public class Game extends ActionBarActivity {
         setContentView(R.layout.activity_game);
 
         setupPieces();
-
     }
+    public static int color = 1;
 
     public static Piece pressed;
 
@@ -121,29 +121,58 @@ public class Game extends ActionBarActivity {
     }
 
     public void setupPieces(){
-        creatPiece("wrook", 1, 1, 1);
-        creatPiece("wknight", 2, 1, 2);
-        creatPiece("wbishop", 3, 1, 3);
-        creatPiece("wqueen", 4, 1, 4);
-        creatPiece("wking", 5, 1, 5);
-        creatPiece("wbishop", 6, 1, 6);
-        creatPiece("wknight", 7, 1, 7);
-        creatPiece("wrook", 8, 1, 8);
-        for(int i=1; i<9; i++) {
-            creatPiece("wpawn", i, 2, (i+8));
+        if(color==1) {
+            creatPiece("wrook", 1, 1, 1);
+            creatPiece("wknight", 2, 1, 2);
+            creatPiece("wbishop", 3, 1, 3);
+            creatPiece("wqueen", 4, 1, 4);
+            creatPiece("wking", 5, 1, 5);
+            creatPiece("wbishop", 6, 1, 6);
+            creatPiece("wknight", 7, 1, 7);
+            creatPiece("wrook", 8, 1, 8);
+            for (int i = 1; i < 9; i++) {
+                creatPiece("wpawn", i, 2, (i + 8));
+            }
+
+
+            creatPiece("brook", 1, 8, 17);
+            creatPiece("bknight", 2, 8, 18);
+            creatPiece("bbishop", 3, 8, 19);
+            creatPiece("bqueen", 4, 8, 20);
+            creatPiece("bking", 5, 8, 21);
+            creatPiece("bbishop", 6, 8, 22);
+            creatPiece("bknight", 7, 8, 23);
+            creatPiece("brook", 8, 8, 24);
+            for (int i = 1; i < 9; i++) {
+                creatPiece("bpawn", i, 7, (i + 24));
+            }
         }
 
+        else {
+            creatPiece("brook", 1, 8, 1);
+            creatPiece("bknight", 2, 8, 2);
+            creatPiece("bbishop", 3, 8, 3);
+            creatPiece("bqueen", 4, 8, 4);
+            creatPiece("bking", 5, 8, 5);
+            creatPiece("bbishop", 6, 8, 6);
+            creatPiece("bknight", 7, 8, 7);
+            creatPiece("brook", 8, 8, 8);
+            for (int i = 1; i < 9; i++) {
+                creatPiece("bpawn", i, 7, (i + 8));
+            }
 
-        creatPiece("brook", 1, 8, 17);
-        creatPiece("bknight", 2, 8, 18);
-        creatPiece("bbishop", 3, 8, 19);
-        creatPiece("bqueen", 4, 8, 20);
-        creatPiece("bking", 5, 8, 21);
-        creatPiece("bbishop", 6, 8, 22);
-        creatPiece("bknight", 7, 8, 23);
-        creatPiece("brook", 8, 8, 24);
-        for(int i=1; i<9; i++) {
-            creatPiece("bpawn", i, 7, (i+24));
+
+            creatPiece("wrook", 1, 1, 17);
+            creatPiece("wknight", 2, 1, 18);
+            creatPiece("wbishop", 3, 1, 19);
+            creatPiece("wqueen", 4, 1, 20);
+            creatPiece("wking", 5, 1, 21);
+            creatPiece("wbishop", 6, 1, 22);
+            creatPiece("wknight", 7, 1, 23);
+            creatPiece("wrook", 8, 1, 24);
+            for (int i = 1; i < 9; i++) {
+                creatPiece("wpawn", i, 2, (i + 24));
+            }
         }
 
     }
@@ -230,8 +259,14 @@ public class Game extends ActionBarActivity {
 
     public RelativeLayout.LayoutParams getPlaceParams(int x, int y){
 
-        double X = 24;
-        double Y = 25;
+        double X;
+        if(color==1){X = 24;}
+        else {X = 280.9;}
+
+        double Y;
+        if(color==1){Y = 25;}
+        else {Y = 281.9;}
+
         double d = 36.9;
 
         RelativeLayout.LayoutParams L = new RelativeLayout.LayoutParams(dp(38),dp(38));
@@ -239,27 +274,27 @@ public class Game extends ActionBarActivity {
         L.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
         switch (x){
-            case 1: L.leftMargin = dp(X) + 0*dp(d); break;
-            case 2: L.leftMargin = dp(X) + 1*dp(d); break;
-            case 3: L.leftMargin = dp(X) + 2*dp(d); break;
-            case 4: L.leftMargin = dp(X) + 3*dp(d); break;
-            case 5: L.leftMargin = dp(X) + 4*dp(d); break;
-            case 6: L.leftMargin = dp(X) + 5*dp(d); break;
-            case 7: L.leftMargin = dp(X) + 6*dp(d); break;
-            case 8: L.leftMargin = dp(X) + 7*dp(d); break;
+            case 1: L.leftMargin = dp(X) + 0*dp(d)*color; break;
+            case 2: L.leftMargin = dp(X) + 1*dp(d)*color; break;
+            case 3: L.leftMargin = dp(X) + 2*dp(d)*color; break;
+            case 4: L.leftMargin = dp(X) + 3*dp(d)*color; break;
+            case 5: L.leftMargin = dp(X) + 4*dp(d)*color; break;
+            case 6: L.leftMargin = dp(X) + 5*dp(d)*color; break;
+            case 7: L.leftMargin = dp(X) + 6*dp(d)*color; break;
+            case 8: L.leftMargin = dp(X) + 7*dp(d)*color; break;
             case 0: L.leftMargin = 0; break;
 
         }
 
         switch (y){
-            case 1: L.bottomMargin = dp(Y) + 0*dp(d); break;
-            case 2: L.bottomMargin = dp(Y) + 1*dp(d); break;
-            case 3: L.bottomMargin = dp(Y) + 2*dp(d); break;
-            case 4: L.bottomMargin = dp(Y) + 3*dp(d); break;
-            case 5: L.bottomMargin = dp(Y) + 4*dp(d); break;
-            case 6: L.bottomMargin = dp(Y) + 5*dp(d); break;
-            case 7: L.bottomMargin = dp(Y) + 6*dp(d); break;
-            case 8: L.bottomMargin = dp(Y) + 7*dp(d); break;
+            case 1: L.bottomMargin = dp(Y) + 0*dp(d)*color; break;
+            case 2: L.bottomMargin = dp(Y) + 1*dp(d)*color; break;
+            case 3: L.bottomMargin = dp(Y) + 2*dp(d)*color; break;
+            case 4: L.bottomMargin = dp(Y) + 3*dp(d)*color; break;
+            case 5: L.bottomMargin = dp(Y) + 4*dp(d)*color; break;
+            case 6: L.bottomMargin = dp(Y) + 5*dp(d)*color; break;
+            case 7: L.bottomMargin = dp(Y) + 6*dp(d)*color; break;
+            case 8: L.bottomMargin = dp(Y) + 7*dp(d)*color; break;
             case 0: L.leftMargin = 0; break;
 
         }

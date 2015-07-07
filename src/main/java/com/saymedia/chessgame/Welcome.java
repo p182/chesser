@@ -25,4 +25,17 @@ public class Welcome extends ActionBarActivity {
 
 
     public void buttonOnClick2(View v){ startActivity(new Intent("chess.pairedDevices")); }
+
+
+    public void changeColor(View v){
+        ImageView image = (ImageView)v;
+        if(Game.color == 1){
+            Game.color=-1;
+            image.setImageResource(R.drawable.bpawn);
+        }
+        else{
+            Game.color=1;
+            image.setImageResource(R.drawable.wpawn);
+        }
+    }
 }
