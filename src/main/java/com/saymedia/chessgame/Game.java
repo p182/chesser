@@ -260,12 +260,12 @@ public class Game extends ActionBarActivity {
     public RelativeLayout.LayoutParams getPlaceParams(int x, int y){
 
         double X;
-        if(color==1){X = 24;}
-        else {X = 280.9;}
+        if(color==1){X = 17.4;}
+        else {X = 273.9;}
 
         double Y;
-        if(color==1){Y = 25;}
-        else {Y = 281.9;}
+        if(color==1){Y = 18.4;}
+        else {Y = 274.9;}
 
         double d = 36.9;
 
