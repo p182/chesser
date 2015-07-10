@@ -6,4 +6,6 @@
     <string name="title_activity_welcome">Welcome</string>
     <string name="play">Click To Play</string>
     <string name="title_activity_paired_devices">PairedDevices</string>
+    <string name="title_activity_open_server">OpenServer</string>
+    <string name="title_activity_connect_to_server">ConnectToServer</string>
 </resources>

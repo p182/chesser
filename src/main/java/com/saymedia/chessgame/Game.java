@@ -299,6 +299,9 @@ public class Game extends ActionBarActivity {
 
         }
 
+        L.height=dp(38);
+        L.width=dp(38);
+
         return L;
     }
 

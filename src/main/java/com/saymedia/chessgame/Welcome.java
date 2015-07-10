@@ -24,7 +24,10 @@ public class Welcome extends ActionBarActivity {
 
 
 
-    public void buttonOnClick2(View v){ startActivity(new Intent("chess.pairedDevices")); }
+    public void buttonOnClick2(View v){ startActivity(new Intent("chess.connectToServer")); }
+
+    public void buttonOnClick3(View v){ startActivity(new Intent("chess.openServer")); }
+
 
 
     public void changeColor(View v){

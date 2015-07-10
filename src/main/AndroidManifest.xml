@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.saymedia.chessgame" >
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher4"
@@ -31,16 +34,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PairedDevices"
-            android:label="@string/title_activity_paired_devices" >
+            android:name=".OpenServer"
+            android:label="@string/title_activity_open_server" >
             <intent-filter>
-                <action android:name="chess.pairedDevices" />
+                <action android:name="chess.openServer" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ConnectToServer"
+            android:label="@string/title_activity_connect_to_server" >
+            <intent-filter>
+                <action android:name="chess.connectToServer" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.BLUETOOTH" />
 
 </manifest>
