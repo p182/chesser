@@ -1,8 +1,10 @@
 package com.saymedia.chessgame;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -15,9 +17,13 @@ public class ConnectThread extends Thread {
     private final BluetoothSocket mmSocket;
     private final BluetoothDevice mmDevice;
 
+    public Activity activity;
+
     UUID MY_UUID = UUID.fromString("427c2fb7-c2a3-4d25-ac0d-81dc6a77525a");
 
-    public ConnectThread(BluetoothDevice device) {
+    public ConnectThread(BluetoothDevice device,Activity _activity) {
+        this.activity = _activity;
+
         // Use a temporary object that is later assigned to mmSocket,
         // because mmSocket is final
         BluetoothSocket tmp = null;
@@ -46,6 +52,11 @@ public class ConnectThread extends Thread {
             } catch (IOException closeException) { }
             return;
         }
+
+        Game.socket=mmSocket;
+        Game.color=-1;
+        activity.startActivity(new Intent("chess.game"));
+
 
         // Do work to manage the connection (in a separate thread)
 //        manageConnectedSocket(mmSocket);

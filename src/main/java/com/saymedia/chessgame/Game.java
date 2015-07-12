@@ -1,8 +1,10 @@
 package com.saymedia.chessgame;
 
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,14 +12,27 @@ import android.widget.RelativeLayout;
 
 
 public class Game extends ActionBarActivity {
+
+    public static BluetoothSocket socket;
+    ConnectedThread connectThread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        ConnectedThread tmp = new ConnectedThread(socket);
+        connectThread=tmp;
+        connectThread.start();
+
         setupPieces();
+
+        if(color==1){ myTurn=true; }
+        else{ myTurn=false; }
     }
     public static int color = 1;
+
+    Boolean myTurn;
 
     public static Piece pressed;
 
@@ -259,15 +274,29 @@ public class Game extends ActionBarActivity {
 
     public RelativeLayout.LayoutParams getPlaceParams(int x, int y){
 
+        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
+        float density = metrics.density;
+        int width = (int)(metrics.widthPixels/density);
+        int height = (int)(metrics.heightPixels/density);
+
+        System.out.println(width+"      -----     "+height);
+
+
+
+//        double d = 36.9;
+        double d =(((width-32)*348.35/386)/8);
+
         double X;
-        if(color==1){X = 17.4;}
-        else {X = 273.9;}
+//        if(color==1){X = 17.4;})
+        if(color==1){X = ((width-32)*22/386);}
+//        else {X = 273.9;}
+        else {X = ((width-32)*22/386) +d*7;}
 
         double Y;
-        if(color==1){Y = 18.4;}
-        else {Y = 274.9;}
+//        if(color==1){Y = 18.4;}
+        if(color==1){Y = ((width-32)*23/388);}
+        else {Y = ((width-32)*23/388) +d*7;}
 
-        double d = 36.9;
 
         RelativeLayout.LayoutParams L = new RelativeLayout.LayoutParams(dp(38),dp(38));
         L.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -299,65 +328,68 @@ public class Game extends ActionBarActivity {
 
         }
 
-        L.height=dp(38);
-        L.width=dp(38);
+        L.height=dp(d);
+        L.width=dp(d);
 
         return L;
     }
 
 
     public void piecesOnClick(View v){
+        if(myTurn) {
 
-        RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
-        for(int id=100; id<6700; id+=100){
-            rl.removeView(findViewById(id));
-        }
-
-
-        Piece p = (Piece)v;
-
-        pressed = p;
-        int id = pressed.getId();
-
-        String c;
+            RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
+            for (int id = 100; id < 6700; id += 100) {
+                rl.removeView(findViewById(id));
+            }
 
 
-        if(id>8 && id<17){
-            c = p.pawnMoves();
-            selectSquares(c , p);
-        }
-        if(id==1 || id==8){
-            c = p.rookMoves();
-            selectSquares(c , p);
-        }
-        if(id==3 || id==6){
-            c = p.bishopMoves();
-            selectSquares(c , p);
-        }
-        if(id==4){
-            c = p.queenMoves();
-            selectSquares(c , p);
-        }
-        if(id==5){
-            c = p.kingMoves();
-            selectSquares(c , p);
-        }
-        if(id==2 || id==7){
-            c = p.knightMoves();
-            selectSquares(c , p);
-        }
+            Piece p = (Piece) v;
+
+            pressed = p;
+            int id = pressed.getId();
+
+            String c;
+
+
+            if (id > 8 && id < 17) {
+                c = p.pawnMoves();
+                selectSquares(c, p);
+            }
+            if (id == 1 || id == 8) {
+                c = p.rookMoves();
+                selectSquares(c, p);
+            }
+            if (id == 3 || id == 6) {
+                c = p.bishopMoves();
+                selectSquares(c, p);
+            }
+            if (id == 4) {
+                c = p.queenMoves();
+                selectSquares(c, p);
+            }
+            if (id == 5) {
+                c = p.kingMoves();
+                selectSquares(c, p);
+            }
+            if (id == 2 || id == 7) {
+                c = p.knightMoves();
+                selectSquares(c, p);
+            }
 
 
 //        System.out.println(Piece.s);
 
-        Piece.s = "";
+            Piece.s = "";
 
-
+        }
     }
 
 
 
     public void selectedOnClick(View v){
+
+        myTurn=false;
 
         SelectedSquare s = (SelectedSquare)v;
 
@@ -374,5 +406,16 @@ public class Game extends ActionBarActivity {
 
 
         removeAponent();
+
+        String wc = wr1.c()+","+wr2.c()+","+wn1.c()+","+wn2.c()+","+wb1.c()+","+wb2.c()+","+wk.c()+","+wq.c()+
+                ","+wp1.c()+","+wp2.c()+","+wp3.c()+","+wp4.c()+","+wp5.c()+","+wp6.c()+","+wp7.c()+","+wp8.c();
+
+        String bc = br1.c()+","+br2.c()+","+bn1.c()+","+bn2.c()+","+bb1.c()+","+bb2.c()+","+bk.c()+","+bq.c()+
+                ","+bp1.c()+","+bp2.c()+","+bp3.c()+","+bp4.c()+","+bp5.c()+","+bp6.c()+","+bp7.c()+","+bp8.c();
+
+        String c = wc +"."+ bc;
+
+        connectThread.stringWrite(c);
+
     }
 }

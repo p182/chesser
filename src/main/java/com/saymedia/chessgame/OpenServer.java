@@ -1,5 +1,6 @@
 package com.saymedia.chessgame;
 
+import android.bluetooth.BluetoothSocket;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,8 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
 
 public class OpenServer extends ActionBarActivity {
+
+    public static BluetoothSocket socket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,24 +24,18 @@ public class OpenServer extends ActionBarActivity {
 
 
     AcceptThread acceptThread = new AcceptThread(this);
-    public static boolean b = false;
 
-    public void startServer(View v){
+    public void startServer(View v) {
         acceptThread.start();
-        TextView textView = (TextView)findViewById(R.id.textView);
+        TextView textView = (TextView) findViewById(R.id.textView);
         textView.setVisibility(View.VISIBLE);
-//        connected();
     }
 
-    public void waitingForSocket(){
-    }
 
-    public void connected(){
-        while (true){
-            if(b){
-                TextView textView2 = (TextView) findViewById(R.id.textView2);
-                textView2.setVisibility(View.VISIBLE);
-            }
-        }
+
+    public void sendMessage(View v) {
+        ConnectedThread ct = new ConnectedThread(socket);
+        String s = "Hello :_: hellO";
+        ct.stringWrite(s);
     }
 }

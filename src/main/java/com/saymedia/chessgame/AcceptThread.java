@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -51,7 +53,7 @@ public class AcceptThread extends Thread {
             }
             // If a connection was accepted
             if (socket != null) {
-                OpenServer.b=true;
+                OpenServer.socket=socket;
 
                 activity.runOnUiThread(new Runnable() {
 
@@ -60,10 +62,14 @@ public class AcceptThread extends Thread {
 
                         TextView textView2 = (TextView) activity.findViewById(R.id.textView2);
                         textView2.setVisibility(View.VISIBLE);
+                        Button button = (Button) activity.findViewById(R.id.button4);
+                        button.setVisibility(View.VISIBLE);
                     }
                 });
 
                 System.out.println("got socket");
+                Game.socket=socket;
+                activity.startActivity(new Intent("chess.game"));
 
                 // Do work to manage the connection (in a separate thread)
                 try{mmServerSocket.close();}

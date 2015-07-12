@@ -3,6 +3,7 @@ package com.saymedia.chessgame;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import java.util.Set;
 
 
 public class ConnectToServer extends ActionBarActivity {
+
+    public static BluetoothSocket socket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +80,12 @@ public class ConnectToServer extends ActionBarActivity {
 
         BluetoothDevice device = btarray[i];
 
-        ConnectThread connectThread = new ConnectThread(device);
+        ConnectThread connectThread = new ConnectThread(device,this);
         connectThread.start();
 
         System.out.println(device.getName());
 
     }
+
 
 }
