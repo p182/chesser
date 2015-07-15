@@ -4,10 +4,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 
@@ -15,6 +12,8 @@ public class Game extends ActionBarActivity {
 
     public static BluetoothSocket socket;
     ConnectedThread connectThread;
+    IncomeListenerThread IncomeListenerThread = new IncomeListenerThread(this);
+    Utils u = new Utils(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +27,7 @@ public class Game extends ActionBarActivity {
         setupPieces();
 
         if(color==1){ myTurn=true; }
-        else{ myTurn=false; }
+        else{ myTurn=false; IncomeListenerThread.start();}
     }
     public static int color = 1;
 
@@ -53,33 +52,14 @@ public class Game extends ActionBarActivity {
     public static Piece wp7 , bp7;
     public static Piece wp8 , bp8;
 
-    public Piece findPieceByCoordinates(String c){
-        if(c.equals(br1.c())){return br1;}
-        if(c.equals(br2.c())){return br2;}
-        if(c.equals(bn1.c())){return bn1;}
-        if(c.equals(bn2.c())){return bn2;}
-        if(c.equals(bb1.c())){return bb1;}
-        if(c.equals(bb2.c())){return bb2;}
-        if(c.equals(bk.c())){return bk;}
-        if(c.equals(bq.c())){return bq;}
-        if(c.equals(bp1.c())){return bp1;}
-        if(c.equals(bp2.c())){return bp2;}
-        if(c.equals(bp3.c())){return bp3;}
-        if(c.equals(bp4.c())){return bp4;}
-        if(c.equals(bp5.c())){return bp5;}
-        if(c.equals(bp6.c())){return bp6;}
-        if(c.equals(bp7.c())){return bp7;}
-        if(c.equals(bp8.c())){return bp8;}
-        else{return null;}
-    }
-    public void removeAponent(){
+    public void removeAponnent(){
         String[] bc =  { br1.c(),br2.c(),bn1.c(),bn2.c(),bb1.c(),bb2.c(),bk.c(),bq.c(),
                 bp1.c(),bp2.c(),bp3.c(),bp4.c(),bp5.c(),bp6.c(),bp7.c(),bp8.c()};
 
         String s = pressed.c();
         for(int t=0; t<bc.length; t++){
             if (s.equals(bc[t])){
-                Piece p = findPieceByCoordinates(bc[t]);
+                Piece p = u.findPieceByCoordinates(bc[t]);
                 System.out.println(p);
                 p.x = 0;
                 System.out.println(p);
@@ -91,30 +71,30 @@ public class Game extends ActionBarActivity {
         }
     }
 
+    /** Returns an array of two booleans witch indicates if there is a Piece on the given coordinate. */
     public static boolean[] checkCoordinate(String s){
-        String[] wc =  { wr1.c(),wr2.c(),wn1.c(),wn2.c(),wb1.c(),wb2.c(),wk.c(),wq.c(),
+        String[] playerCoordinates =  { wr1.c(),wr2.c(),wn1.c(),wn2.c(),wb1.c(),wb2.c(),wk.c(),wq.c(),
                         wp1.c(),wp2.c(),wp3.c(),wp4.c(),wp5.c(),wp6.c(),wp7.c(),wp8.c()};
 
-        String[] bc =  { br1.c(),br2.c(),bn1.c(),bn2.c(),bb1.c(),bb2.c(),bk.c(),bq.c(),
+        String[] opponentCoordinates =  { br1.c(),br2.c(),bn1.c(),bn2.c(),bb1.c(),bb2.c(),bk.c(),bq.c(),
                 bp1.c(),bp2.c(),bp3.c(),bp4.c(),bp5.c(),bp6.c(),bp7.c(),bp8.c()};
 
-//        System.out.println(bc[12]);
 
-        boolean w = true;
-        boolean b = true;
+        boolean p = true;
+        boolean o = true;
 
-        for(int t=0; t<wc.length; t++){
-            if (s.equals(wc[t])){
-                w=false;
+        for(int t=0; t<playerCoordinates.length; t++){
+            if (s.equals(playerCoordinates[t])){
+                p=false;
             }
         }
-        for(int t=0; t<bc.length; t++){
-            if (s.equals(bc[t])){
-                b=false;
+        for(int t=0; t<opponentCoordinates.length; t++){
+            if (s.equals(opponentCoordinates[t])){
+                o=false;
             }
         }
 
-        boolean[] B = {w,b};
+        boolean[] B = {p,o};
         return B;
     }
 
@@ -136,6 +116,7 @@ public class Game extends ActionBarActivity {
     }
 
     public void setupPieces(){
+        // If the player is white
         if(color==1) {
             creatPiece("wrook", 1, 1, 1);
             creatPiece("wknight", 2, 1, 2);
@@ -148,8 +129,6 @@ public class Game extends ActionBarActivity {
             for (int i = 1; i < 9; i++) {
                 creatPiece("wpawn", i, 2, (i + 8));
             }
-
-
             creatPiece("brook", 1, 8, 17);
             creatPiece("bknight", 2, 8, 18);
             creatPiece("bbishop", 3, 8, 19);
@@ -162,7 +141,7 @@ public class Game extends ActionBarActivity {
                 creatPiece("bpawn", i, 7, (i + 24));
             }
         }
-
+        // If the player is black
         else {
             creatPiece("brook", 1, 8, 1);
             creatPiece("bknight", 2, 8, 2);
@@ -175,8 +154,6 @@ public class Game extends ActionBarActivity {
             for (int i = 1; i < 9; i++) {
                 creatPiece("bpawn", i, 7, (i + 8));
             }
-
-
             creatPiece("wrook", 1, 1, 17);
             creatPiece("wknight", 2, 1, 18);
             creatPiece("wbishop", 3, 1, 19);
@@ -189,7 +166,6 @@ public class Game extends ActionBarActivity {
                 creatPiece("wpawn", i, 2, (i + 24));
             }
         }
-
     }
 
     public void creatSelectedSquare(int x, int y, int id){
@@ -197,7 +173,7 @@ public class Game extends ActionBarActivity {
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
         SelectedSquare image = new SelectedSquare(getApplicationContext(), x, y, id);
 
-        image.setLayoutParams(getPlaceParams(x, y));
+        image.setLayoutParams(u.getPlaceParams(x, y));
 
         image.setOnClickListener(
                 new View.OnClickListener() {
@@ -220,44 +196,84 @@ public class Game extends ActionBarActivity {
                 piecesOnClick(v);
             }
         });
-        p.setLayoutParams(getPlaceParams(x, y));
+        p.setLayoutParams(u.getPlaceParams(x, y));
         rl.addView(p);
 
-        switch (id){
-            case 1: wr1 = p; break;
-            case 2: wn1 = p; break;
-            case 3: wb1 = p; break;
-            case 4: wq = p; break;
-            case 5: wk = p; break;
-            case 6: wb2 = p; break;
-            case 7: wn2 = p; break;
-            case 8: wr2 = p; break;
-            case 9: wp1 = p; break;
-            case 10: wp2 = p; break;
-            case 11: wp3 = p; break;
-            case 12: wp4 = p; break;
-            case 13: wp5 = p; break;
-            case 14: wp6 = p; break;
-            case 15: wp7 = p; break;
-            case 16: wp8 = p; break;
+        // If the player is white
+        if(color==1) {
+            switch (id){
+                case 1: wr1 = p; break;
+                case 2: wn1 = p; break;
+                case 3: wb1 = p; break;
+                case 4: wq = p; break;
+                case 5: wk = p; break;
+                case 6: wb2 = p; break;
+                case 7: wn2 = p; break;
+                case 8: wr2 = p; break;
+                case 9: wp1 = p; break;
+                case 10: wp2 = p; break;
+                case 11: wp3 = p; break;
+                case 12: wp4 = p; break;
+                case 13: wp5 = p; break;
+                case 14: wp6 = p; break;
+                case 15: wp7 = p; break;
+                case 16: wp8 = p; break;
 
+                case 17: br1 = p; break;
+                case 18: bn1 = p; break;
+                case 19: bb1 = p; break;
+                case 20: bq = p; break;
+                case 21: bk = p; break;
+                case 22: bb2 = p; break;
+                case 23: bn2 = p; break;
+                case 24: br2 = p; break;
+                case 25: bp1 = p; break;
+                case 26: bp2 = p; break;
+                case 27: bp3 = p; break;
+                case 28: bp4 = p; break;
+                case 29: bp5 = p; break;
+                case 30: bp6 = p; break;
+                case 31: bp7 = p; break;
+                case 32: bp8 = p; break;
+            }
+        }
+        // If the player is black
+        else {
+            switch (id){
+                case 1: br1 = p; break;
+                case 2: bn1 = p; break;
+                case 3: bb1 = p; break;
+                case 4: bq = p; break;
+                case 5: bk = p; break;
+                case 6: bb2 = p; break;
+                case 7: bn2 = p; break;
+                case 8: br2 = p; break;
+                case 9: bp1 = p; break;
+                case 10: bp2 = p; break;
+                case 11: bp3 = p; break;
+                case 12: bp4 = p; break;
+                case 13: bp5 = p; break;
+                case 14: bp6 = p; break;
+                case 15: bp7 = p; break;
+                case 16: bp8 = p; break;
 
-            case 17: br1 = p; break;
-            case 18: bn1 = p; break;
-            case 19: bb1 = p; break;
-            case 20: bq = p; break;
-            case 21: bk = p; break;
-            case 22: bb2 = p; break;
-            case 23: bn2 = p; break;
-            case 24: br2 = p; break;
-            case 25: bp1 = p; break;
-            case 26: bp2 = p; break;
-            case 27: bp3 = p; break;
-            case 28: bp4 = p; break;
-            case 29: bp5 = p; break;
-            case 30: bp6 = p; break;
-            case 31: bp7 = p; break;
-            case 32: bp8 = p; break;
+                case 17: wr1 = p; break;
+                case 18: wn1 = p; break;
+                case 19: wb1 = p; break;
+                case 20: wq = p; break;
+                case 21: wk = p; break;
+                case 22: wb2 = p; break;
+                case 23: wn2 = p; break;
+                case 24: wr2 = p; break;
+                case 25: wp1 = p; break;
+                case 26: wp2 = p; break;
+                case 27: wp3 = p; break;
+                case 28: wp4 = p; break;
+                case 29: wp5 = p; break;
+                case 30: wp6 = p; break;
+                 case 31: wp7 = p; break;
+                case 32: wp8 = p; break;
+            }
         }
 
     }
@@ -265,75 +281,6 @@ public class Game extends ActionBarActivity {
     public void backButton(View v){
         startActivity(new Intent("first.activity"));
     }
-
-    private int dp(double dp) {
-
-        float density = getApplicationContext().getResources().getDisplayMetrics().density;
-        return (int)(dp * density);
-    }
-
-    public RelativeLayout.LayoutParams getPlaceParams(int x, int y){
-
-        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
-        float density = metrics.density;
-        int width = (int)(metrics.widthPixels/density);
-        int height = (int)(metrics.heightPixels/density);
-
-        System.out.println(width+"      -----     "+height);
-
-
-
-//        double d = 36.9;
-        double d =(((width-32)*348.35/386)/8);
-
-        double X;
-//        if(color==1){X = 17.4;})
-        if(color==1){X = ((width-32)*22/386);}
-//        else {X = 273.9;}
-        else {X = ((width-32)*22/386) +d*7;}
-
-        double Y;
-//        if(color==1){Y = 18.4;}
-        if(color==1){Y = ((width-32)*23/388);}
-        else {Y = ((width-32)*23/388) +d*7;}
-
-
-        RelativeLayout.LayoutParams L = new RelativeLayout.LayoutParams(dp(38),dp(38));
-        L.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        L.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-
-        switch (x){
-            case 1: L.leftMargin = dp(X) + 0*dp(d)*color; break;
-            case 2: L.leftMargin = dp(X) + 1*dp(d)*color; break;
-            case 3: L.leftMargin = dp(X) + 2*dp(d)*color; break;
-            case 4: L.leftMargin = dp(X) + 3*dp(d)*color; break;
-            case 5: L.leftMargin = dp(X) + 4*dp(d)*color; break;
-            case 6: L.leftMargin = dp(X) + 5*dp(d)*color; break;
-            case 7: L.leftMargin = dp(X) + 6*dp(d)*color; break;
-            case 8: L.leftMargin = dp(X) + 7*dp(d)*color; break;
-            case 0: L.leftMargin = 0; break;
-
-        }
-
-        switch (y){
-            case 1: L.bottomMargin = dp(Y) + 0*dp(d)*color; break;
-            case 2: L.bottomMargin = dp(Y) + 1*dp(d)*color; break;
-            case 3: L.bottomMargin = dp(Y) + 2*dp(d)*color; break;
-            case 4: L.bottomMargin = dp(Y) + 3*dp(d)*color; break;
-            case 5: L.bottomMargin = dp(Y) + 4*dp(d)*color; break;
-            case 6: L.bottomMargin = dp(Y) + 5*dp(d)*color; break;
-            case 7: L.bottomMargin = dp(Y) + 6*dp(d)*color; break;
-            case 8: L.bottomMargin = dp(Y) + 7*dp(d)*color; break;
-            case 0: L.leftMargin = 0; break;
-
-        }
-
-        L.height=dp(d);
-        L.width=dp(d);
-
-        return L;
-    }
-
 
     public void piecesOnClick(View v){
         if(myTurn) {
@@ -385,8 +332,6 @@ public class Game extends ActionBarActivity {
         }
     }
 
-
-
     public void selectedOnClick(View v){
 
         myTurn=false;
@@ -397,7 +342,7 @@ public class Game extends ActionBarActivity {
         pressed.y = s.y;
 
 
-        pressed.setLayoutParams(getPlaceParams(s.x , s.y));
+        pressed.setLayoutParams(u.getPlaceParams(s.x , s.y));
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
         for(int id=100; id<6700; id+=100){
@@ -405,7 +350,7 @@ public class Game extends ActionBarActivity {
         }
 
 
-        removeAponent();
+        removeAponnent();
 
         String wc = wr1.c()+","+wr2.c()+","+wn1.c()+","+wn2.c()+","+wb1.c()+","+wb2.c()+","+wk.c()+","+wq.c()+
                 ","+wp1.c()+","+wp2.c()+","+wp3.c()+","+wp4.c()+","+wp5.c()+","+wp6.c()+","+wp7.c()+","+wp8.c();
@@ -413,7 +358,7 @@ public class Game extends ActionBarActivity {
         String bc = br1.c()+","+br2.c()+","+bn1.c()+","+bn2.c()+","+bb1.c()+","+bb2.c()+","+bk.c()+","+bq.c()+
                 ","+bp1.c()+","+bp2.c()+","+bp3.c()+","+bp4.c()+","+bp5.c()+","+bp6.c()+","+bp7.c()+","+bp8.c();
 
-        String c = wc +"."+ bc;
+        String c = wc +","+ bc;
 
         connectThread.stringWrite(c);
 

@@ -1,9 +1,6 @@
 package com.saymedia.chessgame;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +42,7 @@ public class ConnectedThread extends Thread {
                 // Read from the InputStream
                 bytes = mmInStream.read(buffer);
                 String inMessage = new String(buffer, 0, bytes,"UTF-8");
-
+                IncomeListenerThread.s=inMessage;
 
                 // Send the obtained bytes to the UI activity
             } catch (IOException e) {
