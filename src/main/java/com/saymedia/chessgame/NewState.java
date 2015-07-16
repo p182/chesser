@@ -2,6 +2,7 @@ package com.saymedia.chessgame;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
+import android.widget.RelativeLayout;
 
 /**
  * Created by SayMedia on 13/07/2015.
@@ -19,14 +20,25 @@ public class NewState{
         System.out.println(u);
     }
 
-    void movePiece(String c){
-        int x = c.charAt(0) - 48;
-        int y = c.charAt(1) - 48;
+    void movePiece(String cId){
+        String[] cIdArray = cId.split(":");
 
-        Piece piece = u.findPieceByCoordinates(c);
+        int x = cIdArray[0].charAt(0) - 48;
+        int y = cIdArray[0].charAt(1) - 48;
+
+        Piece piece = u.findPieceById(Integer.parseInt(cIdArray[1]));
 
         System.out.println(piece);
-        piece.setLayoutParams(u.getPlaceParams(x, y));
+        piece.x = x;
+        piece.y = y;
+        if(x==0&&y==0){
+
+            RelativeLayout rl = (RelativeLayout)activity.findViewById(R.id.fragment);
+            rl.removeView(piece);
+        }
+        else {
+            piece.setLayoutParams(u.getPlaceParams(x, y));
+        }
     }
 
     void creatNewState(){
@@ -39,6 +51,9 @@ public class NewState{
 //        String[] warray = array[0].split(",");
 //        String[] barray = array[1].split(",");
         for (int i = 0; i < array.length; i++) {
+
+            System.out.println(array[i]);
+
             movePiece(array[i]);
         }
 //        for (int i = 0; i < barray.length; i++) {

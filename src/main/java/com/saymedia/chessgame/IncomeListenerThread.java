@@ -18,20 +18,24 @@ public class IncomeListenerThread extends Thread {
     public void run() {
         String string = s;
 
-        while(true){
-            if(!s.equals(string)){
-                System.out.println(s);
-                activity.runOnUiThread(
-                        new Runnable () {
+        while(true) {
+            while (true) {
+//                System.out.println("waiting");
+                if (!s.equals(string)) {
+                    Game.myTurn = true;
+                    System.out.println(s);
+                    activity.runOnUiThread(
+                            new Runnable() {
                             public void run() {
-                                NewState state = new NewState(s,activity);
-                                state.creatNewState();
-                            }
+                                    NewState state = new NewState(s, activity);
+                                    state.creatNewState();
+                                }
                         }
-                );
-                break;
+                    );
+                    break;
+                }
             }
+            string = s;
         }
-
     }
 }

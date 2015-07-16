@@ -87,42 +87,88 @@ public class Utils {
         return L;
     }
 
-    /** Get aPiece object by its coordinate String. */
+    /** Get a Piece object by its coordinate String. */
     public Piece findPieceByCoordinates(String c){
+        // If the player is white
+        if(color==1) {
+            // Black pieces
+            if(c.equals(Game.br1.c())){return Game.br1;}
+            if(c.equals(Game.br2.c())){return Game.br2;}
+            if(c.equals(Game.bn1.c())){return Game.bn1;}
+            if(c.equals(Game.bn2.c())){return Game.bn2;}
+            if(c.equals(Game.bb1.c())){return Game.bb1;}
+            if(c.equals(Game.bb2.c())){return Game.bb2;}
+            if(c.equals(Game.bk.c())){return Game.bk;}
+            if(c.equals(Game.bq.c())){return Game.bq;}
+            if(c.equals(Game.bp1.c())){return Game.bp1;}
+            if(c.equals(Game.bp2.c())){return Game.bp2;}
+            if(c.equals(Game.bp3.c())){return Game.bp3;}
+            if(c.equals(Game.bp4.c())){return Game.bp4;}
+            if(c.equals(Game.bp5.c())){return Game.bp5;}
+            if(c.equals(Game.bp6.c())){return Game.bp6;}
+            if(c.equals(Game.bp7.c())){return Game.bp7;}
+            if(c.equals(Game.bp8.c())){return Game.bp8;}
+            else{return null;}
+        }
+        // If the player is black
+        else {
+            // White pieces
+            if(c.equals(Game.wr1.c())){return Game.wr1;}
+            if(c.equals(Game.wr2.c())){return Game.wr2;}
+            if(c.equals(Game.wn1.c())){return Game.wn1;}
+            if(c.equals(Game.wn2.c())){return Game.wn2;}
+            if(c.equals(Game.wb1.c())){return Game.wb1;}
+            if(c.equals(Game.wb2.c())){return Game.wb2;}
+            if(c.equals(Game.wk.c())){return Game.wk;}
+            if(c.equals(Game.wq.c())){return Game.wq;}
+            if(c.equals(Game.wp1.c())){return Game.wp1;}
+            if(c.equals(Game.wp2.c())){return Game.wp2;}
+            if(c.equals(Game.wp3.c())){return Game.wp3;}
+            if(c.equals(Game.wp4.c())){return Game.wp4;}
+            if(c.equals(Game.wp5.c())){return Game.wp5;}
+            if(c.equals(Game.wp6.c())){return Game.wp6;}
+            if(c.equals(Game.wp7.c())){return Game.wp7;}
+            if(c.equals(Game.wp8.c())){return Game.wp8;}
+            else{return null;}
+        }
+    }
+
+    /** Get a Piece object by its ID int. */
+    public Piece findPieceById(int id){
         // Black pieces
-        if(c.equals(Game.br1.c())){return Game.br1;}
-        if(c.equals(Game.br2.c())){return Game.br2;}
-        if(c.equals(Game.bn1.c())){return Game.bn1;}
-        if(c.equals(Game.bn2.c())){return Game.bn2;}
-        if(c.equals(Game.bb1.c())){return Game.bb1;}
-        if(c.equals(Game.bb2.c())){return Game.bb2;}
-        if(c.equals(Game.bk.c())){return Game.bk;}
-        if(c.equals(Game.bq.c())){return Game.bq;}
-        if(c.equals(Game.bp1.c())){return Game.bp1;}
-        if(c.equals(Game.bp2.c())){return Game.bp2;}
-        if(c.equals(Game.bp3.c())){return Game.bp3;}
-        if(c.equals(Game.bp4.c())){return Game.bp4;}
-        if(c.equals(Game.bp5.c())){return Game.bp5;}
-        if(c.equals(Game.bp6.c())){return Game.bp6;}
-        if(c.equals(Game.bp7.c())){return Game.bp7;}
-        if(c.equals(Game.bp8.c())){return Game.bp8;}
+        if(id == Game.br1.getId()){return Game.br1;}
+        if(id == Game.br2.getId()){return Game.br2;}
+        if(id == Game.bn1.getId()){return Game.bn1;}
+        if(id == Game.bn2.getId()){return Game.bn2;}
+        if(id == Game.bb1.getId()){return Game.bb1;}
+        if(id == Game.bb2.getId()){return Game.bb2;}
+        if(id == Game.bk.getId()){return Game.bk;}
+        if(id == Game.bq.getId()){return Game.bq;}
+        if(id == Game.bp1.getId()){return Game.bp1;}
+        if(id == Game.bp2.getId()){return Game.bp2;}
+        if(id == Game.bp3.getId()){return Game.bp3;}
+        if(id == Game.bp4.getId()){return Game.bp4;}
+        if(id == Game.bp5.getId()){return Game.bp5;}
+        if(id == Game.bp6.getId()){return Game.bp6;}
+        if(id == Game.bp7.getId()){return Game.bp7;}
+        if(id == Game.bp8.getId()){return Game.bp8;}
         // White pieces
-        if(c.equals(Game.wr1.c())){return Game.wr1;}
-        if(c.equals(Game.wr2.c())){return Game.wr2;}
-        if(c.equals(Game.wn1.c())){return Game.wn1;}
-        if(c.equals(Game.wn2.c())){return Game.wn2;}
-        if(c.equals(Game.wb1.c())){return Game.wb1;}
-        if(c.equals(Game.wb2.c())){return Game.wb2;}
-        if(c.equals(Game.wk.c())){return Game.wk;}
-        if(c.equals(Game.wq.c())){return Game.wq;}
-        if(c.equals(Game.wp1.c())){return Game.wp1;}
-        if(c.equals(Game.wp2.c())){return Game.wp2;}
-        if(c.equals(Game.wp3.c())){return Game.wp3;}
-        if(c.equals(Game.wp4.c())){return Game.wp4;}
-        if(c.equals(Game.wp5.c())){return Game.wp5;}
-        if(c.equals(Game.wp6.c())){return Game.wp6;}
-        if(c.equals(Game.wp7.c())){return Game.wp7;}
-        if(c.equals(Game.wp8.c())){return Game.wp8;}
+        if(id == Game.wr1.getId()){return Game.wr1;}
+        if(id == Game.wr2.getId()){return Game.wr2;}
+        if(id == Game.wn1.getId()){return Game.wn1;}
+        if(id == Game.wn2.getId()){return Game.wn2;}
+        if(id == Game.wb1.getId()){return Game.wb1;}
+        if(id == Game.wb2.getId()){return Game.wb2;}
+        if(id == Game.wk.getId()){return Game.wk;}
+        if(id == Game.wq.getId()){return Game.wq;}
+        if(id == Game.wp1.getId()){return Game.wp1;}
+        if(id == Game.wp2.getId()){return Game.wp2;}
+        if(id == Game.wp3.getId()){return Game.wp3;}
+        if(id == Game.wp4.getId()){return Game.wp4;}
+        if(id == Game.wp5.getId()){return Game.wp5;}
+        if(id == Game.wp6.getId()){return Game.wp6;}
+        if(id == Game.wp7.getId()){return Game.wp7;}
+        if(id == Game.wp8.getId()){return Game.wp8;}
         else{return null;}
     }
 }

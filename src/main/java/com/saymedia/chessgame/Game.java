@@ -26,12 +26,12 @@ public class Game extends ActionBarActivity {
 
         setupPieces();
 
-        if(color==1){ myTurn=true; }
+        if(color==1){ myTurn=true; IncomeListenerThread.start();}
         else{ myTurn=false; IncomeListenerThread.start();}
     }
     public static int color = 1;
 
-    Boolean myTurn;
+    public static Boolean myTurn;
 
     public static Piece pressed;
 
@@ -53,14 +53,27 @@ public class Game extends ActionBarActivity {
     public static Piece wp8 , bp8;
 
     public void removeAponnent(){
-        String[] bc =  { br1.c(),br2.c(),bn1.c(),bn2.c(),bb1.c(),bb2.c(),bk.c(),bq.c(),
-                bp1.c(),bp2.c(),bp3.c(),bp4.c(),bp5.c(),bp6.c(),bp7.c(),bp8.c()};
+
+        String[] apponentc;
+
+        // If the player is white
+        if(color==1) {
+            apponentc = new String[] {br1.c(), br2.c(), bn1.c(), bn2.c(), bb1.c(), bb2.c(), bk.c(), bq.c(),
+                    bp1.c(), bp2.c(), bp3.c(), bp4.c(), bp5.c(), bp6.c(), bp7.c(), bp8.c()};
+        }
+        // If the player is black
+        else {
+            apponentc = new String[] {wr1.c(), wr2.c(), wn1.c(), wn2.c(), wb1.c(), wb2.c(), wk.c(), wq.c(),
+                    wp1.c(), wp2.c(), wp3.c(), wp4.c(), wp5.c(), wp6.c(), wp7.c(), wp8.c()};
+        }
 
         String s = pressed.c();
-        for(int t=0; t<bc.length; t++){
-            if (s.equals(bc[t])){
-                Piece p = u.findPieceByCoordinates(bc[t]);
+        for(int t=0; t<apponentc.length; t++){
+            if (s.equals(apponentc[t])){
+                Piece p = u.findPieceByCoordinates(apponentc[t]);
                 System.out.println(p);
+
+//                p.setImageResource(R.drawable.knight);
                 p.x = 0;
                 System.out.println(p);
                 p.y = 0;
@@ -73,12 +86,25 @@ public class Game extends ActionBarActivity {
 
     /** Returns an array of two booleans witch indicates if there is a Piece on the given coordinate. */
     public static boolean[] checkCoordinate(String s){
-        String[] playerCoordinates =  { wr1.c(),wr2.c(),wn1.c(),wn2.c(),wb1.c(),wb2.c(),wk.c(),wq.c(),
-                        wp1.c(),wp2.c(),wp3.c(),wp4.c(),wp5.c(),wp6.c(),wp7.c(),wp8.c()};
+        String[] playerCoordinates;
+        String[] opponentCoordinates;
 
-        String[] opponentCoordinates =  { br1.c(),br2.c(),bn1.c(),bn2.c(),bb1.c(),bb2.c(),bk.c(),bq.c(),
-                bp1.c(),bp2.c(),bp3.c(),bp4.c(),bp5.c(),bp6.c(),bp7.c(),bp8.c()};
+        // If the player is white
+        if(color==1) {
+            playerCoordinates = new String[] {wr1.c(), wr2.c(), wn1.c(), wn2.c(), wb1.c(), wb2.c(), wk.c(), wq.c(),
+                    wp1.c(), wp2.c(), wp3.c(), wp4.c(), wp5.c(), wp6.c(), wp7.c(), wp8.c()};
 
+            opponentCoordinates = new String[] {br1.c(), br2.c(), bn1.c(), bn2.c(), bb1.c(), bb2.c(), bk.c(), bq.c(),
+                    bp1.c(), bp2.c(), bp3.c(), bp4.c(), bp5.c(), bp6.c(), bp7.c(), bp8.c()};
+        }
+        // If the player is black
+        else{
+            playerCoordinates = new String[] {br1.c(), br2.c(), bn1.c(), bn2.c(), bb1.c(), bb2.c(), bk.c(), bq.c(),
+                    bp1.c(), bp2.c(), bp3.c(), bp4.c(), bp5.c(), bp6.c(), bp7.c(), bp8.c()};
+
+            opponentCoordinates = new String[] {wr1.c(), wr2.c(), wn1.c(), wn2.c(), wb1.c(), wb2.c(), wk.c(), wq.c(),
+                    wp1.c(), wp2.c(), wp3.c(), wp4.c(), wp5.c(), wp6.c(), wp7.c(), wp8.c()};
+        }
 
         boolean p = true;
         boolean o = true;
@@ -117,7 +143,7 @@ public class Game extends ActionBarActivity {
 
     public void setupPieces(){
         // If the player is white
-        if(color==1) {
+//        if(color==1) {
             creatPiece("wrook", 1, 1, 1);
             creatPiece("wknight", 2, 1, 2);
             creatPiece("wbishop", 3, 1, 3);
@@ -140,8 +166,8 @@ public class Game extends ActionBarActivity {
             for (int i = 1; i < 9; i++) {
                 creatPiece("bpawn", i, 7, (i + 24));
             }
-        }
-        // If the player is black
+//        }
+/*        // If the player is black
         else {
             creatPiece("brook", 1, 8, 1);
             creatPiece("bknight", 2, 8, 2);
@@ -166,6 +192,7 @@ public class Game extends ActionBarActivity {
                 creatPiece("wpawn", i, 2, (i + 24));
             }
         }
+*/
     }
 
     public void creatSelectedSquare(int x, int y, int id){
@@ -200,7 +227,7 @@ public class Game extends ActionBarActivity {
         rl.addView(p);
 
         // If the player is white
-        if(color==1) {
+//        if(color==1) {
             switch (id){
                 case 1: wr1 = p; break;
                 case 2: wn1 = p; break;
@@ -236,8 +263,8 @@ public class Game extends ActionBarActivity {
                 case 31: bp7 = p; break;
                 case 32: bp8 = p; break;
             }
-        }
-        // If the player is black
+//        }
+/*        // If the player is black
         else {
             switch (id){
                 case 1: br1 = p; break;
@@ -275,7 +302,7 @@ public class Game extends ActionBarActivity {
                 case 32: wp8 = p; break;
             }
         }
-
+*/
     }
 
     public void backButton(View v){
@@ -299,29 +326,59 @@ public class Game extends ActionBarActivity {
             String c;
 
 
-            if (id > 8 && id < 17) {
-                c = p.pawnMoves();
-                selectSquares(c, p);
+            // If the player is white
+            if(color==1) {
+                if (id > 8 && id < 17) {
+                    c = p.pawnMoves();
+                    selectSquares(c, p);
+                }
+                if (id == 1 || id == 8) {
+                    c = p.rookMoves();
+                    selectSquares(c, p);
+                }
+                if (id == 3 || id == 6) {
+                    c = p.bishopMoves();
+                    selectSquares(c, p);
+                }
+                if (id == 4) {
+                    c = p.queenMoves();
+                    selectSquares(c, p);
+                }
+                if (id == 5) {
+                    c = p.kingMoves();
+                    selectSquares(c, p);
+                }
+                if (id == 2 || id == 7) {
+                    c = p.knightMoves();
+                    selectSquares(c, p);
+                }
             }
-            if (id == 1 || id == 8) {
-                c = p.rookMoves();
-                selectSquares(c, p);
-            }
-            if (id == 3 || id == 6) {
-                c = p.bishopMoves();
-                selectSquares(c, p);
-            }
-            if (id == 4) {
-                c = p.queenMoves();
-                selectSquares(c, p);
-            }
-            if (id == 5) {
-                c = p.kingMoves();
-                selectSquares(c, p);
-            }
-            if (id == 2 || id == 7) {
-                c = p.knightMoves();
-                selectSquares(c, p);
+            // If the player is black
+            else{
+                if (id > 24 && id < 33) {
+                    c = p.pawnMoves();
+                    selectSquares(c, p);
+                }
+                if (id == 17 || id == 24) {
+                    c = p.rookMoves();
+                    selectSquares(c, p);
+                }
+                if (id == 19 || id == 22) {
+                    c = p.bishopMoves();
+                    selectSquares(c, p);
+                }
+                if (id == 20) {
+                    c = p.queenMoves();
+                    selectSquares(c, p);
+                }
+                if (id == 21) {
+                    c = p.kingMoves();
+                    selectSquares(c, p);
+                }
+                if (id == 18 || id == 23) {
+                    c = p.knightMoves();
+                    selectSquares(c, p);
+                }
             }
 
 
@@ -352,15 +409,17 @@ public class Game extends ActionBarActivity {
 
         removeAponnent();
 
-        String wc = wr1.c()+","+wr2.c()+","+wn1.c()+","+wn2.c()+","+wb1.c()+","+wb2.c()+","+wk.c()+","+wq.c()+
-                ","+wp1.c()+","+wp2.c()+","+wp3.c()+","+wp4.c()+","+wp5.c()+","+wp6.c()+","+wp7.c()+","+wp8.c();
+        String wc = wr1.cId()+","+wr2.cId()+","+wn1.cId()+","+wn2.cId()+","+wb1.cId()+","+wb2.cId()+","+wk.cId()+","+wq.cId()+
+                ","+wp1.cId()+","+wp2.cId()+","+wp3.cId()+","+wp4.cId()+","+wp5.cId()+","+wp6.cId()+","+wp7.cId()+","+wp8.cId();
 
-        String bc = br1.c()+","+br2.c()+","+bn1.c()+","+bn2.c()+","+bb1.c()+","+bb2.c()+","+bk.c()+","+bq.c()+
-                ","+bp1.c()+","+bp2.c()+","+bp3.c()+","+bp4.c()+","+bp5.c()+","+bp6.c()+","+bp7.c()+","+bp8.c();
+        String bc = br1.cId()+","+br2.cId()+","+bn1.cId()+","+bn2.cId()+","+bb1.cId()+","+bb2.cId()+","+bk.cId()+","+bq.cId()+
+                ","+bp1.cId()+","+bp2.cId()+","+bp3.cId()+","+bp4.cId()+","+bp5.cId()+","+bp6.cId()+","+bp7.cId()+","+bp8.cId();
 
         String c = wc +","+ bc;
 
         connectThread.stringWrite(c);
+        System.out.println("sending: " + c);
+//        IncomeListenerThread.start();
 
     }
 }
