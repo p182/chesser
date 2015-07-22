@@ -1,11 +1,26 @@
 package com.saymedia.chessgame;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 
 public class Game extends ActionBarActivity {
@@ -29,9 +44,36 @@ public class Game extends ActionBarActivity {
         if(color==1){ myTurn=true; IncomeListenerThread.start();}
         else{ myTurn=false; IncomeListenerThread.start();}
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_game, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_save||id == R.id.action_load) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    ChesserDbOperations mDbHelper = new ChesserDbOperations(this);
+
     public static int color = 1;
 
     public static Boolean myTurn;
+    public static Boolean vibrate;
+    public static Boolean soundEfect;
 
     public static Piece pressed;
 
@@ -82,6 +124,22 @@ public class Game extends ActionBarActivity {
 
             }
         }
+    }
+
+    /** Returns a string of all the white pieces coordinates+IDs. */
+    public static String getWPCIDs(){
+        String wc = wr1.cId()+","+wr2.cId()+","+wn1.cId()+","+wn2.cId()+","+wb1.cId()+","+wb2.cId()+","+wk.cId()+","+wq.cId()+
+                ","+wp1.cId()+","+wp2.cId()+","+wp3.cId()+","+wp4.cId()+","+wp5.cId()+","+wp6.cId()+","+wp7.cId()+","+wp8.cId();
+
+        return wc;
+    }
+
+    /** Returns a string of all the black pieces coordinates+IDs. */
+    public static String getBPCIDs(){
+        String bc = br1.cId()+","+br2.cId()+","+bn1.cId()+","+bn2.cId()+","+bb1.cId()+","+bb2.cId()+","+bk.cId()+","+bq.cId()+
+                ","+bp1.cId()+","+bp2.cId()+","+bp3.cId()+","+bp4.cId()+","+bp5.cId()+","+bp6.cId()+","+bp7.cId()+","+bp8.cId();
+
+        return bc;
     }
 
     /** Returns an array of two booleans witch indicates if there is a Piece on the given coordinate. */
@@ -218,8 +276,8 @@ public class Game extends ActionBarActivity {
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
         Piece p = new Piece(getApplicationContext(), x, y, pname, id);
 
-        p.setOnClickListener(new Piece.OnClickListener()  {
-            public void onClick(View v){
+        p.setOnClickListener(new Piece.OnClickListener() {
+            public void onClick(View v) {
                 piecesOnClick(v);
             }
         });
@@ -408,18 +466,111 @@ public class Game extends ActionBarActivity {
 
 
         removeAponnent();
-
+/*
         String wc = wr1.cId()+","+wr2.cId()+","+wn1.cId()+","+wn2.cId()+","+wb1.cId()+","+wb2.cId()+","+wk.cId()+","+wq.cId()+
                 ","+wp1.cId()+","+wp2.cId()+","+wp3.cId()+","+wp4.cId()+","+wp5.cId()+","+wp6.cId()+","+wp7.cId()+","+wp8.cId();
 
         String bc = br1.cId()+","+br2.cId()+","+bn1.cId()+","+bn2.cId()+","+bb1.cId()+","+bb2.cId()+","+bk.cId()+","+bq.cId()+
                 ","+bp1.cId()+","+bp2.cId()+","+bp3.cId()+","+bp4.cId()+","+bp5.cId()+","+bp6.cId()+","+bp7.cId()+","+bp8.cId();
-
-        String c = wc +","+ bc;
+*/
+        String c = getWPCIDs() +","+ getBPCIDs();
 
         connectThread.stringWrite(c);
         System.out.println("sending: " + c);
 //        IncomeListenerThread.start();
+
+    }
+
+    /** Saves the current game to the data base. */
+    public void saveGame(MenuItem item){
+        final Activity activity = this;
+        final View layout = View.inflate(this, R.layout.save_dialog, null);
+        new AlertDialog.Builder(activity)
+                .setTitle("What kind of game is this?")
+                .setPositiveButton("New game", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        new AlertDialog.Builder(activity)
+                                .setTitle("Save Game")
+                                .setMessage("Enter the name you want to give to this game so you will easily remember")
+                                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        EditText nameText = (EditText) layout.findViewById(R.id.gamename);
+                                        String gameName = nameText.getText().toString();
+                                        System.out.println(gameName);
+                                        mDbHelper.saveGame(gameName);
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // do nothing
+                                    }
+                                })
+                                .setView(layout)
+                                .show();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .show();
+    }
+
+    /** Loads  a chosen game from the database. */
+    public void loadGame(MenuItem item){
+        final Activity activity = this;
+        final View layout = View.inflate(this, R.layout.load_dialog, null);
+        new AlertDialog.Builder(activity)
+                .setTitle("Load Game")
+                .setView(layout)
+                .show();
+
+
+
+        final ListView listview = (ListView) findViewById(R.id.entries);
+
+
+
+        final ArrayList<String> list = new ArrayList<>();
+
+                    list.add("a game");
+
+        final ArrayAdapter adapter = new ArrayAdapter(activity, android.R.layout.simple_list_item_1, list);
+        listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new ListView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
+//                itemOnClick(position);
+            }
+        });
+
+
+/*
+        public  void itemOnClick(int i){
+            System.out.println(i);
+
+            BluetoothDevice[] btarray = new BluetoothDevice[pairedDevices.size()];
+
+            if (pairedDevices.size() > 0) {
+                int in=0;
+                for (BluetoothDevice device : pairedDevices) {
+                    if (device.getBluetoothClass().getMajorDeviceClass() == BluetoothClass.Device.Major.PHONE) {
+                        btarray[in] = device;
+                        in++;
+                    }
+                }
+            }
+
+            BluetoothDevice device = btarray[i];
+
+            ConnectThread connectThread = new ConnectThread(device,this);
+            connectThread.start();
+
+            System.out.println(device.getName());
+
+        }
+*/
 
     }
 }

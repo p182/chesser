@@ -2,6 +2,8 @@ package com.saymedia.chessgame;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
+import android.os.Vibrator;
 import android.widget.RelativeLayout;
 
 /**
@@ -42,6 +44,9 @@ public class NewState{
     }
 
     void creatNewState(){
+        Vibrator v = (Vibrator) activity.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 500 milliseconds
+        v.vibrate(50);
         u= new Utils(activity);
         System.out.println(s);
 

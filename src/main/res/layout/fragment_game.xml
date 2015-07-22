@@ -28,5 +28,25 @@
         android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
         android:onClick="backButton" />
 
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vibrate"
+        android:id="@+id/radioButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/radioButton2"
+        android:layout_alignStart="@+id/radioButton2" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sound Efect"
+        android:id="@+id/radioButton2"
+        android:layout_below="@+id/radioButton"
+        android:layout_alignRight="@+id/imageView2"
+        android:layout_marginRight="58dp" />
 
 </RelativeLayout>
+
+
+
