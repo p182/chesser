@@ -2,6 +2,7 @@ package com.saymedia.chessgame;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -27,6 +28,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
     }
 
+    /** Saves a game state to the database. */
     public void saveGame(String gameName){
 
         String piecesCoordinates = Game.getWPCIDs() +","+ Game.getBPCIDs();
@@ -49,6 +51,49 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
                 values);
 
         System.out.println(newRowId);
+
+    }
+
+    /** Loads a game state fro, the database and displays it. */
+    public void loadGame(){
+        // Gets the data repository in read mode
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // select game_name from Games
+        // SELECT game_name, game_pieces_placement FROM Games ORDER BY game_name ASC
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                FeedReaderContract.FeedEntry.GAME_NAME,
+                FeedReaderContract.FeedEntry.GAME_PIECES_PLACEMENT,
+        };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = FeedReaderContract.FeedEntry.GAME_NAME + " ASC";
+
+        Cursor c = db.query(
+                FeedReaderContract.FeedEntry.TABLE_NAME,    // The table to query
+                projection,                                 // The columns to return
+                null,                                       // The columns for the WHERE clause
+                null,                                       // The values for the WHERE clause
+                null,                                       // don't group the rows
+                null,                                       // don't filter by row groups
+                sortOrder                                   // The sort order
+        );
+
+        c.moveToFirst();
+
+//        String gameNames = c.getString( c.getColumnIndexOrThrow(FeedReaderContract.FeedEntry._ID) );
+        while (!c.isAfterLast()) {
+            String gameName = c.getString(0);
+
+//            System.out.println("cursor: " + c.toString());
+            System.out.println("gameName: " + gameName);
+
+            c.move(1);
+
+        }
 
     }
 

@@ -526,7 +526,7 @@ public class Game extends ActionBarActivity {
                 .setView(layout)
                 .show();
 
-
+        mDbHelper.loadGame();
 
         final ListView listview = (ListView) findViewById(R.id.entries);
 
@@ -536,7 +536,11 @@ public class Game extends ActionBarActivity {
 
                     list.add("a game");
 
-        final ArrayAdapter adapter = new ArrayAdapter(activity, android.R.layout.simple_list_item_1, list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, list);
+
+        System.out.println(list);
+        System.out.println(adapter);
+/*
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -544,7 +548,7 @@ public class Game extends ActionBarActivity {
 //                itemOnClick(position);
             }
         });
-
+*/
 
 /*
         public  void itemOnClick(int i){
