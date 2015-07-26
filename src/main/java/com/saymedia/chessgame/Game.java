@@ -396,10 +396,9 @@ public class Game extends ActionBarActivity {
         pressed.setLayoutParams(u.getPlaceParams(s.x , s.y));
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
-        for(int id=100; id<6700; id+=100){
+        for(int id=100; id<6700; id+=100) {
             rl.removeView(findViewById(id));
         }
-
 
         removeAponnent();
 /*
@@ -458,7 +457,7 @@ public class Game extends ActionBarActivity {
         final Activity activity = this;
 
         final View layout = View.inflate(this, R.layout.load_dialog, null);
-        new AlertDialog.Builder(activity).setTitle("Load Game").setView(layout).show();
+        final AlertDialog dialog = new AlertDialog.Builder(activity).setTitle("Load Game").setView(layout).show();
 
         final ListView listview = (ListView) layout.findViewById(R.id.entries);
 
@@ -475,7 +474,9 @@ public class Game extends ActionBarActivity {
             public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
                 String gameSate = mDbHelper.getGameState(position);
                 NewState state = new NewState(gameSate, activity);
+
                 state.creatNewState();
+                dialog.dismiss();
             }
         });
 

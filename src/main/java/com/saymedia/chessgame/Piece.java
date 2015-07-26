@@ -65,7 +65,7 @@ public class Piece extends ImageView{
         boolean o = Game.checkCoordinate(S)[1];
         if(p&&o){addDestination(x, y+Game.color);}
 
-        if(y==2 || y==7){
+        if((y==2 || y==7)&& p && o){
             S = x+""+(y+2*Game.color);
             p = Game.checkCoordinate(S)[0];
             o = Game.checkCoordinate(S)[1];

@@ -25,6 +25,9 @@ public class NewState{
 
     /** Moves a piece by its cId. */
     void movePiece(String cId){
+
+        RelativeLayout rl = (RelativeLayout)activity.findViewById(R.id.fragment);
+
         String[] cIdArray = cId.split(":");
 
         int x = cIdArray[0].charAt(0) - 48;
@@ -32,15 +35,16 @@ public class NewState{
 
         Piece piece = u.findPieceById(Integer.parseInt(cIdArray[1]));
 
+        // To be able to load a game from a game where pieces have been removed.
+        rl.removeView(piece);
+        rl.addView(piece);
+
 //        Game.
 
         System.out.println(piece);
         piece.x = x;
         piece.y = y;
         if(x==0&&y==0){
-
-            RelativeLayout rl = (RelativeLayout)activity.findViewById(R.id.fragment);
-            rl.removeView(piece);
         }
         else {
             piece.setLayoutParams(u.getPlaceParams(x, y));
