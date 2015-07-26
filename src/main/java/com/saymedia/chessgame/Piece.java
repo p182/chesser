@@ -9,24 +9,26 @@ import android.widget.ImageView;
  * Created by SayMedia on 21/06/2015.
  */
 public class Piece extends ImageView{
-    public Piece(Context c, int X, int Y, String pname, int id){
+    public Piece(Context c, int X, int Y, int id){
         super(c);
 
-        switch (pname){
+        /** Set the image of the piece by its id. */
+        switch (id){
+            case 19: case 22: this.setImageResource(R.drawable.bbishop); break;
+            case 21: this.setImageResource(R.drawable.bking); break;
+            case 18: case 23: this.setImageResource(R.drawable.bknight); break;
+            case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32:
+                this.setImageResource(R.drawable.bpawn); break;
+            case 20: this.setImageResource(R.drawable.bqueen); break;
+            case 17: case 24: this.setImageResource(R.drawable.brook); break;
 
-            case "bbishop": this.setImageResource(R.drawable.bbishop); break;
-            case "bking": this.setImageResource(R.drawable.bking); break;
-            case "bknight": this.setImageResource(R.drawable.bknight); break;
-            case "bpawn": this.setImageResource(R.drawable.bpawn); break;
-            case "bqueen": this.setImageResource(R.drawable.bqueen); break;
-            case "brook": this.setImageResource(R.drawable.brook); break;
-
-            case "wbishop": this.setImageResource(R.drawable.wbishop); break;
-            case "wking": this.setImageResource(R.drawable.wking); break;
-            case "wknight": this.setImageResource(R.drawable.wknight); break;
-            case "wpawn": this.setImageResource(R.drawable.wpawn); break;
-            case "wqueen": this.setImageResource(R.drawable.wqueen); break;
-            case "wrook": this.setImageResource(R.drawable.wrook); break;
+            case 3: case 6: this.setImageResource(R.drawable.wbishop); break;
+            case 5: this.setImageResource(R.drawable.wking); break;
+            case 2: case 7: this.setImageResource(R.drawable.wknight); break;
+            case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16:
+                this.setImageResource(R.drawable.wpawn); break;
+            case 4: this.setImageResource(R.drawable.wqueen); break;
+            case 1: case 8: this.setImageResource(R.drawable.wrook); break;
         }
 
         this.setVisibility(View.VISIBLE);

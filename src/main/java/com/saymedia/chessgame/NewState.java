@@ -4,10 +4,11 @@ import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Vibrator;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 /**
- * Created by SayMedia on 13/07/2015.
+ * Helps generate a new state.
  */
 public class NewState{
     String s;
@@ -22,6 +23,7 @@ public class NewState{
         System.out.println(u);
     }
 
+    /** Moves a piece by its cId. */
     void movePiece(String cId){
         String[] cIdArray = cId.split(":");
 
@@ -29,6 +31,8 @@ public class NewState{
         int y = cIdArray[0].charAt(1) - 48;
 
         Piece piece = u.findPieceById(Integer.parseInt(cIdArray[1]));
+
+//        Game.
 
         System.out.println(piece);
         piece.x = x;
@@ -53,16 +57,66 @@ public class NewState{
         String[] array = s.split(",");
 
         System.out.println(array[0]);
-//        String[] warray = array[0].split(",");
-//        String[] barray = array[1].split(",");
+
         for (int i = 0; i < array.length; i++) {
 
             System.out.println(array[i]);
 
             movePiece(array[i]);
         }
-//        for (int i = 0; i < barray.length; i++) {
-//            movePiece(barray[i-1]);
-//        }
     }
+
+/*
+     void createPiece(int x, int y, int id){
+
+        RelativeLayout rl = (RelativeLayout)activity.findViewById(R.id.fragment);
+        Piece p = new Piece(activity.getApplicationContext(), x, y, id);
+
+        p.setOnClickListener(new Piece.OnClickListener() {
+            public void onClick(View v) {
+                Game.piecesOnClick(v);
+            }
+        });
+        p.setLayoutParams(u.getPlaceParams(x, y));
+        rl.addView(p);
+
+
+        switch (id){
+            case 1: wr1 = p; break;
+            case 2: wn1 = p; break;
+            case 3: wb1 = p; break;
+            case 4: wq = p; break;
+            case 5: wk = p; break;
+            case 6: wb2 = p; break;
+            case 7: wn2 = p; break;
+            case 8: wr2 = p; break;
+            case 9: wp1 = p; break;
+            case 10: wp2 = p; break;
+            case 11: wp3 = p; break;
+            case 12: wp4 = p; break;
+            case 13: wp5 = p; break;
+            case 14: wp6 = p; break;
+            case 15: wp7 = p; break;
+            case 16: wp8 = p; break;
+
+            case 17: br1 = p; break;
+            case 18: bn1 = p; break;
+            case 19: bb1 = p; break;
+            case 20: bq = p; break;
+            case 21: bk = p; break;
+            case 22: bb2 = p; break;
+            case 23: bn2 = p; break;
+            case 24: br2 = p; break;
+            case 25: bp1 = p; break;
+            case 26: bp2 = p; break;
+            case 27: bp3 = p; break;
+            case 28: bp4 = p; break;
+            case 29: bp5 = p; break;
+            case 30: bp6 = p; break;
+            case 31: bp7 = p; break;
+            case 32: bp8 = p; break;
+        }
+    }
+*/
+
 }

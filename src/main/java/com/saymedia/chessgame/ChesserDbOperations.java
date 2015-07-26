@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 /**
  * Created by SayMedia on 19/07/2015.
  */
@@ -54,8 +56,8 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
     }
 
-    /** Loads a game state fro, the database and displays it. */
-    public void loadGame(){
+    /** Returns a list of all game names. */
+    public ArrayList getGameNames(){
         // Gets the data repository in read mode
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -83,19 +85,59 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         );
 
         c.moveToFirst();
+        final ArrayList gameNames = new ArrayList();
 
 //        String gameNames = c.getString( c.getColumnIndexOrThrow(FeedReaderContract.FeedEntry._ID) );
         while (!c.isAfterLast()) {
-            String gameName = c.getString(0);
+            gameNames.add(c.getString(0));
 
 //            System.out.println("cursor: " + c.toString());
-            System.out.println("gameName: " + gameName);
+            System.out.println("gameName: " + gameNames);
 
             c.move(1);
 
         }
 
+        return gameNames;
+
     }
+
+    /** Returns a specific game state. */
+    public String getGameState(int i){
+        // Gets the data repository in read mode
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // select game_name from Games
+        // SELECT game_name, game_pieces_placement FROM Games ORDER BY game_name ASC
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                FeedReaderContract.FeedEntry.GAME_NAME,
+                FeedReaderContract.FeedEntry.GAME_PIECES_PLACEMENT,
+        };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder = FeedReaderContract.FeedEntry.GAME_NAME + " ASC";
+
+        Cursor c = db.query(
+                FeedReaderContract.FeedEntry.TABLE_NAME,    // The table to query
+                projection,                                 // The columns to return
+                null,                                       // The columns for the WHERE clause
+                null,                                       // The values for the WHERE clause
+                null,                                       // don't group the rows
+                null,                                       // don't filter by row groups
+                sortOrder                                   // The sort order
+        );
+
+        c.moveToPosition(i);
+
+        String gameState = c.getString(1);
+
+        return gameState;
+
+    }
+
 
 /*
     // Gets the data repository in write mode

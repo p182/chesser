@@ -38,11 +38,12 @@ public class Game extends ActionBarActivity {
         ConnectedThread tmp = new ConnectedThread(socket);
         connectThread=tmp;
         connectThread.start();
+        IncomeListenerThread.start();
 
         setupPieces();
 
-        if(color==1){ myTurn=true; IncomeListenerThread.start();}
-        else{ myTurn=false; IncomeListenerThread.start();}
+        if(color==1){ myTurn=true; }
+        else{ myTurn=false; }
     }
 
     @Override
@@ -199,59 +200,32 @@ public class Game extends ActionBarActivity {
         p.bringToFront();
     }
 
+
     public void setupPieces(){
-        // If the player is white
-//        if(color==1) {
-            creatPiece("wrook", 1, 1, 1);
-            creatPiece("wknight", 2, 1, 2);
-            creatPiece("wbishop", 3, 1, 3);
-            creatPiece("wqueen", 4, 1, 4);
-            creatPiece("wking", 5, 1, 5);
-            creatPiece("wbishop", 6, 1, 6);
-            creatPiece("wknight", 7, 1, 7);
-            creatPiece("wrook", 8, 1, 8);
+            creatPiece(1, 1, 1);
+            creatPiece(2, 1, 2);
+            creatPiece(3, 1, 3);
+            creatPiece(4, 1, 4);
+            creatPiece(5, 1, 5);
+            creatPiece(6, 1, 6);
+            creatPiece(7, 1, 7);
+            creatPiece(8, 1, 8);
             for (int i = 1; i < 9; i++) {
-                creatPiece("wpawn", i, 2, (i + 8));
+                creatPiece(i, 2, (i + 8));
             }
-            creatPiece("brook", 1, 8, 17);
-            creatPiece("bknight", 2, 8, 18);
-            creatPiece("bbishop", 3, 8, 19);
-            creatPiece("bqueen", 4, 8, 20);
-            creatPiece("bking", 5, 8, 21);
-            creatPiece("bbishop", 6, 8, 22);
-            creatPiece("bknight", 7, 8, 23);
-            creatPiece("brook", 8, 8, 24);
+            creatPiece(1, 8, 17);
+            creatPiece(2, 8, 18);
+            creatPiece(3, 8, 19);
+            creatPiece(4, 8, 20);
+            creatPiece(5, 8, 21);
+            creatPiece(6, 8, 22);
+            creatPiece(7, 8, 23);
+            creatPiece(8, 8, 24);
             for (int i = 1; i < 9; i++) {
-                creatPiece("bpawn", i, 7, (i + 24));
+                creatPiece(i, 7, (i + 24));
             }
-//        }
-/*        // If the player is black
-        else {
-            creatPiece("brook", 1, 8, 1);
-            creatPiece("bknight", 2, 8, 2);
-            creatPiece("bbishop", 3, 8, 3);
-            creatPiece("bqueen", 4, 8, 4);
-            creatPiece("bking", 5, 8, 5);
-            creatPiece("bbishop", 6, 8, 6);
-            creatPiece("bknight", 7, 8, 7);
-            creatPiece("brook", 8, 8, 8);
-            for (int i = 1; i < 9; i++) {
-                creatPiece("bpawn", i, 7, (i + 8));
-            }
-            creatPiece("wrook", 1, 1, 17);
-            creatPiece("wknight", 2, 1, 18);
-            creatPiece("wbishop", 3, 1, 19);
-            creatPiece("wqueen", 4, 1, 20);
-            creatPiece("wking", 5, 1, 21);
-            creatPiece("wbishop", 6, 1, 22);
-            creatPiece("wknight", 7, 1, 23);
-            creatPiece("wrook", 8, 1, 24);
-            for (int i = 1; i < 9; i++) {
-                creatPiece("wpawn", i, 2, (i + 24));
-            }
-        }
-*/
     }
+
 
     public void creatSelectedSquare(int x, int y, int id){
 
@@ -271,10 +245,11 @@ public class Game extends ActionBarActivity {
         rl.addView(image);
     }
 
-    public void creatPiece(String pname, int x, int y, int id){
+
+    public void creatPiece(int x, int y, int id){
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
-        Piece p = new Piece(getApplicationContext(), x, y, pname, id);
+        Piece p = new Piece(getApplicationContext(), x, y, id);
 
         p.setOnClickListener(new Piece.OnClickListener() {
             public void onClick(View v) {
@@ -284,88 +259,49 @@ public class Game extends ActionBarActivity {
         p.setLayoutParams(u.getPlaceParams(x, y));
         rl.addView(p);
 
-        // If the player is white
-//        if(color==1) {
-            switch (id){
-                case 1: wr1 = p; break;
-                case 2: wn1 = p; break;
-                case 3: wb1 = p; break;
-                case 4: wq = p; break;
-                case 5: wk = p; break;
-                case 6: wb2 = p; break;
-                case 7: wn2 = p; break;
-                case 8: wr2 = p; break;
-                case 9: wp1 = p; break;
-                case 10: wp2 = p; break;
-                case 11: wp3 = p; break;
-                case 12: wp4 = p; break;
-                case 13: wp5 = p; break;
-                case 14: wp6 = p; break;
-                case 15: wp7 = p; break;
-                case 16: wp8 = p; break;
 
-                case 17: br1 = p; break;
-                case 18: bn1 = p; break;
-                case 19: bb1 = p; break;
-                case 20: bq = p; break;
-                case 21: bk = p; break;
-                case 22: bb2 = p; break;
-                case 23: bn2 = p; break;
-                case 24: br2 = p; break;
-                case 25: bp1 = p; break;
-                case 26: bp2 = p; break;
-                case 27: bp3 = p; break;
-                case 28: bp4 = p; break;
-                case 29: bp5 = p; break;
-                case 30: bp6 = p; break;
-                case 31: bp7 = p; break;
-                case 32: bp8 = p; break;
-            }
-//        }
-/*        // If the player is black
-        else {
-            switch (id){
-                case 1: br1 = p; break;
-                case 2: bn1 = p; break;
-                case 3: bb1 = p; break;
-                case 4: bq = p; break;
-                case 5: bk = p; break;
-                case 6: bb2 = p; break;
-                case 7: bn2 = p; break;
-                case 8: br2 = p; break;
-                case 9: bp1 = p; break;
-                case 10: bp2 = p; break;
-                case 11: bp3 = p; break;
-                case 12: bp4 = p; break;
-                case 13: bp5 = p; break;
-                case 14: bp6 = p; break;
-                case 15: bp7 = p; break;
-                case 16: bp8 = p; break;
+        switch (id){
+        case 1: wr1 = p; break;
+        case 2: wn1 = p; break;
+        case 3: wb1 = p; break;
+        case 4: wq = p; break;
+        case 5: wk = p; break;
+        case 6: wb2 = p; break;
+        case 7: wn2 = p; break;
+        case 8: wr2 = p; break;
+        case 9: wp1 = p; break;
+        case 10: wp2 = p; break;
+        case 11: wp3 = p; break;
+        case 12: wp4 = p; break;
+        case 13: wp5 = p; break;
+        case 14: wp6 = p; break;
+        case 15: wp7 = p; break;
+        case 16: wp8 = p; break;
 
-                case 17: wr1 = p; break;
-                case 18: wn1 = p; break;
-                case 19: wb1 = p; break;
-                case 20: wq = p; break;
-                case 21: wk = p; break;
-                case 22: wb2 = p; break;
-                case 23: wn2 = p; break;
-                case 24: wr2 = p; break;
-                case 25: wp1 = p; break;
-                case 26: wp2 = p; break;
-                case 27: wp3 = p; break;
-                case 28: wp4 = p; break;
-                case 29: wp5 = p; break;
-                case 30: wp6 = p; break;
-                 case 31: wp7 = p; break;
-                case 32: wp8 = p; break;
-            }
+        case 17: br1 = p; break;
+        case 18: bn1 = p; break;
+        case 19: bb1 = p; break;
+        case 20: bq = p; break;
+        case 21: bk = p; break;
+        case 22: bb2 = p; break;
+        case 23: bn2 = p; break;
+        case 24: br2 = p; break;
+        case 25: bp1 = p; break;
+        case 26: bp2 = p; break;
+        case 27: bp3 = p; break;
+        case 28: bp4 = p; break;
+        case 29: bp5 = p; break;
+        case 30: bp6 = p; break;
+        case 31: bp7 = p; break;
+        case 32: bp8 = p; break;
         }
-*/
     }
+
 
     public void backButton(View v){
         startActivity(new Intent("first.activity"));
     }
+
 
     public void piecesOnClick(View v){
         if(myTurn) {
@@ -520,61 +456,34 @@ public class Game extends ActionBarActivity {
     /** Loads  a chosen game from the database. */
     public void loadGame(MenuItem item){
         final Activity activity = this;
+
         final View layout = View.inflate(this, R.layout.load_dialog, null);
-        new AlertDialog.Builder(activity)
-                .setTitle("Load Game")
-                .setView(layout)
-                .show();
+        new AlertDialog.Builder(activity).setTitle("Load Game").setView(layout).show();
 
-        mDbHelper.loadGame();
+        final ListView listview = (ListView) layout.findViewById(R.id.entries);
 
-        final ListView listview = (ListView) findViewById(R.id.entries);
-
-
-
-        final ArrayList<String> list = new ArrayList<>();
-
-                    list.add("a game");
+        final ArrayList<String> list = mDbHelper.getGameNames();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, list);
 
         System.out.println(list);
         System.out.println(adapter);
-/*
+
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new ListView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
-//                itemOnClick(position);
+                String gameSate = mDbHelper.getGameState(position);
+                NewState state = new NewState(gameSate, activity);
+                state.creatNewState();
             }
         });
-*/
 
-/*
-        public  void itemOnClick(int i){
-            System.out.println(i);
+//        public void itemOnClick(int i){
 
-            BluetoothDevice[] btarray = new BluetoothDevice[pairedDevices.size()];
 
-            if (pairedDevices.size() > 0) {
-                int in=0;
-                for (BluetoothDevice device : pairedDevices) {
-                    if (device.getBluetoothClass().getMajorDeviceClass() == BluetoothClass.Device.Major.PHONE) {
-                        btarray[in] = device;
-                        in++;
-                    }
-                }
-            }
+//        }
 
-            BluetoothDevice device = btarray[i];
-
-            ConnectThread connectThread = new ConnectThread(device,this);
-            connectThread.start();
-
-            System.out.println(device.getName());
-
-        }
-*/
 
     }
 }
