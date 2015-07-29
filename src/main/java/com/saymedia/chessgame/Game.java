@@ -15,8 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -44,6 +46,11 @@ public class Game extends ActionBarActivity {
 
         if(color==1){ myTurn=true; }
         else{ myTurn=false; }
+
+        CheckBox c = (CheckBox)findViewById(R.id.vibrateCB);
+        c.setChecked(true);
+        c = (CheckBox)findViewById(R.id.soundCB);
+        c.setChecked(true);
     }
 
     @Override
@@ -72,9 +79,11 @@ public class Game extends ActionBarActivity {
 
     public static int color = 1;
 
+    public static Boolean kingInDanger;
+
     public static Boolean myTurn;
-    public static Boolean vibrate;
-    public static Boolean soundEfect;
+    public static Boolean vibrate = true;
+    public static Boolean sound = true;;
 
     public static Piece pressed;
 
@@ -319,9 +328,10 @@ public class Game extends ActionBarActivity {
 
             String c;
 
-
+/*
             // If the player is white
             if(color==1) {
+
                 if (id > 8 && id < 17) {
                     c = p.pawnMoves();
                     selectSquares(c, p);
@@ -374,12 +384,13 @@ public class Game extends ActionBarActivity {
                     selectSquares(c, p);
                 }
             }
-
-
-//        System.out.println(Piece.s);
+*/
+            if((color==1&&id>0&&id<17)||(color==-1&&id>16&&id<33)) {
+                c = p.moves();
+                selectSquares(c, p);
+            }
 
             Piece.s = "";
-
         }
     }
 
@@ -392,7 +403,6 @@ public class Game extends ActionBarActivity {
         pressed.x = s.x;
         pressed.y = s.y;
 
-
         pressed.setLayoutParams(u.getPlaceParams(s.x , s.y));
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
@@ -401,18 +411,13 @@ public class Game extends ActionBarActivity {
         }
 
         removeAponnent();
-/*
-        String wc = wr1.cId()+","+wr2.cId()+","+wn1.cId()+","+wn2.cId()+","+wb1.cId()+","+wb2.cId()+","+wk.cId()+","+wq.cId()+
-                ","+wp1.cId()+","+wp2.cId()+","+wp3.cId()+","+wp4.cId()+","+wp5.cId()+","+wp6.cId()+","+wp7.cId()+","+wp8.cId();
 
-        String bc = br1.cId()+","+br2.cId()+","+bn1.cId()+","+bn2.cId()+","+bb1.cId()+","+bb2.cId()+","+bk.cId()+","+bq.cId()+
-                ","+bp1.cId()+","+bp2.cId()+","+bp3.cId()+","+bp4.cId()+","+bp5.cId()+","+bp6.cId()+","+bp7.cId()+","+bp8.cId();
-*/
-        String c = getWPCIDs() +","+ getBPCIDs();
+        String Coor = getWPCIDs() +","+ getBPCIDs();
 
-        connectThread.stringWrite(c);
-        System.out.println("sending: " + c);
-//        IncomeListenerThread.start();
+        String message = Coor + ";" + pressed.c()+":"+pressed.getId();
+
+        connectThread.stringWrite(message);
+        System.out.println("sending: " + message);
 
     }
 
@@ -486,5 +491,19 @@ public class Game extends ActionBarActivity {
 //        }
 
 
+    }
+
+    /** Disable enable vibration in game. */
+    public void setVibrate(View v){
+        CheckBox vibrateRB = (CheckBox)v;
+
+        boolean checked = vibrateRB.isChecked();
+
+        if (checked){
+            vibrate = true;
+        }
+        else {
+            vibrate = false;
+        }
     }
 }

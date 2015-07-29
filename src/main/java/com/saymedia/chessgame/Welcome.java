@@ -20,7 +20,7 @@ public class Welcome extends ActionBarActivity {
         System.out.println("onCreate completed");
     }
 
-    public void buttonOnClick(View v){ startActivity(new Intent("chess.game")); }
+//    public void buttonOnClick(View v){ startActivity(new Intent("chess.game")); }
 
 
 
