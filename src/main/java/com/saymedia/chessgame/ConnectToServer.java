@@ -61,7 +61,7 @@ public class ConnectToServer extends ActionBarActivity {
     }
 
     public  void itemOnClick(int i){
-        System.out.println(i);
+//        System.out.println(i);
 
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
@@ -83,7 +83,7 @@ public class ConnectToServer extends ActionBarActivity {
         ConnectThread connectThread = new ConnectThread(device,this);
         connectThread.start();
 
-        System.out.println(device.getName());
+//        System.out.println(device.getName());
 
     }
 

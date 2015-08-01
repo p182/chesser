@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
-
+/** Activate the listener on ConnectThread. */
 public class OpenServer extends ActionBarActivity {
 
     public static BluetoothSocket socket;
@@ -23,19 +23,12 @@ public class OpenServer extends ActionBarActivity {
     }
 
 
-    AcceptThread acceptThread = new AcceptThread(this);
 
     public void startServer(View v) {
+        AcceptThread acceptThread = new AcceptThread(this);
+        System.out.println("Starting");
         acceptThread.start();
         TextView textView = (TextView) findViewById(R.id.textView);
         textView.setVisibility(View.VISIBLE);
-    }
-
-
-
-    public void sendMessage(View v) {
-        ConnectedThread ct = new ConnectedThread(socket);
-        String s = "Hello :_: hellO";
-        ct.stringWrite(s);
     }
 }

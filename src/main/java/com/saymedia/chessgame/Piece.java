@@ -1,10 +1,8 @@
 package com.saymedia.chessgame;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Switch;
 
 /**
  * Created by SayMedia on 21/06/2015.
@@ -47,70 +45,78 @@ public class Piece extends ImageView{
       /** Return a string of coordinates:ID of the piece. */
     public String cId(){ String s = c()+":"+getId(); return s; }
 
-    public static String s = "";
+    String movesCoor = "";
 
     /** Adds safely a coordinate to the string. */
     void addDestination(int a, int b){
         if(a>0 && a<9 && b>0 && b<9){
-            if(s.equals("")){s = a+""+b;}
-            else {s =  s+","+a+""+b;}
+            if(movesCoor.equals("")){
+                movesCoor = a+""+b;}
+            else {
+                movesCoor =  movesCoor +","+a+""+b;}
         }
     }
 
     /** Return a string of all the coordinates a this piece can move to. */
     public String moves(){
+        String moves = "";
+        movesCoor ="";
+
         /** Get moves of the piece by its id. */
         switch (getId()){
-            case 19: case 22: return bishopMoves(-1);
-            case 21: return kingMoves(-1);
-            case 18: case 23: return knightMoves(-1);
+            // for black pieces
+            case 19: case 22: moves = bishopMoves(-1); break;
+            case 21: moves = kingMoves(-1); break;
+            case 18: case 23: moves = knightMoves(-1); break;
             case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32:
-                return pawnMoves(-1);
-            case 20: return queenMoves(-1);
-            case 17: case 24: return rookMoves(-1);
-
-            case 3: case 6: return bishopMoves(1);
-            case 5: return kingMoves(1);
-            case 2: case 7: return knightMoves(1);
+                moves = pawnMoves(-1); break;
+            case 20: moves = queenMoves(-1); break;
+            case 17: case 24: moves = rookMoves(-1); break;
+            // for white pieces
+            case 3: case 6: moves = bishopMoves(1); break;
+            case 5: moves = kingMoves(1); break;
+            case 2: case 7: moves = knightMoves(1); break;
             case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16:
-                return pawnMoves(1);
-            case 4: return queenMoves(1);
-            case 1: case 8: return rookMoves(1);
-            default: return null;
+                moves = pawnMoves(1); break;
+            case 4: moves = queenMoves(1); break;
+            case 1: case 8: moves = rookMoves(1); break;
         }
+
+        return moves;
     }
 
     /** Returns a string array  */
     public String pawnMoves(int pieceColor){
 
         String S = x+""+(y+pieceColor);
-        boolean p = Game.checkCoordinate(S)[0];
-        boolean o = Game.checkCoordinate(S)[1];
+        boolean p = Game.checkCoordinate(S, pieceColor)[0];
+        boolean o = Game.checkCoordinate(S, pieceColor)[1];
         if(p&&o){addDestination(x, y+pieceColor);}
 
         if((y==2 || y==7)&& p && o){
             S = x+""+(y+2*pieceColor);
-            p = Game.checkCoordinate(S)[0];
-            o = Game.checkCoordinate(S)[1];
+            p = Game.checkCoordinate(S, pieceColor)[0];
+            o = Game.checkCoordinate(S, pieceColor)[1];
             if(p&&o){addDestination(x, y+2*pieceColor);}
         }
 
         S = x-pieceColor+""+(y+pieceColor);
-        o = Game.checkCoordinate(S)[1];
+        o = Game.checkCoordinate(S, pieceColor)[1];
         if(!o){addDestination(x-pieceColor, y+pieceColor);}
         S = x+pieceColor+""+(y+pieceColor);
-        o = Game.checkCoordinate(S)[1];
+        o = Game.checkCoordinate(S, pieceColor)[1];
         if(!o){addDestination(x+pieceColor, y+pieceColor);}
 
-        return s;
+//        System.out.println(movesCoor);
+        return movesCoor;
     }
 
     /** Returns a string array of all the coordinates a rook can move to. */
     public String rookMoves(int pieceColor){
         for(int i = y+pieceColor; 0<i&&i<9; i=i+pieceColor) {
             String S = x + "" + i;
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(x, i);
@@ -118,8 +124,8 @@ public class Piece extends ImageView{
         }
         for(int i = y-pieceColor; 0<i&&i<9; i=i-pieceColor) {
             String S = x + "" + i;
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(x, i);
@@ -128,8 +134,8 @@ public class Piece extends ImageView{
 
         for(int i = x+pieceColor; 0<i&&i<9; i=i+pieceColor){
             String S = i+""+y;
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(i, y);
@@ -137,52 +143,52 @@ public class Piece extends ImageView{
         }
         for(int i = x-pieceColor; 0<i&&i<9; i=i-pieceColor){
             String S = i+""+y;
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(i, y);
             if(!o){break;}
         }
 
-        return s;
+        return movesCoor;
     }
 
     /** Returns a string array of all the coordinates a knight can move to. */
     public String knightMoves(int pieceColor){
         String S = x-pieceColor+""+(y+2*pieceColor);
-        boolean p = Game.checkCoordinate(S)[0];
+        boolean p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x-pieceColor, y+2*pieceColor);}
 
         S = x+pieceColor+""+(y+2*pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x+pieceColor, y+2*pieceColor);}
 
         S = x-pieceColor+""+(y-2*pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x-pieceColor, y-2*pieceColor);}
 
         S = x+pieceColor+""+(y-2*pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x+pieceColor, y-2*pieceColor);}
 
         S = x-2*pieceColor+""+(y+pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x-2*pieceColor, y+pieceColor);}
 
         S = x+2*pieceColor+""+(y+pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x+2*pieceColor, y+pieceColor);}
 
         S = x-2*pieceColor+""+(y-pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x-2*pieceColor, y-pieceColor);}
 
         S = x+2*pieceColor+""+(y-pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x+2*pieceColor, y-pieceColor);}
 
-        return s;
+        return movesCoor;
     }
 
     /** Returns a string array of all the coordinates a bishop can move to. */
@@ -191,8 +197,8 @@ public class Piece extends ImageView{
         int n = y -x;
         for(int i = x+pieceColor; 0<i&&i<9; i=i+pieceColor) {
             String S = i + "" + (i+n);
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(i,i+n);
@@ -200,8 +206,8 @@ public class Piece extends ImageView{
         }
         for(int i = x-pieceColor; 0<i&&i<9; i=i-pieceColor) {
             String S = i + "" + (i+n);
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(i,i+n);
@@ -211,8 +217,8 @@ public class Piece extends ImageView{
         n = y +x;
         for(int i = x+pieceColor; 0<i&&i<9; i=i+pieceColor) {
             String S = i + "" + (-i+n);
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(i,-i+n);
@@ -220,60 +226,60 @@ public class Piece extends ImageView{
         }
         for(int i = x-pieceColor; 0<i&&i<9; i=i-pieceColor) {
             String S = i + "" + (-i+n);
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(i,-i+n);
             if(!o){break;}
         }
 
-        return s;
+        return movesCoor;
     }
 
     /** Returns a string array of all the coordinates a king can move to. */
     public String kingMoves(int pieceColor){
         String S = x+pieceColor+""+y;
-        boolean p = Game.checkCoordinate(S)[0];
+        boolean p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x+pieceColor, y);}
 
         S = x-pieceColor+""+y;
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x-pieceColor, y);}
 
         S = x+""+(y+pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x, y+pieceColor);}
 
         S = x+""+(y-pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x, y-pieceColor);}
 
         S = x+pieceColor+""+(y+pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x+pieceColor, y+pieceColor);}
 
         S = x+pieceColor+""+(y-pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x+pieceColor, y-pieceColor);}
 
         S = x-pieceColor+""+(y+pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x-pieceColor, y+pieceColor);}
 
         S = x-pieceColor+""+(y+pieceColor);
-        p = Game.checkCoordinate(S)[0];
+        p = Game.checkCoordinate(S, pieceColor)[0];
         if(p){addDestination(x-pieceColor, y-pieceColor);}
 
-        return s;
+        return movesCoor;
     }
 
     /** Returns a string array of all the coordinates a queen can move to. */
     public String queenMoves(int pieceColor){
         for(int i = y+pieceColor; 0<i&&i<9; i=i+pieceColor) {
             String S = x + "" + i;
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(x, i);
@@ -281,8 +287,8 @@ public class Piece extends ImageView{
         }
         for(int i = y-pieceColor; 0<i&&i<9; i=i-pieceColor) {
             String S = x + "" + i;
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(x, i);
@@ -291,8 +297,8 @@ public class Piece extends ImageView{
 
         for(int i = x+pieceColor; 0<i&&i<9; i=i+pieceColor){
             String S = i+""+y;
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(i, y);
@@ -300,8 +306,8 @@ public class Piece extends ImageView{
         }
         for(int i = x-pieceColor; 0<i&&i<9; i=i-pieceColor){
             String S = i+""+y;
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(i, y);
@@ -312,8 +318,8 @@ public class Piece extends ImageView{
         int n = y -x;
         for(int i = x+pieceColor; 0<i&&i<9; i=i+pieceColor) {
             String S = i + "" + (i+n);
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(i,i+n);
@@ -321,8 +327,8 @@ public class Piece extends ImageView{
         }
         for(int i = x-pieceColor; 0<i&&i<9; i=i-pieceColor) {
             String S = i + "" + (i+n);
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(i,i+n);
@@ -332,8 +338,8 @@ public class Piece extends ImageView{
         n = y +x;
         for(int i = x+pieceColor; 0<i&&i<9; i=i+pieceColor) {
             String S = i + "" + (-i+n);
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(i,-i+n);
@@ -341,15 +347,15 @@ public class Piece extends ImageView{
         }
         for(int i = x-pieceColor; 0<i&&i<9; i=i-pieceColor) {
             String S = i + "" + (-i+n);
-            boolean p = Game.checkCoordinate(S)[0];
-            boolean o = Game.checkCoordinate(S)[1];
+            boolean p = Game.checkCoordinate(S, pieceColor)[0];
+            boolean o = Game.checkCoordinate(S, pieceColor)[1];
 
             if(!p){break;}
             addDestination(i,-i+n);
             if(!o){break;}
         }
 
-        return s;
+        return movesCoor;
     }
 
 

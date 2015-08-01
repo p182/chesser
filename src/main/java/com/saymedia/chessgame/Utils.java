@@ -32,9 +32,6 @@ public class Utils {
         int width = (int)(metrics.widthPixels/density);
         int height = (int)(metrics.heightPixels/density);
 
-        System.out.println(width+"      -----     "+height);
-
-
 
 //        double d = 36.9;
         double d =(((width-32)*348.35/386)/8);
@@ -170,5 +167,50 @@ public class Utils {
         if(id == Game.wp7.getId()){return Game.wp7;}
         if(id == Game.wp8.getId()){return Game.wp8;}
         else{return null;}
+    }
+
+    /** If king is in danger change Game.kingInDanger to true. */
+    public boolean checkIfKingIsInDanger(){
+
+        boolean b = false;
+
+        for (int i =1; i<33; i++){
+            Piece piece = findPieceById(i);
+//            System.out.println(piece.moves()+" : "+i);
+//            piece.movesCoor = "";
+
+            String[] cmoves = piece.moves().split(",");
+            for(String coor : cmoves){
+//                System.out.println(coor);
+                if((coor.equals(Game.wk.c())&&Game.color==1)||(coor.equals(Game.bk.c())&&Game.color==-1)){
+                    b = true;
+                    break;
+                }
+            }
+
+//          System.out.println(b);
+
+        }
+
+        return b;
+    }
+
+    /** If king is in danger change Game.opponentKingInDanger to true. */
+    public boolean checkIfOpponentKingIsInDanger(){
+
+        boolean b = false;
+
+        for (int i =1; i<33; i++){
+            Piece piece = findPieceById(i);
+            String[] cmoves = piece.moves().split(",");
+            for(String coor : cmoves){
+                if((coor.equals(Game.bk)&&Game.color==1)||(coor.equals(Game.wk)&&Game.color==-1)){
+                    b = true;
+                    break;
+                }
+            }
+        }
+
+        return b;
     }
 }

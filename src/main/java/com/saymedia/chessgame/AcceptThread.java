@@ -32,7 +32,7 @@ public class AcceptThread extends Thread {
         // because mmServerSocket is final
         BluetoothServerSocket tmp = null;
         try {
-            // MY_UUID is the app's UUID string, also used by the client code
+            // MY_UUID is the app'movesCoor UUID string, also used by the client code
             tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);
         } catch (IOException e) { }
         mmServerSocket = tmp;
@@ -62,8 +62,6 @@ public class AcceptThread extends Thread {
 
                         TextView textView2 = (TextView) activity.findViewById(R.id.textView2);
                         textView2.setVisibility(View.VISIBLE);
-                        Button button = (Button) activity.findViewById(R.id.button4);
-                        button.setVisibility(View.VISIBLE);
                     }
                 });
 

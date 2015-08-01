@@ -8,6 +8,8 @@ import android.os.Vibrator;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import java.lang.reflect.Array;
+
 /**
  * Helps generate a new state.
  */
@@ -19,9 +21,6 @@ public class NewState{
     public NewState(String string, Activity a){
         activity = a;
         s=string;
-
-        System.out.println(activity.getApplicationContext().getResources().getDisplayMetrics());
-        System.out.println(u);
     }
 
     /** Moves a piece by its cId. */
@@ -47,7 +46,6 @@ public class NewState{
         rl.removeView(piece);
         rl.addView(piece);
 
-        System.out.println(piece);
         piece.x = x;
         piece.y = y;
         if(x==0&&y==0){
@@ -61,7 +59,7 @@ public class NewState{
     void creatNewState(){
 
         u= new Utils(activity);
-        System.out.println(s);
+        System.out.println("movesCoor: " + s);
 
         String[] message = s.split(";");
 
@@ -79,9 +77,15 @@ public class NewState{
 
         for (int i = 0; i < array.length; i++) {
 
-            System.out.println(array[i]);
+//
 
             movePiece(array[i]);
+        }
+
+
+        if(u.checkIfKingIsInDanger()){
+            Game.kingInDanger=true;
+            System.out.println("KINH IN DANGERRR");
         }
 
 

@@ -3,6 +3,7 @@ package com.saymedia.chessgame;
 import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
+import android.widget.Button;
 
 /**
  * Created by SayMedia on 12/07/2015.
@@ -23,10 +24,17 @@ public class IncomeListenerThread extends Thread {
                     while (true) {
                         if (!s.equals(string)) {
                             Game.myTurn = true;
-                            System.out.println(s);
+//                            System.out.println(movesCoor);
                             activity.runOnUiThread(
                                new Runnable() {
                                 public void run() {
+
+                                    Button turnNotifier = (Button)activity.findViewById(R.id.turnNotifier);
+
+                                    turnNotifier.setText("Your Turn");
+                                    turnNotifier.setClickable(false);
+                                    turnNotifier.setEnabled(true);
+
                                     NewState state = new NewState(s, activity);
                                     state.creatNewState();
                                 }

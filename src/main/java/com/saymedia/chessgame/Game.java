@@ -2,12 +2,10 @@ package com.saymedia.chessgame;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothClass;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,14 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 
 public class Game extends ActionBarActivity {
@@ -44,8 +41,20 @@ public class Game extends ActionBarActivity {
 
         setupPieces();
 
-        if(color==1){ myTurn=true; }
-        else{ myTurn=false; }
+        Button turnNotifier = (Button)findViewById(R.id.turnNotifier);
+
+        if(color==1){
+            myTurn=true;
+            turnNotifier.setText("Your Turn");
+            turnNotifier.setClickable(false);
+            turnNotifier.setEnabled(true);
+        }
+        else{
+            myTurn=false;
+            turnNotifier.setText("Opponent's Turn");
+            turnNotifier.setClickable(false);
+            turnNotifier.setEnabled(false);
+        }
 
         CheckBox c = (CheckBox)findViewById(R.id.vibrateCB);
         c.setChecked(true);
@@ -80,12 +89,16 @@ public class Game extends ActionBarActivity {
     public static int color = 1;
 
     public static Boolean kingInDanger;
+    public static Boolean opponentKingInDanger;
 
     public static Boolean myTurn;
     public static Boolean vibrate = true;
-    public static Boolean sound = true;;
+    public static Boolean sound = true;
 
-    public static Piece pressed;
+    public static Piece pressedPiece;
+    public static Piece removedPiece;
+    public static int removedPieceX;
+    public static int removedPieceY;
 
     public static Piece wr1 , br1;
     public static Piece wr2 , br2;
@@ -119,15 +132,15 @@ public class Game extends ActionBarActivity {
                     wp1.c(), wp2.c(), wp3.c(), wp4.c(), wp5.c(), wp6.c(), wp7.c(), wp8.c()};
         }
 
-        String s = pressed.c();
+        String s = pressedPiece.c();
         for(int t=0; t<apponentc.length; t++){
             if (s.equals(apponentc[t])){
                 Piece p = u.findPieceByCoordinates(apponentc[t]);
-                System.out.println(p);
+                removedPieceX = p.x;
+                removedPieceY = p.y;
+                removedPiece = p;
 
-//                p.setImageResource(R.drawable.knight);
                 p.x = 0;
-                System.out.println(p);
                 p.y = 0;
                 RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
                 rl.removeView(p);
@@ -153,12 +166,12 @@ public class Game extends ActionBarActivity {
     }
 
     /** Returns an array of two booleans witch indicates if there is a Piece on the given coordinate. */
-    public static boolean[] checkCoordinate(String s){
+    public static boolean[] checkCoordinate(String s, int customColor){
         String[] playerCoordinates;
         String[] opponentCoordinates;
 
         // If the player is white
-        if(color==1) {
+        if(customColor==1) {
             playerCoordinates = new String[] {wr1.c(), wr2.c(), wn1.c(), wn2.c(), wb1.c(), wb2.c(), wk.c(), wq.c(),
                     wp1.c(), wp2.c(), wp3.c(), wp4.c(), wp5.c(), wp6.c(), wp7.c(), wp8.c()};
 
@@ -323,8 +336,8 @@ public class Game extends ActionBarActivity {
 
             Piece p = (Piece) v;
 
-            pressed = p;
-            int id = pressed.getId();
+            pressedPiece = p;
+            int id = pressedPiece.getId();
 
             String c;
 
@@ -390,34 +403,69 @@ public class Game extends ActionBarActivity {
                 selectSquares(c, p);
             }
 
-            Piece.s = "";
+//            Piece.movesCoor = "";
         }
     }
 
     public void selectedOnClick(View v){
-
-        myTurn=false;
+        Button turnNotifier = (Button)findViewById(R.id.turnNotifier);
 
         SelectedSquare s = (SelectedSquare)v;
 
-        pressed.x = s.x;
-        pressed.y = s.y;
+        final int tmpX = pressedPiece.x;
+        final int tmpY = pressedPiece.y;
 
-        pressed.setLayoutParams(u.getPlaceParams(s.x , s.y));
+        pressedPiece.x = s.x;
+        pressedPiece.y = s.y;
 
-        RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
-        for(int id=100; id<6700; id+=100) {
-            rl.removeView(findViewById(id));
-        }
-
+        pressedPiece.setLayoutParams(u.getPlaceParams(s.x, s.y));
         removeAponnent();
 
-        String Coor = getWPCIDs() +","+ getBPCIDs();
+        if(!u.checkIfKingIsInDanger()) {
 
-        String message = Coor + ";" + pressed.c()+":"+pressed.getId();
+            myTurn=false;
+            turnNotifier.setText("Opponent's Turn");
+            turnNotifier.setClickable(false);
+            turnNotifier.setEnabled(false);
 
-        connectThread.stringWrite(message);
-        System.out.println("sending: " + message);
+            RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
+            for (int id = 100; id < 6700; id += 100) {
+                rl.removeView(findViewById(id));
+            }
+
+
+            String Coor = getWPCIDs() + "," + getBPCIDs();
+
+            String message = Coor + ";";
+
+            connectThread.stringWrite(message);
+
+        }
+        else{
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    pressedPiece.x = tmpX;
+                    pressedPiece.y = tmpY;
+
+                    pressedPiece.setLayoutParams(u.getPlaceParams(tmpX, tmpY));
+
+                    if(removedPiece!=null) {
+                        removedPiece.x = removedPieceX;
+                        removedPiece.y = removedPieceY;
+
+                        RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
+                        rl.addView(removedPiece);
+
+                        removedPiece = null;
+                    }
+                }
+
+            }, 500); //delays
+        }
+
 
     }
 
@@ -469,9 +517,6 @@ public class Game extends ActionBarActivity {
         final ArrayList<String> list = mDbHelper.getGameNames();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, list);
-
-        System.out.println(list);
-        System.out.println(adapter);
 
         listview.setAdapter(adapter);
 
