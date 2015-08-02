@@ -9,7 +9,6 @@ import android.widget.RelativeLayout;
  */
 public class Utils {
     Activity activity;
-    int  color = Game.color;
 
     public Utils(Activity a){
         activity = a;
@@ -23,6 +22,7 @@ public class Utils {
     }
 
     public RelativeLayout.LayoutParams getPlaceParams(int x, int y){
+        int  color = Game.color;
 
         final DisplayMetrics metrics;
         DisplayMetrics _metrics = activity.getApplicationContext().getResources().getDisplayMetrics();
@@ -86,6 +86,7 @@ public class Utils {
 
     /** Get a Piece object by its coordinate String. */
     public Piece findPieceByCoordinates(String c){
+        int  color = Game.color;
         // If the player is white
         if(color==1) {
             // Black pieces

@@ -58,7 +58,28 @@ public class NewState{
         u= new Utils(activity);
         System.out.println("movesCoor: " + s);
 
-        String[] message = s.split(";");
+        String[] state = s.split(";");
+
+        if(state[1]!=null){
+            if(state[1].equals("white")){
+                Game.color = 1;
+            }
+            if(state[1].equals("black")){
+                Game.color = -1;
+            }
+        }
+
+        if(state[2]!=null){
+            if(state[2].equals("myTurn")){
+                Game.myTurn = true;
+            }
+            if(state[2].equals("opTurn")){
+                Game.myTurn = false;
+            }
+        }
+
+        System.out.println(Game.myTurn);
+        System.out.println(Game.color);
 
 //        System.out.println(array[0]);
 /*
@@ -70,31 +91,40 @@ public class NewState{
             final AlertDialog dialog = new AlertDialog.Builder(activity).setTitle("Error").setMessage("Opponent game not synchronized.").show();
         }
 */
-        String[] array = message[0].split(",");
+        String[] array = state[0].split(",");
 
         for (int i = 0; i < array.length; i++) {
-
-//
-
             movePiece(array[i]);
         }
 
-
-        if(u.myKingInCheck()){
-            // Player's king in check - show that is player's turn and that the king is in check.
-            Game.kingInCheck =true;
-            if(Game.color==1){
-                turnNotifier.setText(R.string.white_you_in_check);
-            }
-            else{
-                turnNotifier.setText(R.string.black_you_in_check);
+        if(Game.myTurn) {
+            if (u.myKingInCheck()) {
+                // Player's king in check - show that is player's turn and that the king is in check.
+                Game.kingInCheck = true;
+                if (Game.color == 1) {
+                    turnNotifier.setText(R.string.white_you_in_check);
+                } else {
+                    turnNotifier.setText(R.string.black_you_in_check);
+                }
+            } else {
+                // Player's king not in check - show that it is player's turn.
+                turnNotifier.setText(R.string.player_turn);
             }
         }
-        else{
-            // Player's king not in check - show that it is player's turn.
-            turnNotifier.setText(R.string.player_turn);
+        else {
+            // Notify opponent's turn and whether opponent is in check.
+            if (u.opponentKingInCheck()) {
+                Game.kingInCheck = true;
+                if (Game.color == 1) {
+                    turnNotifier.setText(R.string.black_opponent_in_check);
+                } else {
+                    turnNotifier.setText(R.string.white_opponent_in_check);
+                }
+            } else {
+                // Opponent not in check.
+                turnNotifier.setText(R.string.opponent_turn);
+            }
         }
-
 
     }
 }

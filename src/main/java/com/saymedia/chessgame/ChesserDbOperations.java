@@ -34,6 +34,22 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
     public void saveGame(String gameName){
 
         String piecesCoordinates = Game.getWPCIDs() +","+ Game.getBPCIDs();
+        String color;
+        if(Game.color==1){
+            color = "white";
+        }
+        else{
+            color = "black";
+        }
+        String turn;
+        if(Game.myTurn){
+            turn = "myTurn";
+        }
+        else{
+            turn = "opTurn";
+        }
+        String gameState = piecesCoordinates +";"+ color +";"+ turn;
+
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
         System.out.println(db.toString());
@@ -43,13 +59,13 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(FeedReaderContract.FeedEntry.GAME_NAME, gameName);
-        values.put(FeedReaderContract.FeedEntry.GAME_PIECES_PLACEMENT, piecesCoordinates);
+        values.put(FeedReaderContract.FeedEntry.GAME_STATE, gameState);
 
         // Insert the new row, returning the primary key value of the new row
         long newRowId;
         newRowId = db.insert(
                 FeedReaderContract.FeedEntry.TABLE_NAME,
-                FeedReaderContract.FeedEntry.GAME_PIECES_PLACEMENT,
+                FeedReaderContract.FeedEntry.GAME_STATE,
                 values);
 
         System.out.println(newRowId);
@@ -68,7 +84,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         // you will actually use after this query.
         String[] projection = {
                 FeedReaderContract.FeedEntry.GAME_NAME,
-                FeedReaderContract.FeedEntry.GAME_PIECES_PLACEMENT,
+                FeedReaderContract.FeedEntry.GAME_STATE,
         };
 
         // How you want the results sorted in the resulting Cursor
@@ -114,7 +130,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         // you will actually use after this query.
         String[] projection = {
                 FeedReaderContract.FeedEntry.GAME_NAME,
-                FeedReaderContract.FeedEntry.GAME_PIECES_PLACEMENT,
+                FeedReaderContract.FeedEntry.GAME_STATE,
         };
 
         // How you want the results sorted in the resulting Cursor
@@ -137,22 +153,4 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         return gameState;
 
     }
-
-
-/*
-    // Gets the data repository in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-// Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(FeedReaderContract.FeedEntry.GAME_NAME, id);
-        values.put(FeedReaderContract.FeedEntry.GAME_PIECES_PLACEMENT, title);
-
-// Insert the new row, returning the primary key value of the new row
-        long newRowId;
-        newRowId = db.insert(
-                FeedReaderContract.FeedEntry.TABLE_NAME,
-                FeedReaderContract.FeedEntry.GAME_PIECES_PLACEMENT,
-                values);
-*/
 }

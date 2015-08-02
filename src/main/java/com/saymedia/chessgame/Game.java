@@ -462,8 +462,8 @@ public class Game extends ActionBarActivity {
 
             // Prepare a new game state string and send it to opponent.
             String Coor = getWPCIDs() + "," + getBPCIDs();
-            String message = Coor + ";";
-            connectThread.stringWrite(message);
+            String state = Coor + ";" + null + ";" + null;
+            connectThread.stringWrite(state);
         }
         else{
             // King is checked, the piece will undo the move after delay.
@@ -522,7 +522,7 @@ public class Game extends ActionBarActivity {
                                 .show();
                     }
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton("Old game", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // do nothing
                     }

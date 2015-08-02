@@ -16,7 +16,7 @@ public final class FeedReaderContract {
         public static final String TABLE_NAME = "Games";
 //        public static final String ID = "id";
         public static final String GAME_NAME = "game_name";
-        public static final String GAME_PIECES_PLACEMENT = "game_pieces_placement";
+        public static final String GAME_STATE = "game_state";
     }
 
 
@@ -24,7 +24,8 @@ public final class FeedReaderContract {
             "CREATE TABLE " + FeedEntry.TABLE_NAME + " (" +
 //                    FeedEntry.ID + " INT PRIMARY KEY, "+
                     FeedEntry.GAME_NAME + " TEXT, " +
-                    FeedEntry.GAME_PIECES_PLACEMENT + " TEXT );";
+                    FeedEntry.GAME_STATE + " TEXT " +
+                    ");";
 
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME;

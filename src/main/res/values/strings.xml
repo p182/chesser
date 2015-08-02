@@ -12,7 +12,7 @@
     <string name="opponent_turn">Opponent\'s turn</string>
     <string name="white_you_in_check">Your turn - white in check</string>
     <string name="black_you_in_check">Your turn - black in check</string>
-    <string name="white_opponent_in_check">Opponent\'s turn - white in check!</string>
-    <string name="black_opponent_in_check">Opponent\'s turn - black in check!</string>
+    <string name="white_opponent_in_check">Opponent\'s turn - white in check</string>
+    <string name="black_opponent_in_check">Opponent\'s turn - black in check</string>
 
 </resources>
