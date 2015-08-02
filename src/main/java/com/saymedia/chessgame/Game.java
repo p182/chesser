@@ -13,11 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -26,7 +26,7 @@ public class Game extends ActionBarActivity {
 
     public static BluetoothSocket socket;
     ConnectedThread connectThread;
-    IncomeListenerThread IncomeListenerThread = new IncomeListenerThread(this);
+    IncommingStateListenerThread IncommingStateListenerThread = new IncommingStateListenerThread(this);
     Utils u = new Utils(this);
 
     @Override
@@ -37,23 +37,25 @@ public class Game extends ActionBarActivity {
         ConnectedThread tmp = new ConnectedThread(socket);
         connectThread=tmp;
         connectThread.start();
-        IncomeListenerThread.start();
+        IncommingStateListenerThread.start();
 
         setupPieces();
 
-        Button turnNotifier = (Button)findViewById(R.id.turnNotifier);
+//        Button turnNotifier = (Button)findViewById(R.id.turnNotifier);
+        TextView turnNotifier = (TextView)findViewById(R.id.turnNotifier);
 
+        // Indicate player/opponent turn.
         if(color==1){
             myTurn=true;
-            turnNotifier.setText("Your Turn");
-            turnNotifier.setClickable(false);
-            turnNotifier.setEnabled(true);
+            turnNotifier.setText(R.string.player_turn);
+//            turnNotifier.setClickable(false);
+//            turnNotifier.setEnabled(true);
         }
         else{
             myTurn=false;
-            turnNotifier.setText("Opponent's Turn");
-            turnNotifier.setClickable(false);
-            turnNotifier.setEnabled(false);
+            turnNotifier.setText(R.string.opponent_turn);
+//            turnNotifier.setClickable(false);
+//            turnNotifier.setEnabled(false);
         }
 
         CheckBox c = (CheckBox)findViewById(R.id.vibrateCB);
@@ -88,8 +90,8 @@ public class Game extends ActionBarActivity {
 
     public static int color = 1;
 
-    public static Boolean kingInDanger;
-    public static Boolean opponentKingInDanger;
+    public static Boolean kingInCheck;
+    public static Boolean opponentKingInCheck;
 
     public static Boolean myTurn;
     public static Boolean vibrate = true;
@@ -408,7 +410,9 @@ public class Game extends ActionBarActivity {
     }
 
     public void selectedOnClick(View v){
-        Button turnNotifier = (Button)findViewById(R.id.turnNotifier);
+        // Move the piece to the selected square. Save the old piece's coordinates to be able to undo the move if own king is in check.
+//        Button turnNotifier = (Button)findViewById(R.id.turnNotifier);
+        TextView turnNotifier = (TextView)findViewById(R.id.turnNotifier);
 
         SelectedSquare s = (SelectedSquare)v;
 
@@ -421,27 +425,48 @@ public class Game extends ActionBarActivity {
         pressedPiece.setLayoutParams(u.getPlaceParams(s.x, s.y));
         removeAponnent();
 
-        if(!u.checkIfKingIsInDanger()) {
-
+        if(!u.myKingInCheck()) {
+            // Valid move, king not in check.
             myTurn=false;
-            turnNotifier.setText("Opponent's Turn");
-            turnNotifier.setClickable(false);
-            turnNotifier.setEnabled(false);
+            removedPiece = null;
 
             RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
             for (int id = 100; id < 6700; id += 100) {
                 rl.removeView(findViewById(id));
             }
 
+/*
+            if(Game.color==1){
+                TextView check = (TextView)findViewById(R.id.whitePlayerCheck);
+                check.setVisibility(View.INVISIBLE);
+            }
+            else{
+                TextView check = (TextView)findViewById(R.id.blackPlayerCheck);
+                check.setVisibility(View.INVISIBLE);
+            }
+*/
+            // Notify opponent's turn and whether opponent is in check.
+            if(u.opponentKingInCheck()){
+                Game.kingInCheck =true;
+                if(Game.color==1){
+                    turnNotifier.setText(R.string.black_opponent_in_check);
+                }
+                else{
+                    turnNotifier.setText(R.string.white_opponent_in_check);
+                }
+            }
+            else{
+                // Opponent not in check.
+                turnNotifier.setText(R.string.opponent_turn);
+            }
 
+            // Prepare a new game state string and send it to opponent.
             String Coor = getWPCIDs() + "," + getBPCIDs();
-
             String message = Coor + ";";
-
             connectThread.stringWrite(message);
-
         }
         else{
+            // King is checked, the piece will undo the move after delay.
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
 
@@ -463,7 +488,7 @@ public class Game extends ActionBarActivity {
                     }
                 }
 
-            }, 500); //delays
+            }, 500); // delay
         }
 
 

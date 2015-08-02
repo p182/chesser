@@ -47,7 +47,7 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/vibrateCB"
         android:layout_toStartOf="@+id/vibrateCB" />
-
+<!--
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
@@ -57,6 +57,16 @@
         android:textAllCaps="false"
         android:layout_alignTop="@+id/imageView2"
         android:layout_centerHorizontal="true" />
+-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text=""
+        android:id="@+id/turnNotifier"
+        android:layout_above="@+id/imageView2"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
 

@@ -5,7 +5,7 @@ import android.util.DisplayMetrics;
 import android.widget.RelativeLayout;
 
 /**
- * Created by SayMedia on 14/07/2015.
+ * Collection of utility methods.
  */
 public class Utils {
     Activity activity;
@@ -169,8 +169,8 @@ public class Utils {
         else{return null;}
     }
 
-    /** If king is in danger change Game.kingInDanger to true. */
-    public boolean checkIfKingIsInDanger(){
+    /** Check if own king is in check change. */
+    public boolean myKingInCheck(){
 
         boolean b = false;
 
@@ -195,8 +195,8 @@ public class Utils {
         return b;
     }
 
-    /** If king is in danger change Game.opponentKingInDanger to true. */
-    public boolean checkIfOpponentKingIsInDanger(){
+    /** Check if opponent's king is in check. */
+    public boolean opponentKingInCheck(){
 
         boolean b = false;
 
@@ -204,7 +204,7 @@ public class Utils {
             Piece piece = findPieceById(i);
             String[] cmoves = piece.moves().split(",");
             for(String coor : cmoves){
-                if((coor.equals(Game.bk)&&Game.color==1)||(coor.equals(Game.wk)&&Game.color==-1)){
+                if((coor.equals(Game.bk.c())&&Game.color==1)||(coor.equals(Game.wk.c())&&Game.color==-1)){
                     b = true;
                     break;
                 }

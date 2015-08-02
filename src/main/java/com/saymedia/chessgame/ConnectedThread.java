@@ -42,7 +42,7 @@ public class ConnectedThread extends Thread {
                 // Read from the InputStream
                 bytes = mmInStream.read(buffer);
                 String inMessage = new String(buffer, 0, bytes,"UTF-8");
-                IncomeListenerThread.s=inMessage;
+                IncommingStateListenerThread.s=inMessage;
 
                 // Send the obtained bytes to the UI activity
             } catch (IOException e) {

@@ -1,17 +1,13 @@
 package com.saymedia.chessgame;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Vibrator;
-import android.view.View;
 import android.widget.RelativeLayout;
-
-import java.lang.reflect.Array;
+import android.widget.TextView;
 
 /**
- * Helps generate a new state.
+ * Helps generate a new game state.
  */
 public class NewState{
     String s;
@@ -57,6 +53,7 @@ public class NewState{
     }
 
     void creatNewState(){
+        TextView turnNotifier = (TextView)activity.findViewById(R.id.turnNotifier);
 
         u= new Utils(activity);
         System.out.println("movesCoor: " + s);
@@ -83,9 +80,19 @@ public class NewState{
         }
 
 
-        if(u.checkIfKingIsInDanger()){
-            Game.kingInDanger=true;
-            System.out.println("KINH IN DANGERRR");
+        if(u.myKingInCheck()){
+            // Player's king in check - show that is player's turn and that the king is in check.
+            Game.kingInCheck =true;
+            if(Game.color==1){
+                turnNotifier.setText(R.string.white_you_in_check);
+            }
+            else{
+                turnNotifier.setText(R.string.black_you_in_check);
+            }
+        }
+        else{
+            // Player's king not in check - show that it is player's turn.
+            turnNotifier.setText(R.string.player_turn);
         }
 
 

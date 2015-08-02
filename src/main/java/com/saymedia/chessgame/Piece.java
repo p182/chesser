@@ -47,7 +47,7 @@ public class Piece extends ImageView{
 
     String movesCoor = "";
 
-    /** Adds safely a coordinate to the string. */
+    /** Adds safely coordinates to the string of move coordinates. */
     void addDestination(int a, int b){
         if(a>0 && a<9 && b>0 && b<9){
             if(movesCoor.equals("")){
@@ -239,36 +239,39 @@ public class Piece extends ImageView{
 
     /** Returns a string array of all the coordinates a king can move to. */
     public String kingMoves(int pieceColor){
-        String S = x+pieceColor+""+y;
-        boolean p = Game.checkCoordinate(S, pieceColor)[0];
+        String coor; // Move coordinates.
+        boolean p; // Coor does not overlap a same color piece.
+
+        coor = x+pieceColor+""+y;
+        p = Game.checkCoordinate(coor, pieceColor)[0];
         if(p){addDestination(x+pieceColor, y);}
 
-        S = x-pieceColor+""+y;
-        p = Game.checkCoordinate(S, pieceColor)[0];
+        coor = x-pieceColor+""+y;
+        p = Game.checkCoordinate(coor, pieceColor)[0];
         if(p){addDestination(x-pieceColor, y);}
 
-        S = x+""+(y+pieceColor);
-        p = Game.checkCoordinate(S, pieceColor)[0];
+        coor = x+""+(y+pieceColor);
+        p = Game.checkCoordinate(coor, pieceColor)[0];
         if(p){addDestination(x, y+pieceColor);}
 
-        S = x+""+(y-pieceColor);
-        p = Game.checkCoordinate(S, pieceColor)[0];
+        coor = x+""+(y-pieceColor);
+        p = Game.checkCoordinate(coor, pieceColor)[0];
         if(p){addDestination(x, y-pieceColor);}
 
-        S = x+pieceColor+""+(y+pieceColor);
-        p = Game.checkCoordinate(S, pieceColor)[0];
+        coor = x+pieceColor+""+(y+pieceColor);
+        p = Game.checkCoordinate(coor, pieceColor)[0];
         if(p){addDestination(x+pieceColor, y+pieceColor);}
 
-        S = x+pieceColor+""+(y-pieceColor);
-        p = Game.checkCoordinate(S, pieceColor)[0];
+        coor = x+pieceColor+""+(y-pieceColor);
+        p = Game.checkCoordinate(coor, pieceColor)[0];
         if(p){addDestination(x+pieceColor, y-pieceColor);}
 
-        S = x-pieceColor+""+(y+pieceColor);
-        p = Game.checkCoordinate(S, pieceColor)[0];
+        coor = x-pieceColor+""+(y+pieceColor);
+        p = Game.checkCoordinate(coor, pieceColor)[0];
         if(p){addDestination(x-pieceColor, y+pieceColor);}
 
-        S = x-pieceColor+""+(y+pieceColor);
-        p = Game.checkCoordinate(S, pieceColor)[0];
+        coor = x-pieceColor+""+(y-pieceColor);
+        p = Game.checkCoordinate(coor, pieceColor)[0];
         if(p){addDestination(x-pieceColor, y-pieceColor);}
 
         return movesCoor;

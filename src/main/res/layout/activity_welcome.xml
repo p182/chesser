@@ -11,13 +11,13 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
         android:id="@+id/imageView"
-        android:src="@drawable/knight"
+        android:src="@drawable/logo"
         android:visibility="visible"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/button" />
+        android:layout_alignParentTop="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -26,9 +26,9 @@
         android:text="Connect"
         android:id="@+id/button"
         android:onClick="buttonOnClick2"
-        android:layout_below="@+id/button2"
+        android:layout_alignBottom="@+id/imageView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="28dp" />
+        android:layout_marginBottom="112dp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -37,17 +37,17 @@
         android:text="Host"
         android:id="@+id/button2"
         android:onClick="buttonOnClick3"
-        android:layout_below="@+id/imageView3"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp" />
+        android:layout_above="@+id/button"
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView3"
         android:src="@drawable/logotext"
+        android:layout_marginTop="78dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

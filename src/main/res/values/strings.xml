@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Chess Game</string>
+    <string name="app_name">Chesser</string>
     <string name="hello_world">Hello world!</string>
     <string name="welcome">Welcome To The Game Of Chess</string>
     <string name="action_settings">Settings</string>
@@ -8,5 +8,11 @@
     <string name="title_activity_paired_devices">PairedDevices</string>
     <string name="title_activity_open_server">OpenServer</string>
     <string name="title_activity_connect_to_server">ConnectToServer</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="player_turn">Your turn</string>
+    <string name="opponent_turn">Opponent\'s turn</string>
+    <string name="white_you_in_check">Your turn - white in check</string>
+    <string name="black_you_in_check">Your turn - black in check</string>
+    <string name="white_opponent_in_check">Opponent\'s turn - white in check!</string>
+    <string name="black_opponent_in_check">Opponent\'s turn - black in check!</string>
+
 </resources>
