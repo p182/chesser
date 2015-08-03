@@ -10,7 +10,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 /**
- * Created by SayMedia on 19/07/2015.
+ * Chesser data access object.
  */
 public class ChesserDbOperations extends SQLiteOpenHelper {
 

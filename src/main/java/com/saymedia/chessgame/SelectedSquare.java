@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 /**
- * Created by SayMedia on 24/06/2015.
+ * Selected blue squares.
  */
 public class SelectedSquare extends ImageView {
     public SelectedSquare(Context c, int X, int Y, int id){

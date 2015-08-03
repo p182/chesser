@@ -3,6 +3,7 @@ package com.saymedia.chessgame;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,22 +38,23 @@ public class NewState{
         int y = cIdArray[0].charAt(1) - 48;
 
         Piece piece = u.findPieceById(Integer.parseInt(cIdArray[1]));
-
+/*
         // To be able to load a game from a game where pieces have been removed.
         rl.removeView(piece);
         rl.addView(piece);
-
+*/
         piece.x = x;
         piece.y = y;
         if(x==0&&y==0){
-            rl.removeView(piece);
+//            rl.removeView(piece);
+            piece.setVisibility(View.INVISIBLE);
         }
         else {
             piece.setLayoutParams(u.getPlaceParams(x, y));
         }
     }
 
-    void creatNewState(){
+    void createNewState(){
         TextView turnNotifier = (TextView)activity.findViewById(R.id.turnNotifier);
 
         u= new Utils(activity);

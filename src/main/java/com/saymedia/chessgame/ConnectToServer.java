@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-
+/**
+ * UI to connect to a Bluetooth server.
+ */
 public class ConnectToServer extends ActionBarActivity {
 
     public static BluetoothSocket socket;
@@ -45,7 +47,8 @@ public class ConnectToServer extends ActionBarActivity {
             for (BluetoothDevice device : pairedDevices) {
                 String btName = device.getName();
                 if (device.getBluetoothClass().getMajorDeviceClass() == BluetoothClass.Device.Major.PHONE) {
-                    list.add(btName+"  --  "+device.toString());
+//                    list.add(btName+"  --  "+device.toString());
+                    list.add(device.getAddress()+"  --  "+btName);
                 }
             }
         }

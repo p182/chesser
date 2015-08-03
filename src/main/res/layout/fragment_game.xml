@@ -36,7 +36,8 @@
         android:id="@+id/soundCB"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/vibrateCB"
-        android:layout_toStartOf="@+id/vibrateCB" />
+        android:layout_toStartOf="@+id/vibrateCB"
+        android:visibility="gone" />
 <!--
     <Button
         style="?android:attr/buttonStyleSmall"

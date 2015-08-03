@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Created by SayMedia on 07/07/2015.
+ * Waits for a Bluetooth socket call from a client and passes it on to Game.
  */
 
 public class AcceptThread extends Thread {
@@ -67,6 +67,7 @@ public class AcceptThread extends Thread {
 
                 System.out.println("got socket");
                 Game.socket=socket;
+                Game.color=1;
                 activity.startActivity(new Intent("chess.game"));
 
                 // Do work to manage the connection (in a separate thread)

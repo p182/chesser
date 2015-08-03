@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Created by SayMedia on 08/07/2015.
- */
+ *  Connects to a Bluetooth socket server and passes on to Game.
+ * */
 public class ConnectThread extends Thread {
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private final BluetoothSocket mmSocket;

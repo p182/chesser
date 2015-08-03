@@ -3,7 +3,7 @@ package com.saymedia.chessgame;
 import android.provider.BaseColumns;
 
 /**
- * Created by SayMedia on 19/07/2015.
+ * Defines the chesser database.
  */
 public final class FeedReaderContract {
     // To prevent someone from accidentally instantiating the contract class,

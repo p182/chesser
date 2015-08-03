@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 /**
- * Created by SayMedia on 10/07/2015.
+ * Manages a bluetooth connection.
  */
 public class ConnectedThread extends Thread {
     private final BluetoothSocket mmSocket;
@@ -33,8 +33,10 @@ public class ConnectedThread extends Thread {
     }
 
     public void run() {
+        System.out.println("ConnectedThread: listening...");
         byte[] buffer = new byte[1024];  // buffer store for the stream
         int bytes; // bytes returned from read()
+
 
         // Keep listening to the InputStream until an exception occurs
         while (true) {
@@ -42,7 +44,7 @@ public class ConnectedThread extends Thread {
                 // Read from the InputStream
                 bytes = mmInStream.read(buffer);
                 String inMessage = new String(buffer, 0, bytes,"UTF-8");
-                IncommingStateListenerThread.s=inMessage;
+                IncomingStateListenerThread.s=inMessage;
 
                 // Send the obtained bytes to the UI activity
             } catch (IOException e) {

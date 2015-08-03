@@ -9,7 +9,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
+/**
+ * Initial UI.
+ */
 public class Welcome extends ActionBarActivity {
 
     @Override

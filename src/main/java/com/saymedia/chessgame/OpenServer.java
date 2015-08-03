@@ -11,7 +11,9 @@ import android.widget.TextView;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
-/** Activate the listener on ConnectThread. */
+/**
+ *  UI to activate the listener on AcceptThread server.
+ */
 public class OpenServer extends ActionBarActivity {
 
     public static BluetoothSocket socket;

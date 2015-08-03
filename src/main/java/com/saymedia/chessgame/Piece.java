@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 /**
- * Created by SayMedia on 21/06/2015.
+ * Chess piece.
  */
 public class Piece extends ImageView{
     public Piece(Context c, int X, int Y, int id){

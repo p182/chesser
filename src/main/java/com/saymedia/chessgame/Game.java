@@ -21,12 +21,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-
+/**
+ * Manages the pieces and main UI and holds the game info.
+ */
 public class Game extends ActionBarActivity {
 
     public static BluetoothSocket socket;
     ConnectedThread connectThread;
-    IncommingStateListenerThread IncommingStateListenerThread = new IncommingStateListenerThread(this);
+    IncomingStateListenerThread incomingStateListenerThread = new IncomingStateListenerThread(this);
     Utils u = new Utils(this);
 
     @Override
@@ -37,7 +39,8 @@ public class Game extends ActionBarActivity {
         ConnectedThread tmp = new ConnectedThread(socket);
         connectThread=tmp;
         connectThread.start();
-        IncommingStateListenerThread.start();
+        incomingStateListenerThread.start();
+        System.out.println("Game started");
 
         setupPieces();
 
@@ -145,7 +148,8 @@ public class Game extends ActionBarActivity {
                 p.x = 0;
                 p.y = 0;
                 RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
-                rl.removeView(p);
+//                rl.removeView(p);
+                p.setVisibility(View.INVISIBLE);
 
             }
         }
@@ -215,41 +219,41 @@ public class Game extends ActionBarActivity {
                 String pars = array[i];
                 int x = pars.charAt(0) - 48;
                 int y = pars.charAt(1) - 48;
-                creatSelectedSquare(x, y, (i + 1) * 100);
+                createSelectedSquare(x, y, (i + 1) * 100);
             }
         }
 
-        creatSelectedSquare(p.x, p.y, 65 * 100);
-        creatSelectedSquare(p.x, p.y, 66 * 100);
+        createSelectedSquare(p.x, p.y, 65 * 100);
+        createSelectedSquare(p.x, p.y, 66 * 100);
         p.bringToFront();
     }
 
     public void setupPieces(){
-            creatPiece(1, 1, 1);
-            creatPiece(2, 1, 2);
-            creatPiece(3, 1, 3);
-            creatPiece(4, 1, 4);
-            creatPiece(5, 1, 5);
-            creatPiece(6, 1, 6);
-            creatPiece(7, 1, 7);
-            creatPiece(8, 1, 8);
+            createPiece(1, 1, 1);
+            createPiece(2, 1, 2);
+            createPiece(3, 1, 3);
+            createPiece(4, 1, 4);
+            createPiece(5, 1, 5);
+            createPiece(6, 1, 6);
+            createPiece(7, 1, 7);
+            createPiece(8, 1, 8);
             for (int i = 1; i < 9; i++) {
-                creatPiece(i, 2, (i + 8));
+                createPiece(i, 2, (i + 8));
             }
-            creatPiece(1, 8, 17);
-            creatPiece(2, 8, 18);
-            creatPiece(3, 8, 19);
-            creatPiece(4, 8, 20);
-            creatPiece(5, 8, 21);
-            creatPiece(6, 8, 22);
-            creatPiece(7, 8, 23);
-            creatPiece(8, 8, 24);
+            createPiece(1, 8, 17);
+            createPiece(2, 8, 18);
+            createPiece(3, 8, 19);
+            createPiece(4, 8, 20);
+            createPiece(5, 8, 21);
+            createPiece(6, 8, 22);
+            createPiece(7, 8, 23);
+            createPiece(8, 8, 24);
             for (int i = 1; i < 9; i++) {
-                creatPiece(i, 7, (i + 24));
+                createPiece(i, 7, (i + 24));
             }
     }
 
-    public void creatSelectedSquare(int x, int y, int id){
+    public void createSelectedSquare(int x, int y, int id){
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
         SelectedSquare image = new SelectedSquare(getApplicationContext(), x, y, id);
@@ -267,7 +271,7 @@ public class Game extends ActionBarActivity {
         rl.addView(image);
     }
 
-    public void creatPiece(int x, int y, int id){
+    public void createPiece(int x, int y, int id){
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
         Piece p = new Piece(getApplicationContext(), x, y, id);
@@ -324,6 +328,8 @@ public class Game extends ActionBarActivity {
                 .setTitle("Are you sure you want to exit all your progress will be lost")
                 .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        incomingStateListenerThread.cancel();
+                        connectThread.cancel();
                         startActivity(new Intent("first.activity"));
                     }
                 })
@@ -341,6 +347,7 @@ public class Game extends ActionBarActivity {
             RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
             for (int id = 100; id < 6700; id += 100) {
                 rl.removeView(findViewById(id));
+//                findViewById(id).setVisibility(View.INVISIBLE);
             }
 
 
@@ -475,6 +482,7 @@ public class Game extends ActionBarActivity {
         }
         else{
             // King is checked, the piece will undo the move after delay.
+            myTurn=false;
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
 
@@ -490,9 +498,11 @@ public class Game extends ActionBarActivity {
                         removedPiece.y = removedPieceY;
 
                         RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
-                        rl.addView(removedPiece);
+//                        rl.addView(removedPiece);
+                        removedPiece.setVisibility(View.VISIBLE);
 
                         removedPiece = null;
+                        myTurn=true;
                     }
                 }
 
@@ -575,7 +585,7 @@ public class Game extends ActionBarActivity {
                 String gameSate = mDbHelper.getGameState(position);
                 NewState state = new NewState(gameSate, activity);
 
-                state.creatNewState();
+                state.createNewState();
                 dialog.dismiss();
             }
         });
