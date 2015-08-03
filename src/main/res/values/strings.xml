@@ -14,5 +14,7 @@
     <string name="black_you_in_check">Your turn - black in check</string>
     <string name="white_opponent_in_check">Opponent\'s turn - white in check</string>
     <string name="black_opponent_in_check">Opponent\'s turn - black in check</string>
+    <string name="name_game_already_given">GAME NOT SAVED: name already in use</string>
+    <string name="successfully_saved">Game saved</string>
 
 </resources>

@@ -224,7 +224,6 @@ public class Game extends ActionBarActivity {
         p.bringToFront();
     }
 
-
     public void setupPieces(){
             creatPiece(1, 1, 1);
             creatPiece(2, 1, 2);
@@ -250,7 +249,6 @@ public class Game extends ActionBarActivity {
             }
     }
 
-
     public void creatSelectedSquare(int x, int y, int id){
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
@@ -268,7 +266,6 @@ public class Game extends ActionBarActivity {
 
         rl.addView(image);
     }
-
 
     public void creatPiece(int x, int y, int id){
 
@@ -321,11 +318,22 @@ public class Game extends ActionBarActivity {
         }
     }
 
-
     public void backButton(View v){
-        startActivity(new Intent("first.activity"));
+        System.out.println("dialog");
+        new AlertDialog.Builder(this)
+                .setTitle("Are you sure you want to exit all your progress will be lost")
+                .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent("first.activity"));
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
+                    }
+                })
+                .create().show();
     }
-
 
     public void piecesOnClick(View v){
         if(myTurn) {
@@ -524,7 +532,24 @@ public class Game extends ActionBarActivity {
                 })
                 .setNegativeButton("Old game", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
+                        final View layout = View.inflate(activity, R.layout.load_dialog, null);
+                        final AlertDialog updateDialog = new AlertDialog.Builder(activity).setTitle("Update Game").setView(layout).show();
+
+                        final ListView listview = (ListView) layout.findViewById(R.id.entries);
+
+                        final ArrayList<String> list = mDbHelper.getGameNames();
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, list);
+
+                        listview.setAdapter(adapter);
+
+                        listview.setOnItemClickListener(new ListView.OnItemClickListener() {
+                            public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
+                                String gameName = (String)listview.getItemAtPosition(position);
+                                mDbHelper.updateGame(gameName);
+                                updateDialog.dismiss();
+                            }
+                        });
                     }
                 })
                 .show();
@@ -554,13 +579,6 @@ public class Game extends ActionBarActivity {
                 dialog.dismiss();
             }
         });
-
-//        public void itemOnClick(int i){
-
-
-//        }
-
-
     }
 
     /** Disable enable vibration in game. */

@@ -97,6 +97,7 @@ public class NewState{
             movePiece(array[i]);
         }
 
+        // Notify turn and in-check status.
         if(Game.myTurn) {
             if (u.myKingInCheck()) {
                 // Player's king in check - show that is player's turn and that the king is in check.

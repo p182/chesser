@@ -19,16 +19,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageButton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
-        android:onClick="backButton" />
-
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,6 +58,18 @@
         android:layout_marginTop="27dp"
         android:layout_alignTop="@+id/imageView2"
         android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton"
+        android:scaleType="fitXY"
+        android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:onClick="backButton" />
 
 </RelativeLayout>
 

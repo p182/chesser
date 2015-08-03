@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -14,9 +15,11 @@ import java.util.ArrayList;
 public class ChesserDbOperations extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
+    Context appContext;
 
     public ChesserDbOperations(Context context) {
         super(context, FeedReaderContract.FeedEntry.DATABASE_NAME, null, DATABASE_VERSION);
+        appContext= context;
     }
 
     @Override
@@ -32,43 +35,54 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
     /** Saves a game state to the database. */
     public void saveGame(String gameName){
+        // Check if there is no entry with the same game name.
+        ArrayList existingGamesNames = getGameNames();
+        if(!existingGamesNames.contains(gameName)) {
 
-        String piecesCoordinates = Game.getWPCIDs() +","+ Game.getBPCIDs();
-        String color;
-        if(Game.color==1){
-            color = "white";
+            // Create the game state string.
+            String piecesCoordinates = Game.getWPCIDs() + "," + Game.getBPCIDs();
+            String color;
+            if (Game.color == 1) {
+                color = "white";
+            } else {
+                color = "black";
+            }
+            String turn;
+            if (Game.myTurn) {
+                turn = "myTurn";
+            } else {
+                turn = "opTurn";
+            }
+            String gameState = piecesCoordinates + ";" + color + ";" + turn;
+
+            // Gets the data repository in write mode
+            SQLiteDatabase db = this.getWritableDatabase();
+            System.out.println(db.toString());
+
+            System.out.println(FeedReaderContract.SQL_CREATE_ENTRIES);
+
+            // Create a new map of values, where column names are the keys
+            ContentValues values = new ContentValues();
+            values.put(FeedReaderContract.FeedEntry.GAME_NAME, gameName);
+            values.put(FeedReaderContract.FeedEntry.GAME_STATE, gameState);
+
+            // Insert the new row, returning the primary key value of the new row
+            long newRowId;
+            newRowId = db.insert(
+                    FeedReaderContract.FeedEntry.TABLE_NAME,
+                    FeedReaderContract.FeedEntry.GAME_STATE,
+                    values);
+
+            Toast.makeText(appContext, R.string.successfully_saved,
+                    Toast.LENGTH_LONG).show();
+
+            System.out.println(newRowId);
         }
         else{
-            color = "black";
+            // There is already an entry with the same name. Notify the problem.
+            Toast.makeText(appContext, R.string.name_game_already_given,
+                    Toast.LENGTH_LONG).show();
         }
-        String turn;
-        if(Game.myTurn){
-            turn = "myTurn";
-        }
-        else{
-            turn = "opTurn";
-        }
-        String gameState = piecesCoordinates +";"+ color +";"+ turn;
-
-        // Gets the data repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
-        System.out.println(db.toString());
-
-        System.out.println(FeedReaderContract.SQL_CREATE_ENTRIES);
-
-        // Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(FeedReaderContract.FeedEntry.GAME_NAME, gameName);
-        values.put(FeedReaderContract.FeedEntry.GAME_STATE, gameState);
-
-        // Insert the new row, returning the primary key value of the new row
-        long newRowId;
-        newRowId = db.insert(
-                FeedReaderContract.FeedEntry.TABLE_NAME,
-                FeedReaderContract.FeedEntry.GAME_STATE,
-                values);
-
-        System.out.println(newRowId);
 
     }
 
@@ -151,6 +165,53 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         String gameState = c.getString(1);
 
         return gameState;
+
+    }
+
+    /** Update an existing game state saved in the database. */
+    public void updateGame(String gameName){
+        // Gets the data repository in read mode
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // UPDATE Games game_state='...' WHERE game_name='test2'
+        // DELETE FROM Games WHERE game_name='test2'
+
+        // Create the game state string.
+        String piecesCoordinates = Game.getWPCIDs() +","+ Game.getBPCIDs();
+        String color;
+        if(Game.color==1){
+            color = "white";
+        }
+        else{
+            color = "black";
+        }
+        String turn;
+        if(Game.myTurn){
+            turn = "myTurn";
+        }
+        else{
+            turn = "opTurn";
+        }
+        String gameState = piecesCoordinates +";"+ color +";"+ turn;
+
+        // New value for one column
+        ContentValues values = new ContentValues();
+        values.put(FeedReaderContract.FeedEntry.GAME_STATE, gameState);
+
+        // Which row to update, based on the ID
+        String selection = FeedReaderContract.FeedEntry.GAME_NAME + " = ?";
+        String[] selectionArgs = { gameName };
+
+        int updateCount = db.update(
+                FeedReaderContract.FeedEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+
+        System.out.println("updateCount: " + updateCount);
+
+        Toast.makeText(appContext, R.string.successfully_saved,
+                Toast.LENGTH_LONG).show();
 
     }
 }
