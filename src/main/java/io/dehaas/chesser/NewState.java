@@ -1,10 +1,11 @@
-package com.saymedia.chessgame;
+package io.dehaas.chesser;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 /**
@@ -38,6 +39,21 @@ public class NewState{
         int y = cIdArray[0].charAt(1) - 48;
 
         Piece piece = u.findPieceById(Integer.parseInt(cIdArray[1]));
+        piece.setId(Integer.parseInt(cIdArray[1]));
+
+        // If the id is not standart then
+/*        if(piece.getId()/100!=0){
+            if(piece.getId()%1000==1){piece.setImageResource(R.drawable.wrook);}
+            if(piece.getId()%1000==2){piece.setImageResource(R.drawable.wknight);}
+            if(piece.getId()%1000==3){piece.setImageResource(R.drawable.wbishop);}
+            if(piece.getId()%1000==4){piece.setImageResource(R.drawable.wqueen);}
+            if(piece.getId()%1000==17){piece.setImageResource(R.drawable.brook);}
+            if(piece.getId()%1000==18){piece.setImageResource(R.drawable.bknight);}
+            if(piece.getId()%1000==19){piece.setImageResource(R.drawable.bbishop);}
+            if(piece.getId()%1000==20){piece.setImageResource(R.drawable.bqueen);}
+        }
+*/
+
 /*
         // To be able to load a game from a game where pieces have been removed.
         rl.removeView(piece);
@@ -55,6 +71,11 @@ public class NewState{
     }
 
     void createNewState(){
+        RelativeLayout rl = (RelativeLayout) activity.findViewById(R.id.fragment);
+        for (int id = 100; id < 6700; id += 100) {
+            rl.removeView(activity.findViewById(id));
+        }
+
         TextView turnNotifier = (TextView)activity.findViewById(R.id.turnNotifier);
 
         u= new Utils(activity);
@@ -94,9 +115,11 @@ public class NewState{
         }
 */
         String[] array = state[0].split(",");
+        System.out.println(state[0]);
 
         for (int i = 0; i < array.length; i++) {
             movePiece(array[i]);
+            System.out.println(array[i]);
         }
 
         // Notify turn and in-check status.

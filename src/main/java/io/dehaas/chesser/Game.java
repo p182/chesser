@@ -1,4 +1,4 @@
-package com.saymedia.chessgame;
+package io.dehaas.chesser;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,10 +11,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -99,6 +102,9 @@ public class Game extends ActionBarActivity {
     public static Boolean myTurn;
     public static Boolean vibrate = true;
     public static Boolean sound = true;
+
+    public static String newPieceChosen = "";
+
 
     public static Piece pressedPiece;
     public static Piece removedPiece;
@@ -415,7 +421,7 @@ public class Game extends ActionBarActivity {
                 }
             }
 */
-            if((color==1&&id>0&&id<17)||(color==-1&&id>16&&id<33)) {
+            if((color==1&&id>0&&id<17)||(color==-1&&id>16&&id<33)||(color==1&&id/1000>0&&id/1000<17)||(color==-1&&id/1000>16&&id/1000<33)) {
                 c = p.moves();
                 selectSquares(c, p);
             }
@@ -442,7 +448,7 @@ public class Game extends ActionBarActivity {
 
         if(!u.myKingInCheck()) {
             // Valid move, king not in check.
-            myTurn=false;
+            myTurn = false;
             removedPiece = null;
 
             RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
@@ -461,28 +467,109 @@ public class Game extends ActionBarActivity {
             }
 */
             // Notify opponent's turn and whether opponent is in check.
-            if(u.opponentKingInCheck()){
-                Game.kingInCheck =true;
-                if(Game.color==1){
+            if (u.opponentKingInCheck()) {
+                Game.kingInCheck = true;
+                if (Game.color == 1) {
                     turnNotifier.setText(R.string.black_opponent_in_check);
-                }
-                else{
+                } else {
                     turnNotifier.setText(R.string.white_opponent_in_check);
                 }
-            }
-            else{
+            } else {
                 // Opponent not in check.
                 turnNotifier.setText(R.string.opponent_turn);
             }
 
-            // Prepare a new game state string and send it to opponent.
-            String Coor = getWPCIDs() + "," + getBPCIDs();
-            String state = Coor + ";" + null + ";" + null;
-            connectThread.stringWrite(state);
+            // If piece is a pawn and it got to the end of the board let the player choose to what piece he wants to switch to
+            if ((pressedPiece.getId() > 8 && pressedPiece.getId() < 17 && s.y == 8) || (pressedPiece.getId() > 24 && pressedPiece.getId() < 33 && s.y == 1)) {
+                LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout);
+//                ll.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, u.dp(40)).bottomMargin());
+
+                ImageView rook = (ImageView)findViewById(R.id.rook);
+                ImageView knight = (ImageView)findViewById(R.id.knight);
+                ImageView bishop = (ImageView)findViewById(R.id.bishop);
+                ImageView queen = (ImageView)findViewById(R.id.queen);
+                if(color==1){
+                    rook.setImageResource(R.drawable.wrook);
+                    knight.setImageResource(R.drawable.wknight);
+                    bishop.setImageResource(R.drawable.wbishop);
+                    queen.setImageResource(R.drawable.wqueen);
+                }
+                else{
+                    rook.setImageResource(R.drawable.brook);
+                    knight.setImageResource(R.drawable.bknight);
+                    bishop.setImageResource(R.drawable.bbishop);
+                    queen.setImageResource(R.drawable.bqueen);
+                }
+                rook.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        // Pawn is white
+                        if(8<pressedPiece.getId() && pressedPiece.getId()<17) {
+                            pressedPiece.setId(pressedPiece.getId() * 1000 + 1);
+                            pressedPiece.setImageResource(R.drawable.wrook);
+                        }
+                        // Pawn is black
+                        else{
+                            pressedPiece.setId(pressedPiece.getId() * 1000 + 17);
+                            pressedPiece.setImageResource(R.drawable.brook);
+                        }
+                    }
+                });
+                knight.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        // Pawn is white
+                        if(8<pressedPiece.getId() && pressedPiece.getId()<17) {
+                            pressedPiece.setId(pressedPiece.getId() * 1000 + 2);
+                            pressedPiece.setImageResource(R.drawable.wknight);
+                        }
+                        // Pawn is black
+                        else{
+                            pressedPiece.setId(pressedPiece.getId() * 1000 + 18);
+                            pressedPiece.setImageResource(R.drawable.bknight);
+                        }
+                    }
+                });
+                bishop.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        // Pawn is white
+                        if(8<pressedPiece.getId() && pressedPiece.getId()<17) {
+                            pressedPiece.setId(pressedPiece.getId() * 1000 + 3);
+                            pressedPiece.setImageResource(R.drawable.wbishop);
+                        }
+                        // Pawn is black
+                        else{
+                            pressedPiece.setId(pressedPiece.getId() * 1000 + 19);
+                            pressedPiece.setImageResource(R.drawable.bbishop);
+                        }
+                    }
+                });
+                queen.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        // Pawn is white
+                        if(8<pressedPiece.getId() && pressedPiece.getId()<17) {
+                            pressedPiece.setId(pressedPiece.getId() * 1000 + 4);
+                            pressedPiece.setImageResource(R.drawable.wqueen);
+                        }
+                        // Pawn is black
+                        else{
+                            pressedPiece.setId(pressedPiece.getId() * 1000 + 20);
+                            pressedPiece.setImageResource(R.drawable.bqueen);
+                        }
+                    }
+                });
+
+                ll.setVisibility(View.VISIBLE);
+                ll.bringToFront();
+                System.out.println("pawn at end of board");
+            } else {
+                // Prepare a new game state string and send it to opponent
+                String Coor = getWPCIDs() + "," + getBPCIDs();
+                String state = Coor + ";" + null + ";" + null;
+                connectThread.stringWrite(state);
+            }
         }
         else{
-            // King is checked, the piece will undo the move after delay.
-            myTurn=false;
+            // King is checked, the piece will undo the move after delay
+            myTurn=false; // Disable other pieces from responding to clicks
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
 
@@ -493,7 +580,8 @@ public class Game extends ActionBarActivity {
 
                     pressedPiece.setLayoutParams(u.getPlaceParams(tmpX, tmpY));
 
-                    if(removedPiece!=null) {
+                    // If an opponent piece was removed return it
+                    if (removedPiece != null) {
                         removedPiece.x = removedPieceX;
                         removedPiece.y = removedPieceY;
 
@@ -502,8 +590,8 @@ public class Game extends ActionBarActivity {
                         removedPiece.setVisibility(View.VISIBLE);
 
                         removedPiece = null;
-                        myTurn=true;
                     }
+                    myTurn = true; // Enable other pieces to respond to clicks
                 }
 
             }, 500); // delay
@@ -603,5 +691,20 @@ public class Game extends ActionBarActivity {
         else {
             vibrate = false;
         }
+    }
+
+    public void onNewPieceChossen(View v){
+        LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout);
+        ll.setVisibility(View.INVISIBLE);
+
+        // Prepare a new game state string and send it to opponent
+        String Coor = getWPCIDs() + "," + getBPCIDs();
+        String state = Coor + ";" + null + ";" + null;
+        connectThread.stringWrite(state);
+    }
+
+    // Override the onBackPressed method and do nothing
+    @Override
+    public void onBackPressed() {
     }
 }

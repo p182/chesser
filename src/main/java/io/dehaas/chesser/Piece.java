@@ -1,4 +1,4 @@
-package com.saymedia.chessgame;
+package io.dehaas.chesser;
 
 import android.content.Context;
 import android.view.View;
@@ -80,6 +80,18 @@ public class Piece extends ImageView{
                 moves = pawnMoves(1); break;
             case 4: moves = queenMoves(1); break;
             case 1: case 8: moves = rookMoves(1); break;
+
+            default:
+                System.out.println("default");
+                if(getId()%1000==1){moves = rookMoves(1);}
+                if(getId()%1000==2){moves = knightMoves(1);}
+                if(getId()%1000==3){moves = bishopMoves(1);}
+                if(getId()%1000==4){moves = queenMoves(1);}
+                if(getId()%1000==17){moves = rookMoves(-1);}
+                if(getId()%1000==18){moves = knightMoves(-1);}
+                if(getId()%1000==19){moves = bishopMoves(-1);}
+                if(getId()%1000==20){moves = queenMoves(-1);} break;
+
         }
 
         return moves;

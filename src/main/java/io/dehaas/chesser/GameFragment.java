@@ -1,4 +1,4 @@
-package com.saymedia.chessgame;
+package io.dehaas.chesser;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;

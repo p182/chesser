@@ -1,4 +1,4 @@
-package com.saymedia.chessgame;
+package io.dehaas.chesser;
 
 import android.bluetooth.BluetoothSocket;
 import android.support.v7.app.ActionBarActivity;

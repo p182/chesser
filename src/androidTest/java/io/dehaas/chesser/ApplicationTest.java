@@ -1,4 +1,4 @@
-package com.saymedia.chessgame;
+package io.dehaas.chesser;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

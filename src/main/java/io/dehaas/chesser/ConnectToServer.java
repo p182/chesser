@@ -1,4 +1,4 @@
-package com.saymedia.chessgame;
+package io.dehaas.chesser;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;

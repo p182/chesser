@@ -1,4 +1,4 @@
-package com.saymedia.chessgame;
+package io.dehaas.chesser;
 
 import android.app.Activity;
 import android.util.DisplayMetrics;
@@ -15,7 +15,7 @@ public class Utils {
     }
 
 
-    private int dp(double dp) {
+    public int dp(double dp) {
 
         float density = activity.getApplicationContext().getResources().getDisplayMetrics().density;
         return (int)(dp * density);
@@ -133,6 +133,8 @@ public class Utils {
 
     /** Get a Piece object by its ID int. */
     public Piece findPieceById(int id){
+            System.out.println("find piece by ID");
+            System.out.println("id:" + id);
         // Black pieces
         if(id == Game.br1.getId()){return Game.br1;}
         if(id == Game.br2.getId()){return Game.br2;}
@@ -167,16 +169,36 @@ public class Utils {
         if(id == Game.wp6.getId()){return Game.wp6;}
         if(id == Game.wp7.getId()){return Game.wp7;}
         if(id == Game.wp8.getId()){return Game.wp8;}
-        else{return null;}
+        // If canot find piece matching the id it is a pawn that promoted id.
+        // Devide by 1000 and try again.
+        else{
+//            System.out.println("pawn id:" + id/1000);
+//            return null;
+
+            // Set the new image to the promoted pawn.
+            if(id/1000!=0){
+                if(id%1000==1){findPieceById(id/1000).setImageResource(R.drawable.wrook);}
+                if(id%1000==2){findPieceById(id/1000).setImageResource(R.drawable.wknight);}
+                if(id%1000==3){findPieceById(id/1000).setImageResource(R.drawable.wbishop);}
+                if(id%1000==4){findPieceById(id/1000).setImageResource(R.drawable.wqueen);}
+                if(id%1000==17){findPieceById(id/1000).setImageResource(R.drawable.brook);}
+                if(id%1000==18){findPieceById(id/1000).setImageResource(R.drawable.bknight);}
+                if(id%1000==19){findPieceById(id/1000).setImageResource(R.drawable.bbishop);}
+                if(id%1000==20){findPieceById(id/1000).setImageResource(R.drawable.bqueen);}
+            }
+
+            return findPieceById(id/1000);
+        }
     }
 
     /** Check if own king is in check change. */
     public boolean myKingInCheck(){
 
         boolean b = false;
+        Piece[] allPieces = getAllPieces();
 
-        for (int i =1; i<33; i++){
-            Piece piece = findPieceById(i);
+        for (Piece piece : allPieces){
+//            Piece piece = findPieceById(i);
 //            System.out.println(piece.moves()+" : "+i);
 //            piece.movesCoor = "";
 
@@ -200,9 +222,10 @@ public class Utils {
     public boolean opponentKingInCheck(){
 
         boolean b = false;
+        Piece[] allPieces = getAllPieces();
 
-        for (int i =1; i<33; i++){
-            Piece piece = findPieceById(i);
+        for (Piece piece : allPieces){
+//            Piece piece = findPieceById(i);
             String[] cmoves = piece.moves().split(",");
             for(String coor : cmoves){
                 if((coor.equals(Game.bk.c())&&Game.color==1)||(coor.equals(Game.wk.c())&&Game.color==-1)){
@@ -213,5 +236,46 @@ public class Utils {
         }
 
         return b;
+    }
+
+    /** Returns an array of all the pieces. */
+    public Piece[] getAllPieces(){
+        Piece[] pieceArray = {
+                Game.wr1,
+                Game.wr2,
+                Game.wn1,
+                Game.wn2,
+                Game.wb1,
+                Game.wb2,
+                Game.wk,
+                Game.wq,
+                Game.wp1,
+                Game.wp2,
+                Game.wp3,
+                Game.wp4,
+                Game.wp5,
+                Game.wp6,
+                Game.wp7,
+                Game.wp8,
+
+                Game.br1,
+                Game.br2,
+                Game.bn1,
+                Game.bn2,
+                Game.bb1,
+                Game.bb2,
+                Game.bk,
+                Game.bq,
+                Game.bp1,
+                Game.bp2,
+                Game.bp3,
+                Game.bp4,
+                Game.bp5,
+                Game.bp6,
+                Game.bp7,
+                Game.bp8,
+        };
+
+        return pieceArray;
     }
 }
