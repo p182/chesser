@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -46,11 +47,37 @@ public class AcceptThread extends Thread {
 
         while (true) {
             try {
+                activity.runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        TextView textView = (TextView) activity.findViewById(R.id.textView);
+                        textView.setVisibility(View.VISIBLE);
+                    }
+                });
+
                 socket = mmServerSocket.accept();
+
             } catch (IOException e) {
                 System.out.println(e);
                 break;
+            } catch (NullPointerException e) {
+
+                activity.runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Toast.makeText(activity, R.string.bluetooth_off,
+                                Toast.LENGTH_LONG).show();
+
+                        TextView textView = (TextView) activity.findViewById(R.id.textView);
+                        textView.setVisibility(View.INVISIBLE);
+                    }
+                });
+
+                break;
             }
+
             // If a connection was accepted
             if (socket != null) {
                 OpenServer.socket=socket;

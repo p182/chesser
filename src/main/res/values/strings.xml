@@ -16,5 +16,6 @@
     <string name="black_opponent_in_check">Opponent\'s turn - black in check</string>
     <string name="name_game_already_given">GAME NOT SAVED: name already in use</string>
     <string name="successfully_saved">Game saved</string>
+    <string name="bluetooth_off">Bluetooth off, turn on to open server</string>
 
 </resources>

@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -27,10 +28,8 @@ public class OpenServer extends ActionBarActivity {
 
 
     public void startServer(View v) {
-        AcceptThread acceptThread = new AcceptThread(this);
-        System.out.println("Starting");
-        acceptThread.start();
-        TextView textView = (TextView) findViewById(R.id.textView);
-        textView.setVisibility(View.VISIBLE);
+            AcceptThread acceptThread = new AcceptThread(this);
+            System.out.println("Starting");
+            acceptThread.start();
     }
 }
