@@ -133,8 +133,8 @@ public class Utils {
 
     /** Get a Piece object by its ID int. */
     public Piece findPieceById(int id){
-            System.out.println("find piece by ID");
-            System.out.println("id:" + id);
+//            System.out.println("find piece by ID");
+//            System.out.println("id:" + id);
         // Black pieces
         if(id == Game.br1.getId()){return Game.br1;}
         if(id == Game.br2.getId()){return Game.br2;}

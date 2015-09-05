@@ -431,30 +431,35 @@ public class Game extends ActionBarActivity {
     }
 
     public void selectedOnClick(View v){
-        // Move the piece to the selected square. Save the old piece's coordinates to be able to undo the move if own king is in check.
+
+        // To eliminate bugs only if players turn a selected square will react to click.
+        if (myTurn) {
+            // Move the piece to the selected square. Save the old piece's coordinates to be able to undo the move if own king is in check.
 //        Button turnNotifier = (Button)findViewById(R.id.turnNotifier);
-        TextView turnNotifier = (TextView)findViewById(R.id.turnNotifier);
 
-        SelectedSquare s = (SelectedSquare)v;
+            myTurn = false; // Disable other pieces from responding to clicks
 
-        final int tmpX = pressedPiece.x;
-        final int tmpY = pressedPiece.y;
+            TextView turnNotifier = (TextView) findViewById(R.id.turnNotifier);
 
-        pressedPiece.x = s.x;
-        pressedPiece.y = s.y;
+            SelectedSquare s = (SelectedSquare) v;
 
-        pressedPiece.setLayoutParams(u.getPlaceParams(s.x, s.y));
-        removeAponnent();
+            final int tmpX = pressedPiece.x;
+            final int tmpY = pressedPiece.y;
 
-        if(!u.myKingInCheck()) {
-            // Valid move, king not in check.
-            myTurn = false;
-            removedPiece = null;
+            pressedPiece.x = s.x;
+            pressedPiece.y = s.y;
 
-            RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
-            for (int id = 100; id < 6700; id += 100) {
-                rl.removeView(findViewById(id));
-            }
+            pressedPiece.setLayoutParams(u.getPlaceParams(s.x, s.y));
+            removeAponnent();
+
+            if (!u.myKingInCheck()) {
+                // Valid move, king not in check.
+                removedPiece = null;
+
+                RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
+                for (int id = 100; id < 6700; id += 100) {
+                    rl.removeView(findViewById(id));
+                }
 
 /*
             if(Game.color==1){
@@ -466,138 +471,140 @@ public class Game extends ActionBarActivity {
                 check.setVisibility(View.INVISIBLE);
             }
 */
-            // Notify opponent's turn and whether opponent is in check.
-            if (u.opponentKingInCheck()) {
-                Game.kingInCheck = true;
-                if (Game.color == 1) {
-                    turnNotifier.setText(R.string.black_opponent_in_check);
+                // Notify opponent's turn and whether opponent is in check.
+                if (u.opponentKingInCheck()) {
+                    Game.kingInCheck = true;
+                    if (Game.color == 1) {
+                        turnNotifier.setText(R.string.black_opponent_in_check);
+//                        turnNotifier.setText(R.string.autosave_received);
+                    } else {
+                        turnNotifier.setText(R.string.white_opponent_in_check);
+                    }
                 } else {
-                    turnNotifier.setText(R.string.white_opponent_in_check);
+                    // Opponent not in check.
+                    turnNotifier.setText(R.string.opponent_turn);
                 }
-            } else {
-                // Opponent not in check.
-                turnNotifier.setText(R.string.opponent_turn);
-            }
 
-            // If piece is a pawn and it got to the end of the board let the player choose to what piece he wants to switch to
-            if ((pressedPiece.getId() > 8 && pressedPiece.getId() < 17 && s.y == 8) || (pressedPiece.getId() > 24 && pressedPiece.getId() < 33 && s.y == 1)) {
-                LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout);
+                // If piece is a pawn and it got to the end of the board let the player choose to what piece he wants to switch to
+                if ((pressedPiece.getId() > 8 && pressedPiece.getId() < 17 && s.y == 8) || (pressedPiece.getId() > 24 && pressedPiece.getId() < 33 && s.y == 1)) {
+                    LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout);
 //                ll.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, u.dp(40)).bottomMargin());
 
-                ImageView rook = (ImageView)findViewById(R.id.rook);
-                ImageView knight = (ImageView)findViewById(R.id.knight);
-                ImageView bishop = (ImageView)findViewById(R.id.bishop);
-                ImageView queen = (ImageView)findViewById(R.id.queen);
-                if(color==1){
-                    rook.setImageResource(R.drawable.wrook);
-                    knight.setImageResource(R.drawable.wknight);
-                    bishop.setImageResource(R.drawable.wbishop);
-                    queen.setImageResource(R.drawable.wqueen);
-                }
-                else{
-                    rook.setImageResource(R.drawable.brook);
-                    knight.setImageResource(R.drawable.bknight);
-                    bishop.setImageResource(R.drawable.bbishop);
-                    queen.setImageResource(R.drawable.bqueen);
-                }
-                rook.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        // Pawn is white
-                        if(8<pressedPiece.getId() && pressedPiece.getId()<17) {
-                            pressedPiece.setId(pressedPiece.getId() * 1000 + 1);
-                            pressedPiece.setImageResource(R.drawable.wrook);
-                        }
-                        // Pawn is black
-                        else{
-                            pressedPiece.setId(pressedPiece.getId() * 1000 + 17);
-                            pressedPiece.setImageResource(R.drawable.brook);
-                        }
+                    ImageView rook = (ImageView) findViewById(R.id.rook);
+                    ImageView knight = (ImageView) findViewById(R.id.knight);
+                    ImageView bishop = (ImageView) findViewById(R.id.bishop);
+                    ImageView queen = (ImageView) findViewById(R.id.queen);
+                    if (color == 1) {
+                        rook.setImageResource(R.drawable.wrook);
+                        knight.setImageResource(R.drawable.wknight);
+                        bishop.setImageResource(R.drawable.wbishop);
+                        queen.setImageResource(R.drawable.wqueen);
+                    } else {
+                        rook.setImageResource(R.drawable.brook);
+                        knight.setImageResource(R.drawable.bknight);
+                        bishop.setImageResource(R.drawable.bbishop);
+                        queen.setImageResource(R.drawable.bqueen);
                     }
-                });
-                knight.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        // Pawn is white
-                        if(8<pressedPiece.getId() && pressedPiece.getId()<17) {
-                            pressedPiece.setId(pressedPiece.getId() * 1000 + 2);
-                            pressedPiece.setImageResource(R.drawable.wknight);
+                    rook.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            // Pawn is white
+                            if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
+                                pressedPiece.setId(pressedPiece.getId() * 1000 + 1);
+                                pressedPiece.setImageResource(R.drawable.wrook);
+                            }
+                            // Pawn is black
+                            else {
+                                pressedPiece.setId(pressedPiece.getId() * 1000 + 17);
+                                pressedPiece.setImageResource(R.drawable.brook);
+                            }
                         }
-                        // Pawn is black
-                        else{
-                            pressedPiece.setId(pressedPiece.getId() * 1000 + 18);
-                            pressedPiece.setImageResource(R.drawable.bknight);
+                    });
+                    knight.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            // Pawn is white
+                            if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
+                                pressedPiece.setId(pressedPiece.getId() * 1000 + 2);
+                                pressedPiece.setImageResource(R.drawable.wknight);
+                            }
+                            // Pawn is black
+                            else {
+                                pressedPiece.setId(pressedPiece.getId() * 1000 + 18);
+                                pressedPiece.setImageResource(R.drawable.bknight);
+                            }
                         }
-                    }
-                });
-                bishop.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        // Pawn is white
-                        if(8<pressedPiece.getId() && pressedPiece.getId()<17) {
-                            pressedPiece.setId(pressedPiece.getId() * 1000 + 3);
-                            pressedPiece.setImageResource(R.drawable.wbishop);
+                    });
+                    bishop.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            // Pawn is white
+                            if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
+                                pressedPiece.setId(pressedPiece.getId() * 1000 + 3);
+                                pressedPiece.setImageResource(R.drawable.wbishop);
+                            }
+                            // Pawn is black
+                            else {
+                                pressedPiece.setId(pressedPiece.getId() * 1000 + 19);
+                                pressedPiece.setImageResource(R.drawable.bbishop);
+                            }
                         }
-                        // Pawn is black
-                        else{
-                            pressedPiece.setId(pressedPiece.getId() * 1000 + 19);
-                            pressedPiece.setImageResource(R.drawable.bbishop);
+                    });
+                    queen.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            // Pawn is white
+                            if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
+                                pressedPiece.setId(pressedPiece.getId() * 1000 + 4);
+                                pressedPiece.setImageResource(R.drawable.wqueen);
+                            }
+                            // Pawn is black
+                            else {
+                                pressedPiece.setId(pressedPiece.getId() * 1000 + 20);
+                                pressedPiece.setImageResource(R.drawable.bqueen);
+                            }
                         }
-                    }
-                });
-                queen.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        // Pawn is white
-                        if(8<pressedPiece.getId() && pressedPiece.getId()<17) {
-                            pressedPiece.setId(pressedPiece.getId() * 1000 + 4);
-                            pressedPiece.setImageResource(R.drawable.wqueen);
-                        }
-                        // Pawn is black
-                        else{
-                            pressedPiece.setId(pressedPiece.getId() * 1000 + 20);
-                            pressedPiece.setImageResource(R.drawable.bqueen);
-                        }
-                    }
-                });
+                    });
 
-                ll.setVisibility(View.VISIBLE);
-                ll.bringToFront();
-                System.out.println("pawn at end of board");
+                    ll.setVisibility(View.VISIBLE);
+                    ll.bringToFront();
+                    System.out.println("pawn at end of board");
+                } else {
+                    // Valid nove and pawn not at end of board
+                    // Prepare a new game state string and send it to opponent
+                    String Coor = getWPCIDs() + "," + getBPCIDs();
+                    String state = Coor + ";" + null + ";" + null;
+
+                    mDbHelper.autoSave(getResources().getText(R.string.autosave_sent).toString());
+
+                    connectThread.stringWrite(state);
+                }
             } else {
-                // Prepare a new game state string and send it to opponent
-                String Coor = getWPCIDs() + "," + getBPCIDs();
-                String state = Coor + ";" + null + ";" + null;
-                connectThread.stringWrite(state);
-            }
-        }
-        else{
-            // King is checked, the piece will undo the move after delay
-            myTurn=false; // Disable other pieces from responding to clicks
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
+                // King is checked, the piece will undo the move after delay
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
 
-                @Override
-                public void run() {
-                    pressedPiece.x = tmpX;
-                    pressedPiece.y = tmpY;
+                    @Override
+                    public void run() {
+                        pressedPiece.x = tmpX;
+                        pressedPiece.y = tmpY;
 
-                    pressedPiece.setLayoutParams(u.getPlaceParams(tmpX, tmpY));
+                        pressedPiece.setLayoutParams(u.getPlaceParams(tmpX, tmpY));
 
-                    // If an opponent piece was removed return it
-                    if (removedPiece != null) {
-                        removedPiece.x = removedPieceX;
-                        removedPiece.y = removedPieceY;
+                        // If an opponent piece was removed return it
+                        if (removedPiece != null) {
+                            removedPiece.x = removedPieceX;
+                            removedPiece.y = removedPieceY;
 
-                        RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
+                            RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
 //                        rl.addView(removedPiece);
-                        removedPiece.setVisibility(View.VISIBLE);
+                            removedPiece.setVisibility(View.VISIBLE);
 
-                        removedPiece = null;
+                            removedPiece = null;
+                        }
+                        myTurn = true; // Enable other pieces to respond to clicks
                     }
-                    myTurn = true; // Enable other pieces to respond to clicks
-                }
 
-            }, 500); // delay
+                }, 500); // delay
+            }
+
         }
-
-
     }
 
     /** Saves the current game to the data base. */

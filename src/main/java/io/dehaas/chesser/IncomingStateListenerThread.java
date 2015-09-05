@@ -38,6 +38,10 @@ public class IncomingStateListenerThread extends Thread {
 
                                     NewState state = new NewState(s, activity);
                                     state.createNewState();
+
+                                    // Save the current state in auto save received.
+                                    ChesserDbOperations mDbHelper = new ChesserDbOperations(activity);
+                                    mDbHelper.autoSave(activity.getResources().getText(R.string.autosave_received).toString());
                                 }
                         }
                             );

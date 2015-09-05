@@ -8,6 +8,8 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * Helps generate a new game state.
  */
@@ -41,6 +43,7 @@ public class NewState{
         Piece piece = u.findPieceById(Integer.parseInt(cIdArray[1]));
         piece.setId(Integer.parseInt(cIdArray[1]));
 
+
         // If the id is not standart then
 /*        if(piece.getId()/100!=0){
             if(piece.getId()%1000==1){piece.setImageResource(R.drawable.wrook);}
@@ -67,10 +70,12 @@ public class NewState{
         }
         else {
             piece.setLayoutParams(u.getPlaceParams(x, y));
+            piece.setVisibility(View.VISIBLE);
         }
     }
 
     void createNewState(){
+
         RelativeLayout rl = (RelativeLayout) activity.findViewById(R.id.fragment);
         for (int id = 100; id < 6700; id += 100) {
             rl.removeView(activity.findViewById(id));
@@ -79,30 +84,23 @@ public class NewState{
         TextView turnNotifier = (TextView)activity.findViewById(R.id.turnNotifier);
 
         u= new Utils(activity);
-        System.out.println("movesCoor: " + s);
+//        System.out.println("movesCoor: " + s);
 
         String[] state = s.split(";");
 
-        if(state[1]!=null){
-            if(state[1].equals("white")){
-                Game.color = 1;
-            }
-            if(state[1].equals("black")){
-                Game.color = -1;
-            }
+        if(state[1].equals("white")){
+            Game.color = 1;
+        }
+        if(state[1].equals("black")){
+            Game.color = -1;
         }
 
-        if(state[2]!=null){
-            if(state[2].equals("myTurn")){
-                Game.myTurn = true;
-            }
-            if(state[2].equals("opTurn")){
-                Game.myTurn = false;
-            }
+        if(state[2].equals("myTurn")){
+            Game.myTurn = true;
         }
-
-        System.out.println(Game.myTurn);
-        System.out.println(Game.color);
+        if(state[2].equals("opTurn")){
+            Game.myTurn = false;
+        }
 
 //        System.out.println(array[0]);
 /*
@@ -115,11 +113,11 @@ public class NewState{
         }
 */
         String[] array = state[0].split(",");
-        System.out.println(state[0]);
+//        System.out.println(state[0]);
 
         for (int i = 0; i < array.length; i++) {
             movePiece(array[i]);
-            System.out.println(array[i]);
+//            System.out.println(array[i]);
         }
 
         // Notify turn and in-check status.
@@ -152,5 +150,13 @@ public class NewState{
             }
         }
 
+/*
+        // If its a turn received and not a game that is being loaded.
+        if(state[1].equals("null")&&state[2].equals("null")) {
+            // Save the current state in auto save received.
+            ChesserDbOperations mDbHelper = new ChesserDbOperations(activity);
+            mDbHelper.autoSave(activity.getResources().getText(R.string.autosave_received).toString());
+        }
+*/
     }
 }
