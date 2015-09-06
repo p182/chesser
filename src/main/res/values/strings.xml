@@ -16,8 +16,10 @@
     <string name="black_opponent_in_check">Opponent\'s turn - black in check</string>
     <string name="name_game_already_given">GAME NOT SAVED: name already in use</string>
     <string name="successfully_saved">Game saved</string>
+    <string name="successfully_deleted">Game deleted</string>
     <string name="bluetooth_off">Bluetooth off, turn on to open server</string>
     <string name="autosave_sent">:autosave:last_sent</string>
     <string name="autosave_received">:autosave:last_received</string>
+    <string name="confirm_delete">Are you sure you want to delete</string>
 
 </resources>

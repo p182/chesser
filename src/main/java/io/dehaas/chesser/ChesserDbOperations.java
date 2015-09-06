@@ -88,7 +88,24 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
     /** Deletes a game state from the database. */
     public void deleteGame(String gameName){
+        // Gets the data repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
 
+        // DELETE FROM Games WHERE game_name='test2'
+
+        // Which row to delete, based on the ID
+        String selection = FeedReaderContract.FeedEntry.GAME_NAME + " = ?";
+        String[] selectionArgs = { gameName };
+
+        int deleteCount = db.delete(
+                FeedReaderContract.FeedEntry.TABLE_NAME,
+                selection,
+                selectionArgs);
+
+        System.out.println("deleteCount: " + deleteCount);
+
+        Toast.makeText(appContext, R.string.successfully_deleted,
+                Toast.LENGTH_LONG).show();
     }
 
     /** Returns a list of all game names. */

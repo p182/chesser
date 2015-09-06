@@ -13,4 +13,10 @@
         android:title="Load Game"
         app:showAsAction="never"
         android:onClick="loadGame"/>
+    <item
+        android:id="@+id/action_delete"
+        android:orderInCategory="3"
+        android:title="Delete Game"
+        app:showAsAction="never"
+        android:onClick="deleteGame"/>
 </menu>

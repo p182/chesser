@@ -686,6 +686,45 @@ public class Game extends ActionBarActivity {
         });
     }
 
+    /** Deletes  a chosen game from the database. */
+    public void deleteGame(MenuItem item){
+        final Activity activity = this;
+
+        final View layout = View.inflate(this, R.layout.load_dialog, null);
+        final AlertDialog listDialog = new AlertDialog.Builder(activity).setTitle("Delete Game").setView(layout).show();
+
+        final ListView listview = (ListView) layout.findViewById(R.id.entries);
+
+        final ArrayList<String> list = mDbHelper.getGameNames();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, list);
+
+        listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new ListView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
+                final String gameName = (String) listview.getItemAtPosition(position);
+
+                // Confirm with user that he wants to delete game
+                new AlertDialog.Builder(activity)
+                        .setTitle(getResources().getText(R.string.confirm_delete).toString() +" "+ gameName +" ?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mDbHelper.deleteGame(gameName);
+
+                                // Dissmiss the list dialog only if delete confirmed
+                                listDialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .show();
+            }
+        });
+    }
+
     /** Disable enable vibration in game. */
     public void setVibrate(View v){
         CheckBox vibrateRB = (CheckBox)v;
@@ -710,7 +749,7 @@ public class Game extends ActionBarActivity {
         connectThread.stringWrite(state);
     }
 
-    // Override the onBackPressed method and do nothing
+    /** Override the onBackPressed method and do nothing. */
     @Override
     public void onBackPressed() {
     }
