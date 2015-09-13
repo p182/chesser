@@ -5,10 +5,7 @@ import android.content.Context;
 import android.os.Vibrator;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 
 /**
  * Helps generate a new game state.
@@ -150,13 +147,17 @@ public class NewState{
             }
         }
 
-/*
+        // Run the OpponentKingInCheckmate thread in case its chake mate
+        MyKingInCheckmateThread myKingInCheckmateThreadThread = new MyKingInCheckmateThread(activity);
+        myKingInCheckmateThreadThread.start();
+
+
         // If its a turn received and not a game that is being loaded.
         if(state[1].equals("null")&&state[2].equals("null")) {
-            // Save the current state in auto save received.
-            ChesserDbOperations mDbHelper = new ChesserDbOperations(activity);
-            mDbHelper.autoSave(activity.getResources().getText(R.string.autosave_received).toString());
+            // Run the OpponentKingInCheckmate thread in case its chake mate
+            OpponentKingInCheckmateThread opponentKingInCheckmateThreadThread = new OpponentKingInCheckmateThread(activity);
+            opponentKingInCheckmateThreadThread.start();
         }
-*/
+
     }
 }

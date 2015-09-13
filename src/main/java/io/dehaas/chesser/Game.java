@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -96,7 +95,8 @@ public class Game extends ActionBarActivity {
 
     public static int color = 1;
 
-    public static Boolean kingInCheck;
+    public static Boolean kingInCheck = false;
+    public static Boolean kingInCheckmate;
     public static Boolean opponentKingInCheck;
 
     public static Boolean myTurn;
@@ -128,25 +128,28 @@ public class Game extends ActionBarActivity {
     public static Piece wp7 , bp7;
     public static Piece wp8 , bp8;
 
-    public void removeAponnent(){
 
-        String[] apponentc;
+    /** Remove opponents that have been atacked by one piece. */
+/*
+    public void removeOpponent(){
+
+        String[] opponentc;
 
         // If the player is white
         if(color==1) {
-            apponentc = new String[] {br1.c(), br2.c(), bn1.c(), bn2.c(), bb1.c(), bb2.c(), bk.c(), bq.c(),
+            opponentc = new String[] {br1.c(), br2.c(), bn1.c(), bn2.c(), bb1.c(), bb2.c(), bk.c(), bq.c(),
                     bp1.c(), bp2.c(), bp3.c(), bp4.c(), bp5.c(), bp6.c(), bp7.c(), bp8.c()};
         }
         // If the player is black
         else {
-            apponentc = new String[] {wr1.c(), wr2.c(), wn1.c(), wn2.c(), wb1.c(), wb2.c(), wk.c(), wq.c(),
+            opponentc = new String[] {wr1.c(), wr2.c(), wn1.c(), wn2.c(), wb1.c(), wb2.c(), wk.c(), wq.c(),
                     wp1.c(), wp2.c(), wp3.c(), wp4.c(), wp5.c(), wp6.c(), wp7.c(), wp8.c()};
         }
 
         String s = pressedPiece.c();
-        for(int t=0; t<apponentc.length; t++){
-            if (s.equals(apponentc[t])){
-                Piece p = u.findPieceByCoordinates(apponentc[t]);
+        for(int t=0; t<opponentc.length; t++){
+            if (s.equals(opponentc[t])){
+                Piece p = u.findPieceByCoordinates(opponentc[t]);
                 removedPieceX = p.x;
                 removedPieceY = p.y;
                 removedPiece = p;
@@ -160,6 +163,23 @@ public class Game extends ActionBarActivity {
             }
         }
     }
+*/
+
+    /** Return last opponent that has been removed. */
+/*
+    public void returnOpponent(){
+        if (removedPiece != null) {
+            removedPiece.x = removedPieceX;
+            removedPiece.y = removedPieceY;
+
+            RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
+//                        rl.addView(removedPiece);
+            removedPiece.setVisibility(View.VISIBLE);
+
+            removedPiece = null;
+        }
+    }
+*/
 
     /** Returns a string of all the white pieces coordinates+IDs. */
     public static String getWPCIDs(){
@@ -450,7 +470,7 @@ public class Game extends ActionBarActivity {
             pressedPiece.y = s.y;
 
             pressedPiece.setLayoutParams(u.getPlaceParams(s.x, s.y));
-            removeAponnent();
+            u.removeOpponent();
 
             if (!u.myKingInCheck()) {
                 // Valid move, king not in check.
@@ -571,9 +591,15 @@ public class Game extends ActionBarActivity {
                     String Coor = getWPCIDs() + "," + getBPCIDs();
                     String state = Coor + ";" + null + ";" + null;
 
+                    // Autosave game
                     mDbHelper.autoSave(getResources().getText(R.string.autosave_sent).toString());
 
+                    // Send game to opponent
                     connectThread.stringWrite(state);
+
+                    // Run the OpponentKingInCheckmate thread in case its chake mate
+                    OpponentKingInCheckmateThread opponentKingInCheckmateThreadThread = new OpponentKingInCheckmateThread(this);
+                    opponentKingInCheckmateThreadThread.start();
                 }
             } else {
                 // King is checked, the piece will undo the move after delay
@@ -588,16 +614,8 @@ public class Game extends ActionBarActivity {
                         pressedPiece.setLayoutParams(u.getPlaceParams(tmpX, tmpY));
 
                         // If an opponent piece was removed return it
-                        if (removedPiece != null) {
-                            removedPiece.x = removedPieceX;
-                            removedPiece.y = removedPieceY;
+                        u.returnOpponent();
 
-                            RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
-//                        rl.addView(removedPiece);
-                            removedPiece.setVisibility(View.VISIBLE);
-
-                            removedPiece = null;
-                        }
                         myTurn = true; // Enable other pieces to respond to clicks
                     }
 
@@ -747,6 +765,22 @@ public class Game extends ActionBarActivity {
         String Coor = getWPCIDs() + "," + getBPCIDs();
         String state = Coor + ";" + null + ";" + null;
         connectThread.stringWrite(state);
+    }
+
+    public void checkmateLostCloseOnClick(View v){
+        Game.myTurn = true;
+        LinearLayout lostLayout = (LinearLayout) findViewById(R.id.lostLayout);
+        lostLayout.setVisibility(View.INVISIBLE);
+        System.out.println("close");
+    }
+    public void checkmateWonCloseOnClick(View v){
+        LinearLayout wonLayout = (LinearLayout) findViewById(R.id.wonLayout);
+        wonLayout.setVisibility(View.INVISIBLE);
+    }
+    public void checkmateExitOnClick(View v){
+        incomingStateListenerThread.cancel();
+        connectThread.cancel();
+        startActivity(new Intent("first.activity"));
     }
 
     /** Override the onBackPressed method and do nothing. */
