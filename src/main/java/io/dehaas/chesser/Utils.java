@@ -458,6 +458,7 @@ public class Utils {
         Piece tmpRemovedPiece;
 
         // Scan all players pieces
+        mainLoop:
         for (Piece piece : pieces) {
             String[] cmoves = piece.moves().split(",");
 
@@ -468,20 +469,16 @@ public class Utils {
                 count++;
 
                 if (!coor.equals("")) {
-//                System.out.println("coo: " + coor);
 
                     // Store the current piece coor
                     tmpx = piece.x;
                     tmpy = piece.y;
-//                    tmpPressedPiece = Game.pressedPiece;
 
                     // Change piece coor too move coor
                     piece.x = coor.charAt(0) - 48;
                     piece.y = coor.charAt(1) - 48;
-//                    Game.pressedPiece = piece;
 
                     tmpRemovedPiece = null;
-
 
                     // If the moved piece collides with one of opponents pieces remove it
                     for(Piece opPiece : getAllOpponentsPieces()){
@@ -505,6 +502,16 @@ public class Utils {
 
                         System.out.println("x,y:  " + piece.x + "," + piece.y);
 
+                        if(tmpRemovedPiece!=null) {
+                            tmpRemovedPiece.x = tmpxRemovedPiece;
+                            tmpRemovedPiece.y = tmpyRemovedPiece;
+                        }
+
+                        piece.x = tmpx;
+                        piece.y = tmpy;
+
+                        break mainLoop;
+
                     }
 
                     piece.x = tmpx;
@@ -514,10 +521,7 @@ public class Utils {
                     if(tmpRemovedPiece!=null) {
                         tmpRemovedPiece.x = tmpxRemovedPiece;
                         tmpRemovedPiece.y = tmpyRemovedPiece;
-
-                        break;
                     }
-
                 }
             }
 
@@ -546,6 +550,7 @@ public class Utils {
         Piece tmpRemovedPiece;
 
         // Scan all players pieces
+        mainLoop:
         for (Piece piece : pieces) {
             String[] cmoves = piece.moves().split(",");
 
@@ -580,6 +585,7 @@ public class Utils {
                             opPiece.x = 0;
                             opPiece.y = 0;
                         }
+
                     }
 
 
@@ -592,6 +598,16 @@ public class Utils {
                         System.out.println("Not checkmate");
 
                         System.out.println("x,y:  " + piece.x + "," + piece.y);
+
+                        if(tmpRemovedPiece!=null) {
+                            tmpRemovedPiece.x = tmpxRemovedPiece;
+                            tmpRemovedPiece.y = tmpyRemovedPiece;
+                        }
+
+                        piece.x = tmpx;
+                        piece.y = tmpy;
+
+                        break mainLoop;
 
                     }
 

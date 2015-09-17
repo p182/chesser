@@ -12,10 +12,12 @@
     <string name="opponent_turn">Opponent\'s turn</string>
     <string name="white_you_in_check">Your turn - white in check</string>
     <string name="black_you_in_check">Your turn - black in check</string>
-    <string name="white_you_in_checkmate">Your turn - white in checkmate</string>
-    <string name="black_you_in_checkmate">Your turn - black in checkmate</string>
+    <string name="white_you_is_mated">Your turn - white is mated</string>
+    <string name="black_you_is_mated">Your turn - black is mated</string>
     <string name="white_opponent_in_check">Opponent\'s turn - white in check</string>
     <string name="black_opponent_in_check">Opponent\'s turn - black in check</string>
+    <string name="white_opponent_is_mated">Opponent\'s turn - white is mated</string>
+    <string name="black_opponent_is_mated">Opponent\'s turn - black is mated</string>
     <string name="name_game_already_given">GAME NOT SAVED: name already in use</string>
     <string name="successfully_saved">Game saved</string>
     <string name="successfully_deleted">Game deleted</string>

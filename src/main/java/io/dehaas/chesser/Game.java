@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +43,7 @@ public class Game extends ActionBarActivity {
         connectThread=tmp;
         connectThread.start();
         incomingStateListenerThread.start();
+
         System.out.println("Game started");
 
         setupPieces();
@@ -474,6 +476,8 @@ public class Game extends ActionBarActivity {
 
             if (!u.myKingInCheck()) {
                 // Valid move, king not in check.
+                kingInCheck = false;
+
                 removedPiece = null;
 
                 RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
@@ -493,7 +497,6 @@ public class Game extends ActionBarActivity {
 */
                 // Notify opponent's turn and whether opponent is in check.
                 if (u.opponentKingInCheck()) {
-                    Game.kingInCheck = true;
                     if (Game.color == 1) {
                         turnNotifier.setText(R.string.black_opponent_in_check);
 //                        turnNotifier.setText(R.string.autosave_received);
@@ -597,9 +600,12 @@ public class Game extends ActionBarActivity {
                     // Send game to opponent
                     connectThread.stringWrite(state);
 
-                    // Run the OpponentKingInCheckmate thread in case its chake mate
+
+                    // Run the OpponentKingInCheckmate thread
                     OpponentKingInCheckmateThread opponentKingInCheckmateThreadThread = new OpponentKingInCheckmateThread(this);
                     opponentKingInCheckmateThreadThread.start();
+
+
                 }
             } else {
                 // King is checked, the piece will undo the move after delay

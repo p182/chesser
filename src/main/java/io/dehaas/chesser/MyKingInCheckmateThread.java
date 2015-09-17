@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Handler;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * Thread that runs myKingInCheckmate.
@@ -22,7 +23,7 @@ public class MyKingInCheckmateThread extends Thread {
     public void run() {
         if(Game.kingInCheck) {
 
-            System.out.println(u.myKingInCheckmate());
+            System.out.println(Game.kingInCheck);
 
             if (u.myKingInCheckmate()) {
                 activity.runOnUiThread(
@@ -39,6 +40,13 @@ public class MyKingInCheckmateThread extends Thread {
                                         LinearLayout lostLayout = (LinearLayout) activity.findViewById(R.id.lostLayout);
                                         lostLayout.setVisibility(View.VISIBLE);
                                         lostLayout.bringToFront();
+
+                                        TextView turnNotifier = (TextView)activity.findViewById(R.id.turnNotifier);
+                                        if (Game.color == 1) {
+                                            turnNotifier.setText(R.string.white_you_is_mated);
+                                        } else {
+                                            turnNotifier.setText(R.string.black_you_is_mated);
+                                        }
 
                                     }
 

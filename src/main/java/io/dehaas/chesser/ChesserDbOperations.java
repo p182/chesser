@@ -77,6 +77,9 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
                     Toast.LENGTH_LONG).show();
 
 //            System.out.println(newRowId);
+
+
+            db.close();
         }
         else{
             // There is already an entry with the same name. Notify the problem.
@@ -106,6 +109,8 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
         Toast.makeText(appContext, R.string.successfully_deleted,
                 Toast.LENGTH_LONG).show();
+
+        db.close();
     }
 
     /** Returns a list of all game names. */
@@ -235,6 +240,10 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         Toast.makeText(appContext, R.string.successfully_saved,
                 Toast.LENGTH_LONG).show();
 
+
+
+        db.close();
+
     }
 
     /** Save to the autosave value the current game state. */
@@ -295,5 +304,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
                     selectionArgs);
 
         }
+
+        db.close();
     }
 }

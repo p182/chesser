@@ -62,37 +62,42 @@ public class Piece extends ImageView{
         String moves = "";
         movesCoor ="";
 
-        /** Get moves of the piece by its id. */
-        switch (getId()){
-            // for black pieces
-            case 19: case 22: moves = bishopMoves(-1); break;
-            case 21: moves = kingMoves(-1); break;
-            case 18: case 23: moves = knightMoves(-1); break;
-            case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32:
-                moves = pawnMoves(-1); break;
-            case 20: moves = queenMoves(-1); break;
-            case 17: case 24: moves = rookMoves(-1); break;
-            // for white pieces
-            case 3: case 6: moves = bishopMoves(1); break;
-            case 5: moves = kingMoves(1); break;
-            case 2: case 7: moves = knightMoves(1); break;
-            case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16:
-                moves = pawnMoves(1); break;
-            case 4: moves = queenMoves(1); break;
-            case 1: case 8: moves = rookMoves(1); break;
+        // If the piece has been removed his c() will be "00"
+        // If the piece hase been removed return ""
+        if(!c().equals("00")){
+            /** Get moves of the piece by its id. */
+            switch (getId()){
+                // for black pieces
+                case 19: case 22: moves = bishopMoves(-1); break;
+                case 21: moves = kingMoves(-1); break;
+                case 18: case 23: moves = knightMoves(-1); break;
+                case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32:
+                    moves = pawnMoves(-1); break;
+                case 20: moves = queenMoves(-1); break;
+                case 17: case 24: moves = rookMoves(-1); break;
+                // for white pieces
+                case 3: case 6: moves = bishopMoves(1); break;
+                case 5: moves = kingMoves(1); break;
+                case 2: case 7: moves = knightMoves(1); break;
+                case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16:
+                    moves = pawnMoves(1); break;
+                case 4: moves = queenMoves(1); break;
+                case 1: case 8: moves = rookMoves(1); break;
 
-            default:
-                System.out.println("default");
-                if(getId()%1000==1){moves = rookMoves(1);}
-                if(getId()%1000==2){moves = knightMoves(1);}
-                if(getId()%1000==3){moves = bishopMoves(1);}
-                if(getId()%1000==4){moves = queenMoves(1);}
-                if(getId()%1000==17){moves = rookMoves(-1);}
-                if(getId()%1000==18){moves = knightMoves(-1);}
-                if(getId()%1000==19){moves = bishopMoves(-1);}
-                if(getId()%1000==20){moves = queenMoves(-1);} break;
+                default:
+                    System.out.println("default");
+                    if(getId()%1000==1){moves = rookMoves(1);}
+                    if(getId()%1000==2){moves = knightMoves(1);}
+                    if(getId()%1000==3){moves = bishopMoves(1);}
+                    if(getId()%1000==4){moves = queenMoves(1);}
+                    if(getId()%1000==17){moves = rookMoves(-1);}
+                    if(getId()%1000==18){moves = knightMoves(-1);}
+                    if(getId()%1000==19){moves = bishopMoves(-1);}
+                    if(getId()%1000==20){moves = queenMoves(-1);} break;
 
+            }
         }
+
 
         return moves;
     }

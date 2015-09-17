@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Handler;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * Thread that runs opponentKingInCheckmate.
@@ -21,6 +22,7 @@ public class OpponentKingInCheckmateThread extends Thread {
 
     public void run() {
 
+        if(u.opponentKingInCheck()) {
             if (u.opponentKingInCheckmate()) {
                 activity.runOnUiThread(
                         new Runnable() {
@@ -36,6 +38,14 @@ public class OpponentKingInCheckmateThread extends Thread {
                                         wonLayout.setVisibility(View.VISIBLE);
                                         wonLayout.bringToFront();
 
+                                        TextView turnNotifier = (TextView)activity.findViewById(R.id.turnNotifier);
+                                        if (Game.color == 1) {
+                                            turnNotifier.setText(R.string.black_opponent_is_mated);
+                                        } else {
+                                            turnNotifier.setText(R.string.white_opponent_is_mated);
+                                        }
+
+
                                     }
 
                                 }, 500); // delay
@@ -43,6 +53,7 @@ public class OpponentKingInCheckmateThread extends Thread {
                         }
                 );
             }
+        }
 
     }
 }

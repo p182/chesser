@@ -8,13 +8,14 @@ android {
         applicationId "io.dehaas.chesser"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 5
-        versionName "0.1.5"
+        versionCode 6
+        versionName "0.1.6"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            zipAlignEnabled true
         }
     }
 }
