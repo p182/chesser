@@ -5,10 +5,9 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -100,6 +99,10 @@ public class Game extends ActionBarActivity {
     public static Boolean kingInCheck = false;
     public static Boolean kingInCheckmate;
     public static Boolean opponentKingInCheck;
+
+    public static Boolean kingMoved;
+    public static Boolean rook1Moved;
+    public static Boolean rook2Moved;
 
     public static Boolean myTurn;
     public static Boolean vibrate = true;
@@ -495,18 +498,6 @@ public class Game extends ActionBarActivity {
                 check.setVisibility(View.INVISIBLE);
             }
 */
-                // Notify opponent's turn and whether opponent is in check.
-                if (u.opponentKingInCheck()) {
-                    if (Game.color == 1) {
-                        turnNotifier.setText(R.string.black_opponent_in_check);
-//                        turnNotifier.setText(R.string.autosave_received);
-                    } else {
-                        turnNotifier.setText(R.string.white_opponent_in_check);
-                    }
-                } else {
-                    // Opponent not in check.
-                    turnNotifier.setText(R.string.opponent_turn);
-                }
 
                 // If piece is a pawn and it got to the end of the board let the player choose to what piece he wants to switch to
                 if ((pressedPiece.getId() > 8 && pressedPiece.getId() < 17 && s.y == 8) || (pressedPiece.getId() > 24 && pressedPiece.getId() < 33 && s.y == 1)) {
@@ -590,6 +581,18 @@ public class Game extends ActionBarActivity {
                     System.out.println("pawn at end of board");
                 } else {
                     // Valid nove and pawn not at end of board
+                    // Notify opponent's turn and whether opponent is in check.
+                    if (u.opponentKingInCheck()) {
+                        if (Game.color == 1) {
+                            turnNotifier.setText(R.string.black_opponent_in_check);
+//                        turnNotifier.setText(R.string.autosave_received);
+                        } else {
+                            turnNotifier.setText(R.string.white_opponent_in_check);
+                        }
+                    } else {
+                        // Opponent not in check.
+                        turnNotifier.setText(R.string.opponent_turn);
+                    }
                     // Prepare a new game state string and send it to opponent
                     String Coor = getWPCIDs() + "," + getBPCIDs();
                     String state = Coor + ";" + null + ";" + null;
@@ -766,6 +769,20 @@ public class Game extends ActionBarActivity {
     public void onNewPieceChossen(View v){
         LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout);
         ll.setVisibility(View.INVISIBLE);
+
+        TextView turnNotifier = (TextView) findViewById(R.id.turnNotifier);
+        // Notify opponent's turn and whether opponent is in check.
+        if (u.opponentKingInCheck()) {
+            if (Game.color == 1) {
+                turnNotifier.setText(R.string.black_opponent_in_check);
+//                        turnNotifier.setText(R.string.autosave_received);
+            } else {
+                turnNotifier.setText(R.string.white_opponent_in_check);
+            }
+        } else {
+            // Opponent not in check.
+            turnNotifier.setText(R.string.opponent_turn);
+        }
 
         // Prepare a new game state string and send it to opponent
         String Coor = getWPCIDs() + "," + getBPCIDs();

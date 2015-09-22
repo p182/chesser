@@ -3,7 +3,6 @@ package io.dehaas.chesser;
 import android.app.Activity;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 /**
@@ -17,10 +16,10 @@ public class Utils {
     }
 
 
-    public int dp(double dp) {
+    public double dp(double dp) {
 
         float density = activity.getApplicationContext().getResources().getDisplayMetrics().density;
-        return (int) (dp * density);
+        return (dp * density);
     }
 
     public RelativeLayout.LayoutParams getPlaceParams(int x, int y) {
@@ -31,60 +30,64 @@ public class Utils {
         metrics = _metrics;
 
         float density = metrics.density;
-        int width = (int) (metrics.widthPixels / density);
-        int height = (int) (metrics.heightPixels / density);
+//        System.out.println(density);
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
 
 
-//        double d = 36.9;
-        double d = (((width - 32) * 348.35 / 386) / 8);
+//        double d = 36.9*density;
+        double d = ((width - dp(32)) * 43 / 386);
+//        System.out.println(d);
+//        System.out.println(width - dp(32));
 
         double X;
 //        if(color==1){X = 17.4;})
         if (color == 1) {
-            X = ((width - 32) * 22 / 386);
+            X = ((width - dp(32)) * 22 / 386);
+            System.out.println(X);
         }
 //        else {X = 273.9;}
         else {
-            X = ((width - 32) * 22 / 386) + d * 7;
+            X = ((width - dp(32)) * 22 / 386) + d * 7;
         }
 
         double Y;
 //        if(color==1){Y = 18.4;}
         if (color == 1) {
-            Y = ((width - 32) * 23 / 388);
+            Y = ((width - dp(32)) * 23 / 388);
         } else {
-            Y = ((width - 32) * 23 / 388) + d * 7;
+            Y = ((width - dp(32)) * 23 / 388) + d * 7;
         }
 
 
-        RelativeLayout.LayoutParams L = new RelativeLayout.LayoutParams(dp(38), dp(38));
+        RelativeLayout.LayoutParams L = new RelativeLayout.LayoutParams(0,0);
         L.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         L.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
         switch (x) {
             case 1:
-                L.leftMargin = dp(X) + 0 * dp(d) * color;
+                L.leftMargin =(int)( X + 0 * d * color);
                 break;
             case 2:
-                L.leftMargin = dp(X) + 1 * dp(d) * color;
+                L.leftMargin = (int)(X + 1 * d * color);
                 break;
             case 3:
-                L.leftMargin = dp(X) + 2 * dp(d) * color;
+                L.leftMargin = (int)(X + 2 * d * color);
                 break;
             case 4:
-                L.leftMargin = dp(X) + 3 * dp(d) * color;
+                L.leftMargin = (int)(X + 3 * d * color);
                 break;
             case 5:
-                L.leftMargin = dp(X) + 4 * dp(d) * color;
+                L.leftMargin = (int)(X + 4 * d * color);
                 break;
             case 6:
-                L.leftMargin = dp(X) + 5 * dp(d) * color;
+                L.leftMargin = (int)(X + 5 * d * color);
                 break;
             case 7:
-                L.leftMargin = dp(X) + 6 * dp(d) * color;
+                L.leftMargin = (int)(X + 6 * d * color);
                 break;
             case 8:
-                L.leftMargin = dp(X) + 7 * dp(d) * color;
+                L.leftMargin = (int)(X + 7 * d * color);
                 break;
             case 0:
                 L.leftMargin = 0;
@@ -94,28 +97,28 @@ public class Utils {
 
         switch (y) {
             case 1:
-                L.bottomMargin = dp(Y) + 0 * dp(d) * color;
+                L.bottomMargin = (int)(Y + 0 * d * color);
                 break;
             case 2:
-                L.bottomMargin = dp(Y) + 1 * dp(d) * color;
+                L.bottomMargin = (int)(Y + 1 * d * color);
                 break;
             case 3:
-                L.bottomMargin = dp(Y) + 2 * dp(d) * color;
+                L.bottomMargin = (int)(Y + 2 * d * color);
                 break;
             case 4:
-                L.bottomMargin = dp(Y) + 3 * dp(d) * color;
+                L.bottomMargin = (int)(Y + 3 * d * color);
                 break;
             case 5:
-                L.bottomMargin = dp(Y) + 4 * dp(d) * color;
+                L.bottomMargin = (int)(Y + 4 * d * color);
                 break;
             case 6:
-                L.bottomMargin = dp(Y) + 5 * dp(d) * color;
+                L.bottomMargin = (int)(Y + 5 * d * color);
                 break;
             case 7:
-                L.bottomMargin = dp(Y) + 6 * dp(d) * color;
+                L.bottomMargin = (int)(Y + 6 * d * color);
                 break;
             case 8:
-                L.bottomMargin = dp(Y) + 7 * dp(d) * color;
+                L.bottomMargin = (int)(Y + 7 * d * color);
                 break;
             case 0:
                 L.leftMargin = 0;
@@ -123,8 +126,8 @@ public class Utils {
 
         }
 
-        L.height = dp(d);
-        L.width = dp(d);
+        L.height = (int)d;
+        L.width = (int)d;
 
         return L;
     }
@@ -386,10 +389,6 @@ public class Utils {
         }
     }
 
-
-//    public class
-
-
     /**
      * Check if own king is in check change.
      */
@@ -439,7 +438,6 @@ public class Utils {
 
         return b;
     }
-
 
     /**
      * Checks if own king in check mate and if so ends game .
@@ -514,14 +512,14 @@ public class Utils {
 
                     }
 
-                    piece.x = tmpx;
-                    piece.y = tmpy;
-//                    Game.pressedPiece = tmpPressedPiece;
 
                     if(tmpRemovedPiece!=null) {
                         tmpRemovedPiece.x = tmpxRemovedPiece;
                         tmpRemovedPiece.y = tmpyRemovedPiece;
                     }
+
+                    piece.x = tmpx;
+                    piece.y = tmpy;
                 }
             }
 
@@ -531,7 +529,6 @@ public class Utils {
         return kingInCheckMate;
 
     }
-
 
     /**
      * Checks if opponent king in check mate and if so ends game .
@@ -577,13 +574,13 @@ public class Utils {
 
 
                     // If the moved piece collides with one of players pieces remove it
-                    for(Piece opPiece : getAllPlayersPieces()){
-                        if(opPiece.c().equals(piece.c())){
-                            tmpRemovedPiece = opPiece;
-                            tmpxRemovedPiece = opPiece.x;
-                            tmpyRemovedPiece = opPiece.y;
-                            opPiece.x = 0;
-                            opPiece.y = 0;
+                    for(Piece pPiece : getAllPlayersPieces()){
+                        if(pPiece.c().equals(piece.c())){
+                            tmpRemovedPiece = pPiece;
+                            tmpxRemovedPiece = pPiece.x;
+                            tmpyRemovedPiece = pPiece.y;
+                            pPiece.x = 0;
+                            pPiece.y = 0;
                         }
 
                     }
@@ -611,17 +608,14 @@ public class Utils {
 
                     }
 
-                    piece.x = tmpx;
-                    piece.y = tmpy;
-//                    Game.pressedPiece = tmpPressedPiece;
 
                     if(tmpRemovedPiece!=null) {
                         tmpRemovedPiece.x = tmpxRemovedPiece;
                         tmpRemovedPiece.y = tmpyRemovedPiece;
-
-                        break;
                     }
 
+                    piece.x = tmpx;
+                    piece.y = tmpy;
                 }
             }
 
@@ -631,8 +625,6 @@ public class Utils {
         return kingInCheckMate;
 
     }
-
-
 
     /**
      * Returns an array of all the pieces.
@@ -777,7 +769,6 @@ public class Utils {
         }
     }
 
-
     /** Remove opponents that have been atacked by one piece. */
     public void removeOpponent(){
 
@@ -811,7 +802,6 @@ public class Utils {
             }
         }
     }
-
 
     /** Return last opponent that has been removed. */
     public void returnOpponent(){

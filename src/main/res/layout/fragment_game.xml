@@ -121,15 +121,16 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="false"
-        android:layout_alignParentStart="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:gravity="center_vertical|center_horizontal"
         android:visibility="invisible"
         android:id="@+id/wonLayout"
         android:background="@color/bright_foreground_disabled_material_dark"
-        android:layout_alignTop="@+id/turnNotifier">
+        android:layout_alignTop="@+id/turnNotifier"
+        android:layout_alignParentBottom="true">
 
         <ImageButton
             style="@style/Base.Widget.AppCompat.Button.Borderless"
@@ -178,17 +179,16 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical|center_horizontal"
         android:visibility="invisible"
         android:id="@+id/lostLayout"
         android:background="@color/bright_foreground_disabled_material_dark"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/turnNotifier">
+        android:layout_alignTop="@+id/turnNotifier"
+        android:layout_alignParentBottom="true">
 
         <ImageButton
             android:layout_width="30dp"
