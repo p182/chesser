@@ -17,24 +17,18 @@
 
 package io.dehaas.chesser;
 
-import android.support.v4.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
+import android.content.Context;
 
 /**
- * A placeholder fragment containing a simple view.
+ * Special selected green squares for castling and taking en-passant.
  */
-public class GameFragment extends Fragment {
-
-    public GameFragment() {
+public class SpecialSelectedSquare extends SelectedSquare {
+    public SpecialSelectedSquare(Context c, int X, int Y, int id, int TYPE){
+        super(c,X,Y,id);
+        this.setImageResource(R.drawable.special_selected);
+        type = TYPE;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_game, container, false);
-    }
+    /** 1=castling_rook_1 , 2=castling_rook_2 , 3=en_passant */
+    int type;
 }

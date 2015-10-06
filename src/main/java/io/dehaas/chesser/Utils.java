@@ -1,3 +1,20 @@
+// Copyright 2015 Roni Harel
+//
+// This file is part of Chesser.
+//
+// Chesser is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Chesser is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Chesser.  If not, see <http://www.gnu.org/licenses/>.
+
 package io.dehaas.chesser;
 
 import android.app.Activity;
@@ -44,7 +61,7 @@ public class Utils {
 //        if(color==1){X = 17.4;})
         if (color == 1) {
             X = ((width - dp(32)) * 22 / 386);
-            System.out.println(X);
+//            System.out.println(X);
         }
 //        else {X = 273.9;}
         else {
@@ -815,6 +832,39 @@ public class Utils {
 
             Game.removedPiece = null;
         }
+    }
+
+    public boolean squareIsUnsafe(int x, int y){
+        int kingx=0;
+        int kingy=0;
+
+        if(Game.color==1) {
+            kingx = Game.wk.x;
+            kingy = Game.wk.y;
+
+            Game.wk.x = x;
+            Game.wk.y = y;
+        }
+        if(Game.color==-1) {
+            kingx = Game.bk.x;
+            kingy = Game.bk.y;
+
+            Game.bk.x = x;
+            Game.bk.y = y;
+        }
+
+        boolean check = myKingInCheck();
+
+        if(Game.color==1) {
+            Game.wk.x = kingx;
+            Game.wk.y = kingy;
+        }
+        if(Game.color==-1) {
+            Game.bk.x = kingx;
+            Game.bk.y = kingy;
+        }
+
+        return check;
     }
 
 }

@@ -1,3 +1,20 @@
+// Copyright 2015 Roni Harel
+//
+// This file is part of Chesser.
+//
+// Chesser is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Chesser is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Chesser.  If not, see <http://www.gnu.org/licenses/>.
+
 package io.dehaas.chesser;
 
 import android.app.Activity;
@@ -100,9 +117,12 @@ public class Game extends ActionBarActivity {
     public static Boolean kingInCheckmate;
     public static Boolean opponentKingInCheck;
 
-    public static Boolean kingMoved;
-    public static Boolean rook1Moved;
-    public static Boolean rook2Moved;
+    public static Boolean castlingRook1 = true;
+    public static Boolean castlingRook2 = true;
+
+    public static Boolean castlingRook1Happened = false;
+    public static Boolean castlingRook2Happened = false;
+    public static Boolean enPassantHappened = false;
 
     public static Boolean myTurn;
     public static Boolean vibrate = true;
@@ -132,59 +152,6 @@ public class Game extends ActionBarActivity {
     public static Piece wp6 , bp6;
     public static Piece wp7 , bp7;
     public static Piece wp8 , bp8;
-
-
-    /** Remove opponents that have been atacked by one piece. */
-/*
-    public void removeOpponent(){
-
-        String[] opponentc;
-
-        // If the player is white
-        if(color==1) {
-            opponentc = new String[] {br1.c(), br2.c(), bn1.c(), bn2.c(), bb1.c(), bb2.c(), bk.c(), bq.c(),
-                    bp1.c(), bp2.c(), bp3.c(), bp4.c(), bp5.c(), bp6.c(), bp7.c(), bp8.c()};
-        }
-        // If the player is black
-        else {
-            opponentc = new String[] {wr1.c(), wr2.c(), wn1.c(), wn2.c(), wb1.c(), wb2.c(), wk.c(), wq.c(),
-                    wp1.c(), wp2.c(), wp3.c(), wp4.c(), wp5.c(), wp6.c(), wp7.c(), wp8.c()};
-        }
-
-        String s = pressedPiece.c();
-        for(int t=0; t<opponentc.length; t++){
-            if (s.equals(opponentc[t])){
-                Piece p = u.findPieceByCoordinates(opponentc[t]);
-                removedPieceX = p.x;
-                removedPieceY = p.y;
-                removedPiece = p;
-
-                p.x = 0;
-                p.y = 0;
-                RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
-//                rl.removeView(p);
-                p.setVisibility(View.INVISIBLE);
-
-            }
-        }
-    }
-*/
-
-    /** Return last opponent that has been removed. */
-/*
-    public void returnOpponent(){
-        if (removedPiece != null) {
-            removedPiece.x = removedPieceX;
-            removedPiece.y = removedPieceY;
-
-            RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
-//                        rl.addView(removedPiece);
-            removedPiece.setVisibility(View.VISIBLE);
-
-            removedPiece = null;
-        }
-    }
-*/
 
     /** Returns a string of all the white pieces coordinates+IDs. */
     public static String getWPCIDs(){
@@ -302,6 +269,34 @@ public class Game extends ActionBarActivity {
         rl.addView(image);
     }
 
+    public void createSpecialSelectedSquare(int x, int y, int id, int type){
+
+        RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
+        final SpecialSelectedSquare image = new SpecialSelectedSquare(getApplicationContext(), x, y, id, type);
+
+        image.setLayoutParams(u.getPlaceParams(x, y));
+
+        image.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View v) {
+                        switch (image.type) {
+                            case 1:
+                                castlingRook1Happened = true;
+                                break;
+                            case 2:
+                                castlingRook2Happened = true;
+                                break;
+                            case 3:
+                                enPassantHappened = true;
+                        }
+                        selectedOnClick(v);
+                    }
+                }
+        );
+
+        rl.addView(image);
+    }
+
     public void createPiece(int x, int y, int id){
 
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.fragment);
@@ -373,14 +368,13 @@ public class Game extends ActionBarActivity {
     }
 
     public void piecesOnClick(View v){
+        // Only if players turn a piece will react to click.
         if(myTurn) {
-
+            // Remove all other selected squares.
             RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
-            for (int id = 100; id < 6700; id += 100) {
+            for (int id = 100; id < 7000; id += 100) {
                 rl.removeView(findViewById(id));
-//                findViewById(id).setVisibility(View.INVISIBLE);
             }
-
 
             Piece p = (Piece) v;
 
@@ -389,74 +383,32 @@ public class Game extends ActionBarActivity {
 
             String c;
 
-/*
-            // If the player is white
-            if(color==1) {
-
-                if (id > 8 && id < 17) {
-                    c = p.pawnMoves();
-                    selectSquares(c, p);
-                }
-                if (id == 1 || id == 8) {
-                    c = p.rookMoves();
-                    selectSquares(c, p);
-                }
-                if (id == 3 || id == 6) {
-                    c = p.bishopMoves();
-                    selectSquares(c, p);
-                }
-                if (id == 4) {
-                    c = p.queenMoves();
-                    selectSquares(c, p);
-                }
-                if (id == 5) {
-                    c = p.kingMoves();
-                    selectSquares(c, p);
-                }
-                if (id == 2 || id == 7) {
-                    c = p.knightMoves();
-                    selectSquares(c, p);
-                }
-            }
-            // If the player is black
-            else{
-                if (id > 24 && id < 33) {
-                    c = p.pawnMoves();
-                    selectSquares(c, p);
-                }
-                if (id == 17 || id == 24) {
-                    c = p.rookMoves();
-                    selectSquares(c, p);
-                }
-                if (id == 19 || id == 22) {
-                    c = p.bishopMoves();
-                    selectSquares(c, p);
-                }
-                if (id == 20) {
-                    c = p.queenMoves();
-                    selectSquares(c, p);
-                }
-                if (id == 21) {
-                    c = p.kingMoves();
-                    selectSquares(c, p);
-                }
-                if (id == 18 || id == 23) {
-                    c = p.knightMoves();
-                    selectSquares(c, p);
-                }
-            }
-*/
+            //Only if piece is one of the players pieces display its selected squares.
             if((color==1&&id>0&&id<17)||(color==-1&&id>16&&id<33)||(color==1&&id/1000>0&&id/1000<17)||(color==-1&&id/1000>16&&id/1000<33)) {
                 c = p.moves();
                 selectSquares(c, p);
             }
 
-//            Piece.movesCoor = "";
+            if(color==1&&id==5||color==-1&&id==21){
+                System.out.println("checking for castling");
+
+                if(castlingAvailable()[0]){
+                    if(color==1)createSpecialSelectedSquare(wk.x-2,wk.y,6700,1);
+                    if(color==-1)createSpecialSelectedSquare(bk.x-2,bk.y,6700,1);
+                    System.out.println("castling availble 0");
+                }
+                if(castlingAvailable()[1]){
+                    if(color==1)createSpecialSelectedSquare(wk.x+2,wk.y,6800,2);
+                    if(color==-1)createSpecialSelectedSquare(bk.x+2,bk.y,6800,2);
+                    System.out.println("castling availble 1");
+                }
+
+                // TODO make a spesial selected for castling
+            }
         }
     }
 
     public void selectedOnClick(View v){
-
         // To eliminate bugs only if players turn a selected square will react to click.
         if (myTurn) {
             // Move the piece to the selected square. Save the old piece's coordinates to be able to undo the move if own king is in check.
@@ -464,7 +416,6 @@ public class Game extends ActionBarActivity {
 
             myTurn = false; // Disable other pieces from responding to clicks
 
-            TextView turnNotifier = (TextView) findViewById(R.id.turnNotifier);
 
             SelectedSquare s = (SelectedSquare) v;
 
@@ -484,115 +435,50 @@ public class Game extends ActionBarActivity {
                 removedPiece = null;
 
                 RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
-                for (int id = 100; id < 6700; id += 100) {
+                for (int id = 100; id < 7000; id += 100) {
                     rl.removeView(findViewById(id));
                 }
 
-/*
-            if(Game.color==1){
-                TextView check = (TextView)findViewById(R.id.whitePlayerCheck);
-                check.setVisibility(View.INVISIBLE);
-            }
-            else{
-                TextView check = (TextView)findViewById(R.id.blackPlayerCheck);
-                check.setVisibility(View.INVISIBLE);
-            }
-*/
-
                 // If piece is a pawn and it got to the end of the board let the player choose to what piece he wants to switch to
                 if ((pressedPiece.getId() > 8 && pressedPiece.getId() < 17 && s.y == 8) || (pressedPiece.getId() > 24 && pressedPiece.getId() < 33 && s.y == 1)) {
-                    LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout);
-//                ll.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, u.dp(40)).bottomMargin());
-
-                    ImageView rook = (ImageView) findViewById(R.id.rook);
-                    ImageView knight = (ImageView) findViewById(R.id.knight);
-                    ImageView bishop = (ImageView) findViewById(R.id.bishop);
-                    ImageView queen = (ImageView) findViewById(R.id.queen);
-                    if (color == 1) {
-                        rook.setImageResource(R.drawable.wrook);
-                        knight.setImageResource(R.drawable.wknight);
-                        bishop.setImageResource(R.drawable.wbishop);
-                        queen.setImageResource(R.drawable.wqueen);
-                    } else {
-                        rook.setImageResource(R.drawable.brook);
-                        knight.setImageResource(R.drawable.bknight);
-                        bishop.setImageResource(R.drawable.bbishop);
-                        queen.setImageResource(R.drawable.bqueen);
-                    }
-                    rook.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                            // Pawn is white
-                            if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
-                                pressedPiece.setId(pressedPiece.getId() * 1000 + 1);
-                                pressedPiece.setImageResource(R.drawable.wrook);
-                            }
-                            // Pawn is black
-                            else {
-                                pressedPiece.setId(pressedPiece.getId() * 1000 + 17);
-                                pressedPiece.setImageResource(R.drawable.brook);
-                            }
-                        }
-                    });
-                    knight.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                            // Pawn is white
-                            if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
-                                pressedPiece.setId(pressedPiece.getId() * 1000 + 2);
-                                pressedPiece.setImageResource(R.drawable.wknight);
-                            }
-                            // Pawn is black
-                            else {
-                                pressedPiece.setId(pressedPiece.getId() * 1000 + 18);
-                                pressedPiece.setImageResource(R.drawable.bknight);
-                            }
-                        }
-                    });
-                    bishop.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                            // Pawn is white
-                            if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
-                                pressedPiece.setId(pressedPiece.getId() * 1000 + 3);
-                                pressedPiece.setImageResource(R.drawable.wbishop);
-                            }
-                            // Pawn is black
-                            else {
-                                pressedPiece.setId(pressedPiece.getId() * 1000 + 19);
-                                pressedPiece.setImageResource(R.drawable.bbishop);
-                            }
-                        }
-                    });
-                    queen.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                            // Pawn is white
-                            if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
-                                pressedPiece.setId(pressedPiece.getId() * 1000 + 4);
-                                pressedPiece.setImageResource(R.drawable.wqueen);
-                            }
-                            // Pawn is black
-                            else {
-                                pressedPiece.setId(pressedPiece.getId() * 1000 + 20);
-                                pressedPiece.setImageResource(R.drawable.bqueen);
-                            }
-                        }
-                    });
-
-                    ll.setVisibility(View.VISIBLE);
-                    ll.bringToFront();
-                    System.out.println("pawn at end of board");
+                    displayNewPieceChooser();
                 } else {
-                    // Valid nove and pawn not at end of board
-                    // Notify opponent's turn and whether opponent is in check.
-                    if (u.opponentKingInCheck()) {
-                        if (Game.color == 1) {
-                            turnNotifier.setText(R.string.black_opponent_in_check);
-//                        turnNotifier.setText(R.string.autosave_received);
-                        } else {
-                            turnNotifier.setText(R.string.white_opponent_in_check);
-                        }
-                    } else {
-                        // Opponent not in check.
-                        turnNotifier.setText(R.string.opponent_turn);
+                    // Valid move and pawn not at end of board
+
+                    // if king or rook moved disable the according the castling options
+                    if((pressedPiece==wr1 || pressedPiece==wk)&&color==1 || (pressedPiece==br1 || pressedPiece==bk)&&color==-1){
+                        castlingRook1 = false;
                     }
+                    if((pressedPiece==wr2 || pressedPiece==wk)&&color==1 || (pressedPiece==br2 || pressedPiece==bk)&&color==-1){
+                        castlingRook2 = false;
+                    }
+
+                    // if castling happened then move the rook accordingly
+                    if(castlingRook1Happened){
+                        if(color==1) {
+                            wr1.x = wk.x+1;
+                            wr1.setLayoutParams(u.getPlaceParams(wr1.x, wr1.y));
+                        }
+                        if(color==-1) {
+                            br1.x = bk.x+1;
+                            br1.setLayoutParams(u.getPlaceParams(br1.x, br1.y));
+                        }
+                        castlingRook1Happened=false;
+                    }
+                    if(castlingRook2Happened){
+                        if(color==1) {
+                            wr2.x = wk.x-1;
+                            wr2.setLayoutParams(u.getPlaceParams(wr2.x, wr2.y));
+                        }
+                        if(color==-1) {
+                            br2.x = bk.x-1;
+                            br2.setLayoutParams(u.getPlaceParams(br2.x, br2.y));
+                        }
+                        castlingRook2Happened=false;
+                    }
+
+                    opponentTurnNotifier();
+
                     // Prepare a new game state string and send it to opponent
                     String Coor = getWPCIDs() + "," + getBPCIDs();
                     String state = Coor + ";" + null + ";" + null;
@@ -600,15 +486,13 @@ public class Game extends ActionBarActivity {
                     // Autosave game
                     mDbHelper.autoSave(getResources().getText(R.string.autosave_sent).toString());
 
+
                     // Send game to opponent
                     connectThread.stringWrite(state);
-
 
                     // Run the OpponentKingInCheckmate thread
                     OpponentKingInCheckmateThread opponentKingInCheckmateThreadThread = new OpponentKingInCheckmateThread(this);
                     opponentKingInCheckmateThreadThread.start();
-
-
                 }
             } else {
                 // King is checked, the piece will undo the move after delay
@@ -734,7 +618,7 @@ public class Game extends ActionBarActivity {
 
                 // Confirm with user that he wants to delete game
                 new AlertDialog.Builder(activity)
-                        .setTitle(getResources().getText(R.string.confirm_delete).toString() +" "+ gameName +" ?")
+                        .setTitle(getResources().getText(R.string.confirm_delete).toString() + " " + gameName + " ?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 mDbHelper.deleteGame(gameName);
@@ -766,7 +650,89 @@ public class Game extends ActionBarActivity {
         }
     }
 
-    public void onNewPieceChossen(View v){
+    /** Display a bar at the bottom of the screen for prommoting a pawn. */
+    public void displayNewPieceChooser(){
+        LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout);
+
+        ImageView rook = (ImageView) findViewById(R.id.rook);
+        ImageView knight = (ImageView) findViewById(R.id.knight);
+        ImageView bishop = (ImageView) findViewById(R.id.bishop);
+        ImageView queen = (ImageView) findViewById(R.id.queen);
+        if (color == 1) {
+            rook.setImageResource(R.drawable.wrook);
+            knight.setImageResource(R.drawable.wknight);
+            bishop.setImageResource(R.drawable.wbishop);
+            queen.setImageResource(R.drawable.wqueen);
+        } else {
+            rook.setImageResource(R.drawable.brook);
+            knight.setImageResource(R.drawable.bknight);
+            bishop.setImageResource(R.drawable.bbishop);
+            queen.setImageResource(R.drawable.bqueen);
+        }
+        rook.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Pawn is white
+                if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
+                    pressedPiece.setId(pressedPiece.getId() * 1000 + 1);
+                    pressedPiece.setImageResource(R.drawable.wrook);
+                }
+                // Pawn is black
+                else {
+                    pressedPiece.setId(pressedPiece.getId() * 1000 + 17);
+                    pressedPiece.setImageResource(R.drawable.brook);
+                }
+            }
+        });
+        knight.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Pawn is white
+                if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
+                    pressedPiece.setId(pressedPiece.getId() * 1000 + 2);
+                    pressedPiece.setImageResource(R.drawable.wknight);
+                }
+                // Pawn is black
+                else {
+                    pressedPiece.setId(pressedPiece.getId() * 1000 + 18);
+                    pressedPiece.setImageResource(R.drawable.bknight);
+                }
+            }
+        });
+        bishop.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Pawn is white
+                if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
+                    pressedPiece.setId(pressedPiece.getId() * 1000 + 3);
+                    pressedPiece.setImageResource(R.drawable.wbishop);
+                }
+                // Pawn is black
+                else {
+                    pressedPiece.setId(pressedPiece.getId() * 1000 + 19);
+                    pressedPiece.setImageResource(R.drawable.bbishop);
+                }
+            }
+        });
+        queen.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Pawn is white
+                if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
+                    pressedPiece.setId(pressedPiece.getId() * 1000 + 4);
+                    pressedPiece.setImageResource(R.drawable.wqueen);
+                }
+                // Pawn is black
+                else {
+                    pressedPiece.setId(pressedPiece.getId() * 1000 + 20);
+                    pressedPiece.setImageResource(R.drawable.bqueen);
+                }
+            }
+        });
+
+        ll.setVisibility(View.VISIBLE);
+        ll.bringToFront();
+        System.out.println("pawn at end of board");
+
+    }
+
+    public void onNewPieceChosen(View v){
         LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout);
         ll.setVisibility(View.INVISIBLE);
 
@@ -806,8 +772,101 @@ public class Game extends ActionBarActivity {
         startActivity(new Intent("first.activity"));
     }
 
+
+    /** Notify opponent's turn and whether opponent is in check. */
+    public void opponentTurnNotifier(){
+        TextView turnNotifier = (TextView) findViewById(R.id.turnNotifier);
+
+        if (u.opponentKingInCheck()) {
+            if (Game.color == 1) {
+                turnNotifier.setText(R.string.black_opponent_in_check);
+            } else {
+                turnNotifier.setText(R.string.white_opponent_in_check);
+            }
+        } else {
+            // Opponent not in check.
+            turnNotifier.setText(R.string.opponent_turn);
+        }
+    }
+
     /** Override the onBackPressed method and do nothing. */
     @Override
     public void onBackPressed() {
+    }
+
+    public boolean[] castlingAvailable(){
+        boolean rook1CastlingAvailable = false;
+        boolean rook2CastlingAvailable = false;
+
+        // Both the king and the first rook have not moved yet
+        if(castlingRook1&&!kingInCheck){
+            boolean squaresClear = true;
+
+            // Scan all pieces and if there is a piece between the rook and the king declare it and break
+            for(Piece piece : u.getAllPieces()){
+                if(color==1&&(piece.c().equals("21")||piece.c().equals("31")||piece.c().equals("41")) || color==-1&&(piece.c().equals("28")||piece.c().equals("38")||piece.c().equals("48"))){
+                    squaresClear = false;
+                    break;
+                }
+            }
+
+            boolean squaresSafe = true;
+
+            if(color==1&&(u.squareIsUnsafe(3, 1)||u.squareIsUnsafe(4, 1)) || color==-1&&(u.squareIsUnsafe(3, 8)||u.squareIsUnsafe(4, 8))){
+                squaresSafe = false;
+            }
+
+            if(squaresClear&&squaresSafe) rook1CastlingAvailable = true;
+        }
+        // Both the king and the second rook have not moved yet
+        if(castlingRook2&&!kingInCheck){
+            boolean squaresClear = true;
+
+            // Scan all pieces and if there is a piece between the rook and the king declare it and break
+            for(Piece piece : u.getAllPlayersPieces()){
+                if(color==1&&(piece.c().equals("61")||piece.c().equals("71")) || color==-1&&(piece.c().equals("68")||piece.c().equals("78"))){
+                    squaresClear = false;
+                    break;
+                }
+            }
+
+            boolean squaresSafe = true;
+
+            if(color==1&&(u.squareIsUnsafe(6, 1)||u.squareIsUnsafe(7, 1)) || color==-1&&(u.squareIsUnsafe(6, 8)||u.squareIsUnsafe(7, 8))){
+                squaresSafe = false;
+            }
+
+            if(squaresClear&&squaresSafe) rook2CastlingAvailable = true;
+        }
+
+        return new boolean[] {rook1CastlingAvailable,rook2CastlingAvailable};
+    }
+
+    public void specialSelectedOnClick(View v){
+        myTurn=false;
+
+        System.out.println("special selected");
+
+        SpecialSelectedSquare special = (SpecialSelectedSquare)v;
+
+        pressedPiece.x = special.x;
+        pressedPiece.y = special.y;
+
+        opponentTurnNotifier();
+
+        // Prepare a new game state string and send it to opponent
+        String Coor = getWPCIDs() + "," + getBPCIDs();
+        String state = Coor + ";" + null + ";" + null;
+
+        // Autosave game
+        mDbHelper.autoSave(getResources().getText(R.string.autosave_sent).toString());
+
+        // Send game to opponent
+        connectThread.stringWrite(state);
+
+        // Run the OpponentKingInCheckmate thread
+        OpponentKingInCheckmateThread opponentKingInCheckmateThreadThread = new OpponentKingInCheckmateThread(this);
+        opponentKingInCheckmateThreadThread.start();
+
     }
 }

@@ -1,3 +1,20 @@
+// Copyright 2015 Roni Harel
+//
+// This file is part of Chesser.
+//
+// Chesser is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Chesser is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Chesser.  If not, see <http://www.gnu.org/licenses/>.
+
 package io.dehaas.chesser;
 
 import android.content.Context;
@@ -74,7 +91,7 @@ public class Piece extends ImageView{
                 case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32:
                     moves = pawnMoves(-1); break;
                 case 20: moves = queenMoves(-1); break;
-                case 17: case 24: moves = rookMoves(-1); break;
+                case 17:case 24: moves = rookMoves(-1); break;
                 // for white pieces
                 case 3: case 6: moves = bishopMoves(1); break;
                 case 5: moves = kingMoves(1); break;
@@ -86,14 +103,14 @@ public class Piece extends ImageView{
 
                 default:
                     System.out.println("default");
-                    if(getId()%1000==1){moves = rookMoves(1);}
-                    if(getId()%1000==2){moves = knightMoves(1);}
-                    if(getId()%1000==3){moves = bishopMoves(1);}
-                    if(getId()%1000==4){moves = queenMoves(1);}
-                    if(getId()%1000==17){moves = rookMoves(-1);}
-                    if(getId()%1000==18){moves = knightMoves(-1);}
-                    if(getId()%1000==19){moves = bishopMoves(-1);}
-                    if(getId()%1000==20){moves = queenMoves(-1);} break;
+                    if(getId()%1000==1)moves = rookMoves(1);
+                    if(getId()%1000==2)moves = knightMoves(1);
+                    if(getId()%1000==3)moves = bishopMoves(1);
+                    if(getId()%1000==4)moves = queenMoves(1);
+                    if(getId()%1000==17)moves = rookMoves(-1);
+                    if(getId()%1000==18)moves = knightMoves(-1);
+                    if(getId()%1000==19)moves = bishopMoves(-1);
+                    if(getId()%1000==20)moves = queenMoves(-1); break;
 
             }
         }
