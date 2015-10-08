@@ -19,8 +19,6 @@ package io.dehaas.chesser;
 
 import android.app.Activity;
 
-import java.io.IOException;
-
 /**
  * Checks if new state string arrived and passes it on to NewState.
  */
@@ -44,15 +42,6 @@ public class IncomingStateListenerThread extends Thread {
                             activity.runOnUiThread(
                                new Runnable() {
                                 public void run() {
-/*
-
-                                    Button turnNotifier = (Button)activity.findViewById(R.id.turnNotifier);
-
-                                    turnNotifier.setText("Your Turn");
-                                    turnNotifier.setClickable(false);
-                                    turnNotifier.setEnabled(true);
-*/
-
                                     NewState state = new NewState(s, activity);
                                     state.createNewState();
 

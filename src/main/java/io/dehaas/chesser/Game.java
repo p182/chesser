@@ -120,6 +120,16 @@ public class Game extends ActionBarActivity {
     public static Boolean castlingRook1 = true;
     public static Boolean castlingRook2 = true;
 
+    // the id number of the two opponent piece that can make an en-passant move devived by a coma
+    public static String opponentEnPassant = ".";
+
+    public static int enPassantXCoorForOpp = 0;
+    public static int enPassantXCoor = 0;
+
+    // the ids of the pawns that can perform an en-passant
+    public static int enPassant1 = 0;
+    public static int enPassant2 = 0;
+
     public static Boolean castlingRook1Happened = false;
     public static Boolean castlingRook2Happened = false;
     public static Boolean enPassantHappened = false;
@@ -402,8 +412,11 @@ public class Game extends ActionBarActivity {
                     if(color==-1)createSpecialSelectedSquare(bk.x+2,bk.y,6800,2);
                     System.out.println("castling availble 1");
                 }
+            }
 
-                // TODO make a spesial selected for castling
+            if(id==enPassant1 || id==enPassant2){
+                if(color==1)createSpecialSelectedSquare(enPassantXCoor, pressedPiece.y+1,6900,3);
+                if(color==-1)createSpecialSelectedSquare(enPassantXCoor, pressedPiece.y-1,6900,3);
             }
         }
     }
@@ -477,11 +490,46 @@ public class Game extends ActionBarActivity {
                         castlingRook2Happened=false;
                     }
 
+                    //if en-passant happened move remove the opp pawn accordingly
+                    if(enPassantHappened){
+                        enPassantHappened=false;
+
+                        String oppCoor;
+                        if(color==1) oppCoor = enPassantXCoor + "" + (pressedPiece.y-1) ;
+                        else oppCoor = enPassantXCoor + "" + (pressedPiece.y+1) ;
+                        System.out.println(oppCoor);
+                        u.removePieceByCoor(oppCoor);
+                    }
+                    // disable en-passant
+                    enPassant1=0;
+                    enPassant2=0;
+
+                    // if opponent can do a en-passant move ad the according opp pieces ids to opponentEnPassant
+                    if((pressedPiece.getId() > 8 && pressedPiece.getId() < 17) || (pressedPiece.getId() > 24 && pressedPiece.getId() < 33)){
+                        if(Math.abs(pressedPiece.y - tmpY)==2){
+                            Boolean first = true;
+                            for(Piece piece : u.getAllOpponentsPieces()){
+                                if(pressedPiece.y==piece.y && Math.abs(pressedPiece.x-piece.x)==1){
+                                    if(first){
+                                        first=false;
+                                        opponentEnPassant =""+piece.getId();
+                                    }
+                                    else{
+                                        opponentEnPassant = opponentEnPassant +","+piece.getId();
+                                    }
+                                    enPassantXCoorForOpp = pressedPiece.x;
+                                }
+                            }
+                        }
+                    }
+
                     opponentTurnNotifier();
 
                     // Prepare a new game state string and send it to opponent
-                    String Coor = getWPCIDs() + "," + getBPCIDs();
-                    String state = Coor + ";" + null + ";" + null;
+                    String state = u.getState();
+
+                    opponentEnPassant = ".";
+                    enPassantXCoorForOpp = 0;
 
                     // Autosave game
                     mDbHelper.autoSave(getResources().getText(R.string.autosave_sent).toString());
@@ -588,7 +636,7 @@ public class Game extends ActionBarActivity {
 
         listview.setOnItemClickListener(new ListView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
-                String gameSate = mDbHelper.getGameState(position);
+                String gameSate = mDbHelper.getGameStateFromDb(position);
                 NewState state = new NewState(gameSate, activity);
 
                 state.createNewState();
@@ -751,8 +799,7 @@ public class Game extends ActionBarActivity {
         }
 
         // Prepare a new game state string and send it to opponent
-        String Coor = getWPCIDs() + "," + getBPCIDs();
-        String state = Coor + ";" + null + ";" + null;
+        String state = u.getState();
         connectThread.stringWrite(state);
     }
 

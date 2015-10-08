@@ -820,6 +820,19 @@ public class Utils {
         }
     }
 
+    /** Remove piece with the given coor */
+    public void removePieceByCoor(String coor){
+        Piece p = findPieceByCoordinates(coor);
+        Game.removedPieceX = p.x;
+        Game.removedPieceY = p.y;
+        Game.removedPiece = p;
+
+        p.x = 0;
+        p.y = 0;
+
+        p.setVisibility(View.INVISIBLE);
+    }
+
     /** Return last opponent that has been removed. */
     public void returnOpponent(){
         if (Game.removedPiece != null) {
@@ -865,6 +878,37 @@ public class Utils {
         }
 
         return check;
+    }
+
+    /** Return the current game state string. */
+    public String getState(){
+        String Coor = Game.getWPCIDs() + "," + Game.getBPCIDs();
+        String state = Coor + ";" + null + ";" + null + ";" + null + ";" + null + ";" + Game.opponentEnPassant + ";" + Game.enPassantXCoorForOpp;
+        return state;
+    }
+
+    /** Return the current game state string for saving in database */
+    public String getStateForDb(){
+        String piecesCoordinates = Game.getWPCIDs() +","+ Game.getBPCIDs();
+
+        String color;
+        if(Game.color==1){
+            color = "white";
+        }
+        else{
+            color = "black";
+        }
+
+        String turn;
+        if(Game.myTurn){
+            turn = "myTurn";
+        }
+        else{
+            turn = "opTurn";
+        }
+        String state = piecesCoordinates +";"+ color +";"+ turn + ";" + Game.castlingRook1 + ";" + Game.castlingRook2 + ";" + Game.enPassant1+","+Game.enPassant2 + ";" + Game.enPassantXCoor;
+
+        return state;
     }
 
 }

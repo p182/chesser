@@ -17,8 +17,8 @@
 
 package io.dehaas.chesser;
 
+import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -32,11 +32,13 @@ import java.util.ArrayList;
 public class ChesserDbOperations extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
-    Context appContext;
+    Activity activity;
 
-    public ChesserDbOperations(Context context) {
-        super(context, FeedReaderContract.FeedEntry.DATABASE_NAME, null, DATABASE_VERSION);
-        appContext = context;
+    Utils u = new Utils(activity);
+
+    public ChesserDbOperations(Activity gameActivity) {
+        super(gameActivity, FeedReaderContract.FeedEntry.DATABASE_NAME, null, DATABASE_VERSION);
+        activity = gameActivity;
     }
 
     @Override
@@ -57,20 +59,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         if(!existingGamesNames.contains(gameName)) {
 
             // Create the game state string.
-            String piecesCoordinates = Game.getWPCIDs() + "," + Game.getBPCIDs();
-            String color;
-            if (Game.color == 1) {
-                color = "white";
-            } else {
-                color = "black";
-            }
-            String turn;
-            if (Game.myTurn) {
-                turn = "myTurn";
-            } else {
-                turn = "opTurn";
-            }
-            String gameState = piecesCoordinates + ";" + color + ";" + turn;
+            String gameState = u.getStateForDb();
 
             // Gets the data repository in write mode
             SQLiteDatabase db = this.getWritableDatabase();
@@ -90,7 +79,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
                     FeedReaderContract.FeedEntry.GAME_STATE,
                     values);
 
-            Toast.makeText(appContext, R.string.successfully_saved,
+            Toast.makeText(activity, R.string.successfully_saved,
                     Toast.LENGTH_LONG).show();
 
 //            System.out.println(newRowId);
@@ -100,7 +89,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         }
         else{
             // There is already an entry with the same name. Notify the problem.
-            Toast.makeText(appContext, R.string.name_game_already_given,
+            Toast.makeText(activity, R.string.name_game_already_given,
                     Toast.LENGTH_LONG).show();
         }
 
@@ -124,7 +113,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
         System.out.println("deleteCount: " + deleteCount);
 
-        Toast.makeText(appContext, R.string.successfully_deleted,
+        Toast.makeText(activity, R.string.successfully_deleted,
                 Toast.LENGTH_LONG).show();
 
         db.close();
@@ -176,8 +165,8 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
     }
 
-    /** Returns a specific game state. */
-    public String getGameState(int i){
+    /** Returns a specific game state from the database. */
+    public String getGameStateFromDb(int i){
         // Gets the data repository in read mode
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -221,22 +210,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         // DELETE FROM Games WHERE game_name='test2'
 
         // Create the game state string.
-        String piecesCoordinates = Game.getWPCIDs() +","+ Game.getBPCIDs();
-        String color;
-        if(Game.color==1){
-            color = "white";
-        }
-        else{
-            color = "black";
-        }
-        String turn;
-        if(Game.myTurn){
-            turn = "myTurn";
-        }
-        else{
-            turn = "opTurn";
-        }
-        String gameState = piecesCoordinates +";"+ color +";"+ turn;
+        String gameState = u.getStateForDb();
 
         // New value for one column
         ContentValues values = new ContentValues();
@@ -254,7 +228,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
 //        System.out.println("updateCount: " + updateCount);
 
-        Toast.makeText(appContext, R.string.successfully_saved,
+        Toast.makeText(activity, R.string.successfully_saved,
                 Toast.LENGTH_LONG).show();
 
 
@@ -267,20 +241,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
     public void autoSave(String name){
 
         // Create the game state string.
-        String piecesCoordinates = Game.getWPCIDs() + "," + Game.getBPCIDs();
-        String color;
-        if (Game.color == 1) {
-            color = "white";
-        } else {
-            color = "black";
-        }
-        String turn;
-        if (Game.myTurn) {
-            turn = "myTurn";
-        } else {
-            turn = "opTurn";
-        }
-        String gameState = piecesCoordinates + ";" + color + ";" + turn;
+        String gameState = u.getStateForDb();
 
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
