@@ -21,6 +21,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,17 +41,6 @@
         android:layout_toLeftOf="@+id/vibrateCB"
         android:layout_toStartOf="@+id/vibrateCB"
         android:visibility="gone" />
-<!--
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/turnNotifier"
-        android:textAllCaps="false"
-        android:layout_alignTop="@+id/imageView2"
-        android:layout_centerHorizontal="true" />
--->
 
     <TextView
         android:layout_width="wrap_content"
@@ -127,7 +117,7 @@
         android:layout_alignParentStart="true"
         android:gravity="center_vertical|center_horizontal"
         android:visibility="invisible"
-        android:id="@+id/wonLayout"
+        android:id="@+id/gameFinishedLayout"
         android:background="@color/bright_foreground_disabled_material_dark"
         android:layout_alignTop="@+id/turnNotifier"
         android:layout_alignParentBottom="true">
@@ -136,21 +126,21 @@
             style="@style/Base.Widget.AppCompat.Button.Borderless"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:id="@+id/closeCheckmateWon"
+            android:id="@+id/closeGameFinished"
             android:layout_gravity="center_horizontal|end"
             android:src="@drawable/abc_ic_clear_mtrl_alpha"
             android:layout_marginRight="30dp"
             android:layout_marginTop="10dp"
             android:tint="@color/accent_material_light"
-            android:onClick="checkmateWonCloseOnClick"
+            android:onClick="gameFinishedCloseOnClick"
             android:focusable="false" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="checkmate!"
-            android:id="@+id/checkmate_won"
+            android:text=""
+            android:id="@+id/gameFinishedTitle"
             android:textSize="50dp"
             android:textStyle="bold"
             android:layout_centerInParent="true"/>
@@ -159,8 +149,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="You have won."
-            android:id="@+id/won"
+            android:text=""
+            android:id="@+id/gameFinishedText"
             android:textSize="25dp"
             android:textStyle="italic"
             android:layout_alignParentTop="true"
@@ -172,67 +162,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="exit"
-            android:id="@+id/exitCheckmateWon"
+            android:id="@+id/exitGameFinished"
             android:layout_gravity="center_horizontal"
             android:onClick="checkmateExitOnClick" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal"
-        android:visibility="invisible"
-        android:id="@+id/lostLayout"
-        android:background="@color/bright_foreground_disabled_material_dark"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/turnNotifier"
-        android:layout_alignParentBottom="true">
-
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/closeCheckmateLost"
-            android:layout_gravity="center_horizontal|end"
-            android:src="@drawable/abc_ic_clear_mtrl_alpha"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="10dp"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:tint="@color/accent_material_light"
-            android:onClick="checkmateLostCloseOnClick" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="checkmate..."
-            android:id="@+id/checkmate_lost"
-            android:textSize="50dp"
-            android:textStyle="bold"
-            android:layout_centerInParent="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="You have lost."
-            android:id="@+id/lost"
-            android:textSize="25dp"
-            android:textStyle="italic"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <Button
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="exit"
-            android:id="@+id/exitCheckmateLost"
-            android:layout_gravity="center_horizontal"
-            android:onClick="checkmateExitOnClick" />
-
     </LinearLayout>
 
 </RelativeLayout>

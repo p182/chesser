@@ -457,9 +457,9 @@ public class Utils {
     }
 
     /**
-     * Checks if own king in check mate and if so ends game .
+     * Checks if own king in mate.
      */
-    public boolean myKingInCheckmate() {
+    public boolean myKingInMate() {
 //        Game.kingInCheckmate = true;
         int count = 0;
 
@@ -548,9 +548,9 @@ public class Utils {
     }
 
     /**
-     * Checks if opponent king in check mate and if so ends game .
+     * Checks if opponent king in mate.
      */
-    public boolean opponentKingInCheckmate() {
+    public boolean opponentKingInMate() {
 //        Game.kingInCheckmate = true;
         int count = 0;
 

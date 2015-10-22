@@ -539,8 +539,8 @@ public class Game extends ActionBarActivity {
                     connectThread.stringWrite(state);
 
                     // Run the OpponentKingInCheckmate thread
-                    OpponentKingInCheckmateThread opponentKingInCheckmateThreadThread = new OpponentKingInCheckmateThread(this);
-                    opponentKingInCheckmateThreadThread.start();
+                    OpponentKingInMateThread opponentKingInMateThreadThread = new OpponentKingInMateThread(this);
+                    opponentKingInMateThreadThread.start();
                 }
             } else {
                 // King is checked, the piece will undo the move after delay
@@ -803,14 +803,8 @@ public class Game extends ActionBarActivity {
         connectThread.stringWrite(state);
     }
 
-    public void checkmateLostCloseOnClick(View v){
-        Game.myTurn = true;
-        LinearLayout lostLayout = (LinearLayout) findViewById(R.id.lostLayout);
-        lostLayout.setVisibility(View.INVISIBLE);
-        System.out.println("close");
-    }
-    public void checkmateWonCloseOnClick(View v){
-        LinearLayout wonLayout = (LinearLayout) findViewById(R.id.wonLayout);
+    public void gameFinishedCloseOnClick(View v){
+        LinearLayout wonLayout = (LinearLayout) findViewById(R.id.gameFinishedLayout);
         wonLayout.setVisibility(View.INVISIBLE);
     }
     public void checkmateExitOnClick(View v){
@@ -912,8 +906,8 @@ public class Game extends ActionBarActivity {
         connectThread.stringWrite(state);
 
         // Run the OpponentKingInCheckmate thread
-        OpponentKingInCheckmateThread opponentKingInCheckmateThreadThread = new OpponentKingInCheckmateThread(this);
-        opponentKingInCheckmateThreadThread.start();
+        OpponentKingInMateThread opponentKingInMateThreadThread = new OpponentKingInMateThread(this);
+        opponentKingInMateThreadThread.start();
 
     }
 }
