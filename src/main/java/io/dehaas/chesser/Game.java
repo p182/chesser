@@ -135,6 +135,7 @@ public class Game extends ActionBarActivity {
     public static Boolean enPassantHappened = false;
 
     public static Boolean myTurn;
+    public static Boolean piecesClickable=true;
     public static Boolean vibrate = true;
     public static Boolean sound = true;
 
@@ -378,8 +379,8 @@ public class Game extends ActionBarActivity {
     }
 
     public void piecesOnClick(View v){
-        // Only if players turn a piece will react to click.
-        if(myTurn) {
+        // Only if players turn and pieces are set to clickable a piece will react to click.
+        if(myTurn&&piecesClickable) {
             // Remove all other selected squares.
             RelativeLayout rl = (RelativeLayout) findViewById(R.id.fragment);
             for (int id = 100; id < 7000; id += 100) {
@@ -534,9 +535,9 @@ public class Game extends ActionBarActivity {
                     // Autosave game
                     mDbHelper.autoSave(getResources().getText(R.string.autosave_sent).toString());
 
-
                     // Send game to opponent
                     connectThread.stringWrite(state);
+                    System.out.println("Castling: " + castlingRook1 +", "+ castlingRook2);
 
                     // Run the OpponentKingInCheckmate thread
                     OpponentKingInMateThread opponentKingInMateThreadThread = new OpponentKingInMateThread(this);
@@ -813,7 +814,6 @@ public class Game extends ActionBarActivity {
         startActivity(new Intent("first.activity"));
     }
 
-
     /** Notify opponent's turn and whether opponent is in check. */
     public void opponentTurnNotifier(){
         TextView turnNotifier = (TextView) findViewById(R.id.turnNotifier);
@@ -883,31 +883,20 @@ public class Game extends ActionBarActivity {
         return new boolean[] {rook1CastlingAvailable,rook2CastlingAvailable};
     }
 
-    public void specialSelectedOnClick(View v){
-        myTurn=false;
+    /** Show the help dialog. */
+    public void help(MenuItem item){
+        piecesClickable=false;
+        LinearLayout info = (LinearLayout)findViewById(R.id.linearLayout2);
+        info.bringToFront();
 
-        System.out.println("special selected");
+        if(info.getVisibility()==View.INVISIBLE) info.setVisibility(View.VISIBLE);
+        else info.setVisibility(View.INVISIBLE);
+    }
 
-        SpecialSelectedSquare special = (SpecialSelectedSquare)v;
-
-        pressedPiece.x = special.x;
-        pressedPiece.y = special.y;
-
-        opponentTurnNotifier();
-
-        // Prepare a new game state string and send it to opponent
-        String Coor = getWPCIDs() + "," + getBPCIDs();
-        String state = Coor + ";" + null + ";" + null;
-
-        // Autosave game
-        mDbHelper.autoSave(getResources().getText(R.string.autosave_sent).toString());
-
-        // Send game to opponent
-        connectThread.stringWrite(state);
-
-        // Run the OpponentKingInCheckmate thread
-        OpponentKingInMateThread opponentKingInMateThreadThread = new OpponentKingInMateThread(this);
-        opponentKingInMateThreadThread.start();
-
+    /** Close the help dialog. */
+    public void closeHelp(View v){
+        piecesClickable=true;
+        LinearLayout info = (LinearLayout)findViewById(R.id.linearLayout2);
+        info.setVisibility(View.INVISIBLE);
     }
 }

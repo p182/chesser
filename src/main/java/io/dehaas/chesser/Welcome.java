@@ -18,13 +18,10 @@
 package io.dehaas.chesser;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 /**
  * Initial UI.
@@ -39,25 +36,20 @@ public class Welcome extends ActionBarActivity {
         System.out.println("onCreate completed");
     }
 
-//    public void buttonOnClick(View v){ startActivity(new Intent("chess.game")); }
-
-
-
     public void buttonOnClick2(View v){ startActivity(new Intent("chess.connectToServer")); }
 
     public void buttonOnClick3(View v){ startActivity(new Intent("chess.openServer")); }
 
+    public void showInfo(View v){
+        LinearLayout info = (LinearLayout)findViewById(R.id.linearLayout);
+        info.bringToFront();
 
+        if(info.getVisibility()==View.INVISIBLE) info.setVisibility(View.VISIBLE);
+        else info.setVisibility(View.INVISIBLE);
+    }
 
-    public void changeColor(View v){
-        ImageView image = (ImageView)v;
-        if(Game.color == 1){
-            Game.color=-1;
-            image.setImageResource(R.drawable.bpawn);
-        }
-        else{
-            Game.color=1;
-            image.setImageResource(R.drawable.wpawn);
-        }
+    public void closeInfo(View v){
+        LinearLayout info = (LinearLayout)findViewById(R.id.linearLayout);
+        info.setVisibility(View.INVISIBLE);
     }
 }

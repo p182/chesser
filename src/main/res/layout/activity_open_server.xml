@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Waiting for socket..."
+        android:text="Waiting for opponent to join..."
         android:id="@+id/textView"
         android:visibility="invisible"
         android:background="#b3ffffff"

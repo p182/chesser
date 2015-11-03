@@ -167,6 +167,59 @@
             android:onClick="checkmateExitOnClick" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#ebfff2"
+        android:touchscreenBlocksFocus="false"
+        android:visibility="invisible"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp" >
+
+        <ImageButton
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/imageButton3"
+            android:layout_gravity="center_horizontal|end"
+            android:src="@drawable/abc_ic_clear_mtrl_alpha"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:tint="@color/accent_material_light"
+            android:onClick="closeHelp"
+            android:focusable="false" />
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView2"
+            android:layout_centerVertical="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/info_game"
+                android:textColor="#002e25"
+                android:textSize="17sp"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/textView7"
+                android:autoLink="web"/>
+        </ScrollView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView8"
+            android:text="Roni Harel 2015" />
+    </LinearLayout>
+
 </RelativeLayout>
 
 

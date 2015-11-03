@@ -114,15 +114,15 @@ public class NewState{
         }
 
         if(state[3].equals("false")) Game.castlingRook1 = false;
+        if(state[3].equals("true")) Game.castlingRook1 = true;
         if(state[4].equals("false")) Game.castlingRook2 = false;
+        if(state[4].equals("true")) Game.castlingRook2 = true;
 
         System.out.println("state: " + s);
 
         if(state.length>5 && !state[5].equals(".")){
             String[] ids = state[5].split(",");
-            System.out.println("ids: " + ids);
             Game.enPassant1 = Integer.parseInt(ids[0]);
-            System.out.println("ids 1: " + ids[0]);
             if(ids.length==2) Game.enPassant2 = Integer.parseInt(ids[1]);
         }
 
@@ -130,17 +130,6 @@ public class NewState{
             Game.enPassantXCoor = Integer.parseInt(state[6]);
         }
 
-
-//        System.out.println(array[0]);
-/*
-        // If both players a well synchronized
-        if(array[0].equals(Game.getWPCIDs() +","+ Game.getBPCIDs())){
-            movePiece(array[1]);
-        }
-        else{
-            final AlertDialog dialog = new AlertDialog.Builder(activity).setTitle("Error").setMessage("Opponent game not synchronized.").show();
-        }
-*/
         String[] array = state[0].split(",");
 //        System.out.println(state[0]);
 

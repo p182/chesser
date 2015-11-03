@@ -228,13 +228,9 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
 //        System.out.println("updateCount: " + updateCount);
 
-        Toast.makeText(activity, R.string.successfully_saved,
-                Toast.LENGTH_LONG).show();
-
-
+        Toast.makeText(activity, R.string.successfully_saved, Toast.LENGTH_LONG).show();
 
         db.close();
-
     }
 
     /** Save to the autosave value the current game state. */
@@ -242,6 +238,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
         // Create the game state string.
         String gameState = u.getStateForDb();
+        System.out.println(gameState);
 
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();

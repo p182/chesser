@@ -37,4 +37,17 @@
     <string name="stalemate">stalemate</string>
     <string name="stalemate_won">You could have won...</string>
     <string name="stalemate_lost">You could have lost!</string>
+
+    <!-- use as source for google play description -->
+    <string name="info_welcome">
+        <b>HOW TO START A GAME:</b>
+        \n <b>•</b> Make sure Bluetooth is on and your device is paired with the opponent\'s device.
+        \n <b>•</b> In the app hit \"HOST A GAME\" if you want to be the white player or \"JOIN A GAME\" if you want to be the black player.
+        \n <b>•</b> First the hosting player has to open the server and then the other player has to choose the host\'s device name from the list.</string>
+    <string name="info_game">
+        <b>HOW TO PLAY:</b>
+        \n <b>•</b> Click on any of your pieces to see their possible moves and click on any highlighted square to make your move, which is then sent automatically. If the piece goes back to its starting square it means you have put your king in check and therefore the move has been cancelled.
+        \n <b>•</b> You can save, load and delete games using the menu.
+        \n <b>•</b> If the move fails to be sent or there is any other problem, there are two auto saved games that can be of help. For example if the move was not sent you can load the \'last_received\' game and remake the move.
+        \n <b>•</b> For any questions about chess rules >>> <a href="http://www.chessvariants.org/d.chess/chess.html">http://www.chessvariants.org/d.chess/chess.html</a> </string>
 </resources>
