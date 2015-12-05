@@ -52,7 +52,13 @@ public class NewState{
         int x = cIdArray[0].charAt(0) - 48;
         int y = cIdArray[0].charAt(1) - 48;
 
-        Piece piece = u.findPieceById(Integer.parseInt(cIdArray[1]));
+        Piece piece;
+        if(u.findPieceById(Integer.parseInt(cIdArray[1])) != null){
+            piece = u.findPieceById(Integer.parseInt(cIdArray[1]));
+        }
+        else {
+            piece = u.findPieceById(u.currentId(Integer.parseInt(cIdArray[1])));
+        }
         piece.setId(Integer.parseInt(cIdArray[1]));
 
 

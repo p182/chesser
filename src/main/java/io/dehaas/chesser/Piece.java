@@ -396,4 +396,6 @@ public class Piece extends ImageView{
     }
 
 
+    //TODO: make a "type" field
+
 }

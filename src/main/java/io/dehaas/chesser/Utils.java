@@ -370,41 +370,76 @@ public class Utils {
         }
         // If canot find piece matching the id it is a pawn that promoted id.
         // Devide by 1000 and try again.
-        else {
+//        else {
 //            System.out.println("pawn id:" + id/1000);
 //            return null;
 
-            // Set the new image to the promoted pawn.
-            if (id / 1000 != 0) {
-                if (id % 1000 == 1) {
-                    findPieceById(id / 1000).setImageResource(R.drawable.wrook);
-                }
-                if (id % 1000 == 2) {
-                    findPieceById(id / 1000).setImageResource(R.drawable.wknight);
-                }
-                if (id % 1000 == 3) {
-                    findPieceById(id / 1000).setImageResource(R.drawable.wbishop);
-                }
-                if (id % 1000 == 4) {
-                    findPieceById(id / 1000).setImageResource(R.drawable.wqueen);
-                }
-                if (id % 1000 == 17) {
-                    findPieceById(id / 1000).setImageResource(R.drawable.brook);
-                }
-                if (id % 1000 == 18) {
-                    findPieceById(id / 1000).setImageResource(R.drawable.bknight);
-                }
-                if (id % 1000 == 19) {
-                    findPieceById(id / 1000).setImageResource(R.drawable.bbishop);
-                }
-                if (id % 1000 == 20) {
-                    findPieceById(id / 1000).setImageResource(R.drawable.bqueen);
+
+            else return null;
+
+            //TODO: if searching for a non existing pawn try to promot it and search for the "promoted" pawn
+
+//        }
+    }
+
+    public int currentId(int id){
+
+        int currentId = id;
+
+        // Set the new image to the promoted pawn.
+        if (id>1000 && findPieceById(id/1000)!=null) {
+            if (id % 1000 == 1) findPieceById(id / 1000).setImageResource(R.drawable.wrook);
+            if (id % 1000 == 2) findPieceById(id / 1000).setImageResource(R.drawable.wknight);
+            if (id % 1000 == 3) findPieceById(id / 1000).setImageResource(R.drawable.wbishop);
+            if (id % 1000 == 4) findPieceById(id / 1000).setImageResource(R.drawable.wqueen);
+            if (id % 1000 == 17) findPieceById(id / 1000).setImageResource(R.drawable.brook);
+            if (id % 1000 == 18) findPieceById(id / 1000).setImageResource(R.drawable.bknight);
+            if (id % 1000 == 19) findPieceById(id / 1000).setImageResource(R.drawable.bbishop);
+            if (id % 1000 == 20) findPieceById(id / 1000).setImageResource(R.drawable.bqueen);
+
+            currentId = id / 1000;
+        }
+
+        if(id<1000){
+            for(int i = 1; i < 5; i++ ){
+                if(findPieceById(id*1000 + i)!=null) {
+                    findPieceById(id*1000 + i).setImageResource(R.drawable.wpawn);
+                    currentId = id*1000 + i;
                 }
             }
-
-            return findPieceById(id / 1000);
+            for (int i = 17; i < 21; i++) {
+                if (findPieceById(id * 1000 + i) != null) {
+                    findPieceById(id * 1000 + i).setImageResource(R.drawable.bpawn);
+                    currentId = id * 1000 + i;
+                }
+            }
         }
+
+        if(id>1000 && findPieceById(id/1000)==null){
+            for(int i = 1; i < 5; i++ ){
+                if(findPieceById(id/1000*1000 + i)!=null) {
+                    if (id % 1000 == 1) findPieceById(id/1000*1000 + i).setImageResource(R.drawable.wrook);
+                    if (id % 1000 == 2) findPieceById(id/1000*1000 + i).setImageResource(R.drawable.wknight);
+                    if (id % 1000 == 3) findPieceById(id/1000*1000 + i).setImageResource(R.drawable.wbishop);
+                    if (id % 1000 == 4) findPieceById(id/1000*1000 + i).setImageResource(R.drawable.wqueen);
+
+                    currentId = id/1000*1000 + i;
+                }
+            }
+            for (int i = 17; i < 21; i++) {
+                if (findPieceById(id/1000*1000 + i) != null) {
+                    if (id % 1000 == 17) findPieceById(id/1000*1000 + i).setImageResource(R.drawable.brook);
+                    if (id % 1000 == 18) findPieceById(id/1000*1000 + i).setImageResource(R.drawable.bknight);
+                    if (id % 1000 == 19) findPieceById(id/1000*1000 + i).setImageResource(R.drawable.bbishop);
+                    if (id % 1000 == 20) findPieceById(id/1000*1000 + i).setImageResource(R.drawable.bqueen);
+                    currentId = id/1000*1000 + i;
+                }
+            }
+        }
+
+        return currentId;
     }
+
 
     /**
      * Check if own king is in check change.

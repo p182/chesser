@@ -54,19 +54,6 @@
         android:layout_marginBottom="10dp"
         android:textStyle="bold" />
 
-    <ImageButton
-        android:layout_width="40dp"
-        android:layout_height="35dp"
-        android:id="@+id/imageButton"
-        android:scaleType="fitXY"
-        android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentTop="true"
-        android:adjustViewBounds="true"
-        android:onClick="backButton"
-        android:background="@drawable/custombutton" />
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -131,7 +118,7 @@
             android:src="@drawable/abc_ic_clear_mtrl_alpha"
             android:layout_marginRight="30dp"
             android:layout_marginTop="10dp"
-            android:tint="@color/accent_material_light"
+            android:tint="#007a9f"
             android:onClick="gameFinishedCloseOnClick"
             android:focusable="false" />
 
@@ -189,7 +176,7 @@
             android:src="@drawable/abc_ic_clear_mtrl_alpha"
             android:layout_marginRight="30dp"
             android:layout_marginTop="10dp"
-            android:tint="@color/accent_material_light"
+            android:tint="#007a9f"
             android:onClick="closeHelp"
             android:focusable="false" />
 
@@ -206,7 +193,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/info_game"
-                android:textColor="#002e25"
+                android:textColor="#00363b"
                 android:textSize="17sp"
                 android:fontFamily="sans-serif-light"
                 android:id="@+id/textView7"

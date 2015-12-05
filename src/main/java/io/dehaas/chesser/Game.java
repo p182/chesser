@@ -24,7 +24,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +43,7 @@ import java.util.ArrayList;
 /**
  * Manages the pieces and main UI and holds the game info.
  */
-public class Game extends ActionBarActivity {
+public class Game extends AppCompatActivity {
 
     public static BluetoothSocket socket;
     ConnectedThread connectThread;
@@ -55,6 +55,8 @@ public class Game extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         ConnectedThread tmp = new ConnectedThread(socket);
         connectThread=tmp;
         connectThread.start();
@@ -64,21 +66,16 @@ public class Game extends ActionBarActivity {
 
         setupPieces();
 
-//        Button turnNotifier = (Button)findViewById(R.id.turnNotifier);
         TextView turnNotifier = (TextView)findViewById(R.id.turnNotifier);
 
         // Indicate player/opponent turn.
         if(color==1){
             myTurn=true;
             turnNotifier.setText(R.string.player_turn);
-//            turnNotifier.setClickable(false);
-//            turnNotifier.setEnabled(true);
         }
         else{
             myTurn=false;
             turnNotifier.setText(R.string.opponent_turn);
-//            turnNotifier.setClickable(false);
-//            turnNotifier.setEnabled(false);
         }
 
         CheckBox c = (CheckBox)findViewById(R.id.vibrateCB);
@@ -104,6 +101,24 @@ public class Game extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save||id == R.id.action_load) {
             return true;
+        }
+        if (id == android.R.id.home){
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Are you sure you want to exit all your progress will be lost")
+                    .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            incomingStateListenerThread.cancel();
+                            connectThread.cancel();
+                            startActivity(new Intent("first.activity"));
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do nothing
+                        }
+                    })
+                    .create().show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -459,7 +474,7 @@ public class Game extends ActionBarActivity {
                 } else {
                     // Valid move and pawn not at end of board
 
-                    // if king or rook moved disable the according the castling options
+                    // if king or rook moved disable accordingly the castling options
                     if((pressedPiece==wr1 || pressedPiece==wk)&&color==1 || (pressedPiece==br1 || pressedPiece==bk)&&color==-1){
                         castlingRook1 = false;
                     }
@@ -721,57 +736,71 @@ public class Game extends ActionBarActivity {
         rook.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Pawn is white
-                if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
-                    pressedPiece.setId(pressedPiece.getId() * 1000 + 1);
+                if (color == 1) {
+                    if(pressedPiece.getId()>1000) pressedPiece.setId( pressedPiece.getId() / 1000 *1000 + 1);
+                    else pressedPiece.setId( pressedPiece.getId() *1000 + 1);
                     pressedPiece.setImageResource(R.drawable.wrook);
                 }
                 // Pawn is black
                 else {
-                    pressedPiece.setId(pressedPiece.getId() * 1000 + 17);
+                    if(pressedPiece.getId()>1000) pressedPiece.setId( pressedPiece.getId() / 1000 *1000 + 17);
+                    else pressedPiece.setId( pressedPiece.getId() *1000 + 17);
                     pressedPiece.setImageResource(R.drawable.brook);
                 }
+                System.out.println(pressedPiece.getId());
             }
         });
         knight.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Pawn is white
-                if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
-                    pressedPiece.setId(pressedPiece.getId() * 1000 + 2);
+                if (color == 1) {
+                    if (pressedPiece.getId() > 1000)
+                        pressedPiece.setId(pressedPiece.getId() / 1000 * 1000 + 2);
+                    else pressedPiece.setId(pressedPiece.getId() * 1000 + 2);
                     pressedPiece.setImageResource(R.drawable.wknight);
                 }
                 // Pawn is black
                 else {
-                    pressedPiece.setId(pressedPiece.getId() * 1000 + 18);
+                    if (pressedPiece.getId() > 1000)
+                        pressedPiece.setId(pressedPiece.getId() / 1000 * 1000 + 18);
+                    else pressedPiece.setId(pressedPiece.getId() * 1000 + 18);
                     pressedPiece.setImageResource(R.drawable.bknight);
                 }
+                System.out.println(pressedPiece.getId());
             }
         });
         bishop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Pawn is white
-                if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
-                    pressedPiece.setId(pressedPiece.getId() * 1000 + 3);
+                if (color == 1) {
+                    if(pressedPiece.getId()>1000) pressedPiece.setId( pressedPiece.getId() / 1000 *1000 + 3);
+                    else pressedPiece.setId( pressedPiece.getId() *1000 + 3);
                     pressedPiece.setImageResource(R.drawable.wbishop);
                 }
                 // Pawn is black
                 else {
-                    pressedPiece.setId(pressedPiece.getId() * 1000 + 19);
+                    if(pressedPiece.getId()>1000) pressedPiece.setId( pressedPiece.getId() / 1000 *1000 + 19);
+                    else pressedPiece.setId( pressedPiece.getId() *1000 + 19);
                     pressedPiece.setImageResource(R.drawable.bbishop);
                 }
+                System.out.println(pressedPiece.getId());
             }
         });
         queen.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Pawn is white
-                if (8 < pressedPiece.getId() && pressedPiece.getId() < 17) {
-                    pressedPiece.setId(pressedPiece.getId() * 1000 + 4);
+                if (color == 1) {
+                    if(pressedPiece.getId()>1000) pressedPiece.setId( pressedPiece.getId() / 1000 *1000 + 4);
+                    else pressedPiece.setId( pressedPiece.getId() *1000 + 4);
                     pressedPiece.setImageResource(R.drawable.wqueen);
                 }
                 // Pawn is black
                 else {
-                    pressedPiece.setId(pressedPiece.getId() * 1000 + 20);
+                    if(pressedPiece.getId()>1000) pressedPiece.setId( pressedPiece.getId() / 1000 *1000 + 20);
+                    else pressedPiece.setId( pressedPiece.getId() *1000 + 20);
                     pressedPiece.setImageResource(R.drawable.bqueen);
                 }
+                System.out.println(pressedPiece.getId());
             }
         });
 
@@ -899,4 +928,5 @@ public class Game extends ActionBarActivity {
         LinearLayout info = (LinearLayout)findViewById(R.id.linearLayout2);
         info.setVisibility(View.INVISIBLE);
     }
+
 }

@@ -22,7 +22,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Chesser"
         android:id="@+id/textView3"
-        android:textColor="#002e25"
+        android:textColor="#00363b"
         android:textSize="85sp"
         android:layout_marginTop="100dp"
         android:fontFamily="sans-serif-light"
@@ -96,7 +96,7 @@
             android:src="@drawable/abc_ic_clear_mtrl_alpha"
             android:layout_marginRight="30dp"
             android:layout_marginTop="10dp"
-            android:tint="@color/accent_material_light"
+            android:tint="#007a9f"
             android:onClick="closeInfo"
             android:focusable="false" />
 
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/info_welcome"
-                android:textColor="#002e25"
+                android:textColor="#00363b"
                 android:textSize="17sp"
                 android:fontFamily="sans-serif-light"
                 android:id="@+id/textView5" />

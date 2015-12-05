@@ -3,9 +3,13 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="colorPrimary">#003856</item>
+        <item name="colorPrimaryDark">#002033</item>
+        <item name="colorAccent">#007a9f</item>
     </style>
     <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
+        <item name="colorPrimaryDark">#ba003554</item>
     </style>
 
 </resources>
