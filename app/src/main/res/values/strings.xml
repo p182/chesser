@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Chesser</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="welcome">Welcome To The Game Of Chess</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_welcome">Chesser</string>
+    <string name="play">Click To Play</string>
+    <string name="title_activity_paired_devices">PairedDevices</string>
+    <string name="title_activity_open_server">OpenServer</string>
+    <string name="title_activity_connect_to_server">ConnectToServer</string>
+    <string name="player_turn">Your turn</string>
+    <string name="opponent_turn">Opponent\'s turn</string>
+    <string name="white_you_in_check">Your turn - white in check</string>
+    <string name="black_you_in_check">Your turn - black in check</string>
+    <string name="white_you_is_mated">Your turn - white is mated</string>
+    <string name="black_you_is_mated">Your turn - black is mated</string>
+    <string name="white_you_is_stalemated">Your turn - white is stalemated</string>
+    <string name="black_you_is_stalemated">Your turn - black is stalemated</string>
+    <string name="white_opponent_in_check">Opponent\'s turn - white in check</string>
+    <string name="black_opponent_in_check">Opponent\'s turn - black in check</string>
+    <string name="white_opponent_is_mated">Opponent\'s turn - white is mated</string>
+    <string name="black_opponent_is_mated">Opponent\'s turn - black is mated</string>
+    <string name="white_opponent_is_stalemated">Opponent\'s turn - white is stalemated</string>
+    <string name="black_opponent_is_stalemated">Opponent\'s turn - black is stalemated</string>
+    <string name="name_game_already_given">GAME NOT SAVED: name already in use</string>
+    <string name="successfully_saved">Game saved</string>
+    <string name="successfully_deleted">Game deleted</string>
+    <string name="bluetooth_off">Bluetooth off, turn on to open server</string>
+    <string name="autosave_sent">:autosave:last_sent</string>
+    <string name="autosave_received">:autosave:last_received</string>
+    <string name="confirm_delete">Are you sure you want to delete</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="checkmate_won">checkmate!</string>
+    <string name="checkmate_lost">checkmate...</string>
+    <string name="won">You have won.</string>
+    <string name="lost">You have lost.</string>
+    <string name="stalemate">stalemate</string>
+    <string name="stalemate_won">You could have won...</string>
+    <string name="stalemate_lost">You could have lost!</string>
+
+    <!-- use as source for google play description -->
+    <string name="info_welcome">
+        <b>HOW TO START A GAME:</b>
+        \n <b>•</b> Make sure Bluetooth is on and your device is paired with the opponent\'s device.
+        \n <b>•</b> In the app hit \"HOST A GAME\" if you want to be the white player or \"JOIN A GAME\" if you want to be the black player.
+        \n <b>•</b> First the hosting player has to open the server and then the other player has to choose the host\'s device name from the list.</string>
+    <string name="info_game">
+        <b>HOW TO PLAY:</b>
+        \n <b>•</b> Click on any of your pieces to see their possible moves and click on any highlighted square to make your move, which is then sent automatically. If the piece goes back to its starting square it means you have put your king in check and therefore the move has been cancelled.
+        \n <b>•</b> You can save, load and delete games using the menu.
+        \n <b>•</b> If the move fails to be sent or there is any other problem, there are two auto saved games that can be of help. For example if the move was not sent you can load the \'last_received\' game and remake the move.
+        \n <b>•</b> For any questions about chess rules >>> <a href="http://www.chessvariants.org/d.chess/chess.html">http://www.chessvariants.org/d.chess/chess.html</a> </string>
+</resources>

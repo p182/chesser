@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".Game">
+    <item
+        android:id="@+id/action_save"
+        android:orderInCategory="1"
+        android:title="Save Game"
+        app:showAsAction="never"
+        android:onClick="saveGame"/>
+    <item
+        android:id="@+id/action_load"
+        android:orderInCategory="2"
+        android:title="Load Game"
+        app:showAsAction="never"
+        android:onClick="loadGame"/>
+    <item
+        android:id="@+id/action_delete"
+        android:orderInCategory="3"
+        android:title="Delete Game"
+        app:showAsAction="never"
+        android:onClick="deleteGame"/>
+    <item
+        android:id="@+id/action_help"
+        android:orderInCategory="4"
+        android:title="Help"
+        app:showAsAction="never"
+        android:onClick="help"/>
+</menu>
