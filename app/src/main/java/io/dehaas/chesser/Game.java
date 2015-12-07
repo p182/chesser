@@ -82,6 +82,9 @@ public class Game extends AppCompatActivity {
         c.setChecked(true);
         c = (CheckBox)findViewById(R.id.soundCB);
         c.setChecked(true);
+
+        castlingRook1 = true;
+        castlingRook2 = true;
     }
 
     @Override
@@ -129,8 +132,6 @@ public class Game extends AppCompatActivity {
     public static int color = 1;
 
     public static Boolean kingInCheck = false;
-    public static Boolean kingInCheckmate;
-    public static Boolean opponentKingInCheck;
 
     public static Boolean castlingRook1 = true;
     public static Boolean castlingRook2 = true;
@@ -152,10 +153,6 @@ public class Game extends AppCompatActivity {
     public static Boolean myTurn;
     public static Boolean piecesClickable=true;
     public static Boolean vibrate = true;
-    public static Boolean sound = true;
-
-    public static String newPieceChosen = "";
-
 
     public static Piece pressedPiece;
     public static Piece removedPiece;
@@ -374,25 +371,6 @@ public class Game extends AppCompatActivity {
         }
     }
 
-    public void backButton(View v){
-        System.out.println("dialog");
-        new AlertDialog.Builder(this)
-                .setTitle("Are you sure you want to exit all your progress will be lost")
-                .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        incomingStateListenerThread.cancel();
-                        connectThread.cancel();
-                        startActivity(new Intent("first.activity"));
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do nothing
-                    }
-                })
-                .create().show();
-    }
-
     public void piecesOnClick(View v){
         // Only if players turn and pieces are set to clickable a piece will react to click.
         if(myTurn&&piecesClickable) {
@@ -455,9 +433,22 @@ public class Game extends AppCompatActivity {
             pressedPiece.y = s.y;
 
             pressedPiece.setLayoutParams(u.getPlaceParams(s.x, s.y));
+            pressedPiece.bringToFront();
             u.removeOpponent();
 
-            if (!u.myKingInCheck()) {
+            // if the player has chosen a castling move but its puts the king in danger set castling1SquaresSafe to false
+            boolean castling1SquaresSafe = true;
+            if(castlingRook1Happened && (color==1&&(u.squareIsUnsafe(3, 1)||u.squareIsUnsafe(4, 1)) || color==-1&&(u.squareIsUnsafe(3, 8)||u.squareIsUnsafe(4, 8)))){
+                castling1SquaresSafe = false;
+            }
+
+            // if the player has chosen a castling move but its puts the king in danger set castling2SquaresSafe to false
+            boolean castling2SquaresSafe = true;
+            if(castlingRook2Happened && (color==1&&(u.squareIsUnsafe(6, 1)||u.squareIsUnsafe(7, 1)) || color==-1&&(u.squareIsUnsafe(6, 8)||u.squareIsUnsafe(7, 8)))){
+                castling2SquaresSafe = false;
+            }
+
+            if (!u.myKingInCheck() && castling1SquaresSafe && castling2SquaresSafe) {
                 // Valid move, king not in check.
                 kingInCheck = false;
 
@@ -558,8 +549,8 @@ public class Game extends AppCompatActivity {
                     OpponentKingInMateThread opponentKingInMateThreadThread = new OpponentKingInMateThread(this);
                     opponentKingInMateThreadThread.start();
                 }
-            } else {
-                // King is checked, the piece will undo the move after delay
+            } else{
+                // King is checked or illegal castling attempted, the piece will undo the move after delay
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
 
@@ -572,6 +563,9 @@ public class Game extends AppCompatActivity {
 
                         // If an opponent piece was removed return it
                         u.returnOpponent();
+
+                        if (castlingRook1Happened) castlingRook1Happened=false;
+                        if (castlingRook2Happened) castlingRook2Happened=false;
 
                         myTurn = true; // Enable other pieces to respond to clicks
                     }
@@ -723,11 +717,13 @@ public class Game extends AppCompatActivity {
         ImageView bishop = (ImageView) findViewById(R.id.bishop);
         ImageView queen = (ImageView) findViewById(R.id.queen);
         if (color == 1) {
+            ll.setBackgroundColor(getResources().getColor(R.color.secondary_text_default_material_light));
             rook.setImageResource(R.drawable.wrook);
             knight.setImageResource(R.drawable.wknight);
             bishop.setImageResource(R.drawable.wbishop);
             queen.setImageResource(R.drawable.wqueen);
         } else {
+            ll.setBackgroundColor(getResources().getColor(R.color.secondary_text_default_material_dark));
             rook.setImageResource(R.drawable.brook);
             knight.setImageResource(R.drawable.bknight);
             bishop.setImageResource(R.drawable.bbishop);
@@ -880,13 +876,7 @@ public class Game extends AppCompatActivity {
                 }
             }
 
-            boolean squaresSafe = true;
-
-            if(color==1&&(u.squareIsUnsafe(3, 1)||u.squareIsUnsafe(4, 1)) || color==-1&&(u.squareIsUnsafe(3, 8)||u.squareIsUnsafe(4, 8))){
-                squaresSafe = false;
-            }
-
-            if(squaresClear&&squaresSafe) rook1CastlingAvailable = true;
+            if(squaresClear) rook1CastlingAvailable = true;
         }
         // Both the king and the second rook have not moved yet
         if(castlingRook2&&!kingInCheck){
@@ -900,13 +890,7 @@ public class Game extends AppCompatActivity {
                 }
             }
 
-            boolean squaresSafe = true;
-
-            if(color==1&&(u.squareIsUnsafe(6, 1)||u.squareIsUnsafe(7, 1)) || color==-1&&(u.squareIsUnsafe(6, 8)||u.squareIsUnsafe(7, 8))){
-                squaresSafe = false;
-            }
-
-            if(squaresClear&&squaresSafe) rook2CastlingAvailable = true;
+            if(squaresClear) rook2CastlingAvailable = true;
         }
 
         return new boolean[] {rook1CastlingAvailable,rook2CastlingAvailable};

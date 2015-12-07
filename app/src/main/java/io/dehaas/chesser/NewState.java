@@ -39,14 +39,6 @@ public class NewState{
 
     /** Moves a piece by its cId. */
     void movePiece(String cId){
-
-        Vibrator v = (Vibrator) activity.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        // If vibrate is on
-        if(Game.vibrate) {
-            // Vibrate for 500 milliseconds
-            v.vibrate(50);
-        }
-
         String[] cIdArray = cId.split(":");
 
         int x = cIdArray[0].charAt(0) - 48;
@@ -93,6 +85,14 @@ public class NewState{
     }
 
     void createNewState(){
+
+        Vibrator v = (Vibrator) activity.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        // If vibrate is on
+        if(Game.vibrate) {
+            // Vibrate for 500 milliseconds
+            v.vibrate(50);
+        }
+
 
         RelativeLayout rl = (RelativeLayout) activity.findViewById(R.id.fragment);
         for (int id = 100; id < 7000; id += 100) {

@@ -35,8 +35,8 @@
     <string name="won">You have won.</string>
     <string name="lost">You have lost.</string>
     <string name="stalemate">stalemate</string>
-    <string name="stalemate_won">You could have won...</string>
-    <string name="stalemate_lost">You could have lost!</string>
+    <string name="stalemate_won">Its a draw!</string>
+    <string name="stalemate_lost">Its a draw...</string>
 
     <!-- use as source for google play description -->
     <string name="info_welcome">
