@@ -108,7 +108,7 @@ public class Game extends AppCompatActivity {
         if (id == android.R.id.home){
 
             new AlertDialog.Builder(this)
-                    .setTitle("Are you sure you want to exit all your progress will be lost")
+                    .setTitle(R.string.exit_confirm)
                     .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             incomingStateListenerThread.cancel();
@@ -116,7 +116,7 @@ public class Game extends AppCompatActivity {
                             startActivity(new Intent("first.activity"));
                         }
                     })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // Do nothing
                         }
@@ -595,7 +595,7 @@ public class Game extends AppCompatActivity {
                                         mDbHelper.saveGame(gameName);
                                     }
                                 })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         // do nothing
                                     }
@@ -677,7 +677,7 @@ public class Game extends AppCompatActivity {
                 // Confirm with user that he wants to delete game
                 new AlertDialog.Builder(activity)
                         .setTitle(getResources().getText(R.string.confirm_delete).toString() + " " + gameName + " ?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 mDbHelper.deleteGame(gameName);
 
@@ -685,7 +685,7 @@ public class Game extends AppCompatActivity {
                                 listDialog.dismiss();
                             }
                         })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                             }
                         })
