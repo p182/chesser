@@ -91,7 +91,11 @@ public class Game extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_game, menu);
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    public void onSaveMenuClicked(MenuItem menuItem){
     }
 
     @Override
@@ -102,9 +106,11 @@ public class Game extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+/*
         if (id == R.id.action_save||id == R.id.action_load) {
             return true;
         }
+*/
         if (id == android.R.id.home){
 
             new AlertDialog.Builder(this)
@@ -123,6 +129,36 @@ public class Game extends AppCompatActivity {
                     })
                     .create().show();
         }
+        if(id == R.id.action_saveMenu){
+            final Activity activity = this;
+
+            final View layout = View.inflate(this, R.layout.load_dialog, null);
+            final AlertDialog dialog = new AlertDialog.Builder(activity).setTitle("Game Saving Options").setView(layout).show();
+
+            final ListView listview = (ListView) layout.findViewById(R.id.entries);
+
+            final ArrayList<String> list = new ArrayList<>(3);
+            list.add(0 , "Save a game");
+            list.add(1 , "Load a game");
+            list.add(2 , "Delete a game");
+
+
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, list);
+
+            listview.setAdapter(adapter);
+
+            listview.setOnItemClickListener(new ListView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
+                    switch (position){
+                        case 0: saveGame(); break;
+                        case 1: loadGame(); break;
+                        case 2: deleteGame(); break;
+                    }
+                    dialog.dismiss();
+                }
+            });
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -136,7 +172,7 @@ public class Game extends AppCompatActivity {
     public static Boolean castlingRook1 = true;
     public static Boolean castlingRook2 = true;
 
-    // the id number of the two opponent piece that can make an en-passant move devived by a coma
+    // the id number of the two opponent piece that can make an en-passant move devided by a coma
     public static String opponentEnPassant = ".";
 
     public static int enPassantXCoorForOpp = 0;
@@ -516,7 +552,7 @@ public class Game extends AppCompatActivity {
                         if(Math.abs(pressedPiece.y - tmpY)==2){
                             Boolean first = true;
                             for(Piece piece : u.getAllOpponentsPieces()){
-                                if(pressedPiece.y==piece.y && Math.abs(pressedPiece.x-piece.x)==1){
+                                if((pressedPiece.y==piece.y && Math.abs(pressedPiece.x-piece.x)==1)&&(piece.getId() > 8 && piece.getId() < 17) || (piece.getId() > 24 && piece.getId() < 33)){
                                     if(first){
                                         first=false;
                                         opponentEnPassant =""+piece.getId();
@@ -577,7 +613,7 @@ public class Game extends AppCompatActivity {
     }
 
     /** Saves the current game to the data base. */
-    public void saveGame(MenuItem item){
+    public void saveGame(){
         final Activity activity = this;
         final View layout = View.inflate(this, R.layout.save_dialog, null);
         new AlertDialog.Builder(activity)
@@ -630,7 +666,7 @@ public class Game extends AppCompatActivity {
     }
 
     /** Loads  a chosen game from the database. */
-    public void loadGame(MenuItem item){
+    public void loadGame(){
         final Activity activity = this;
 
         final View layout = View.inflate(this, R.layout.load_dialog, null);
@@ -656,7 +692,7 @@ public class Game extends AppCompatActivity {
     }
 
     /** Deletes  a chosen game from the database. */
-    public void deleteGame(MenuItem item){
+    public void deleteGame(){
         final Activity activity = this;
 
         final View layout = View.inflate(this, R.layout.load_dialog, null);
