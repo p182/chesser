@@ -238,7 +238,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
         // Create the game state string.
         String gameState = u.getStateForDb();
-        System.out.println(gameState);
+//        System.out.println(gameState);
 
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();

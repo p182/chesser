@@ -83,8 +83,7 @@ public class AcceptThread extends Thread {
 
                     @Override
                     public void run() {
-                        Toast.makeText(activity, R.string.bluetooth_off,
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity, R.string.bluetooth_off, Toast.LENGTH_LONG).show();
 
                         TextView textView = (TextView) activity.findViewById(R.id.textView);
                         textView.setVisibility(View.INVISIBLE);
@@ -93,12 +92,21 @@ public class AcceptThread extends Thread {
 
                 break;
             } catch (Exception e){
-                Toast.makeText(activity, e.toString(),Toast.LENGTH_LONG).show();
+                final String eror = e.toString();
+                activity.runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Toast.makeText(activity, eror, Toast.LENGTH_LONG).show();
+                        TextView textView = (TextView) activity.findViewById(R.id.textView);
+                        textView.setVisibility(View.INVISIBLE);
+                    }
+                });
             }
 
             // If a connection was accepted
             if (socket != null) {
-                OpenServer.socket=socket;
+//                OpenServer.socket=socket;
 
                 activity.runOnUiThread(new Runnable() {
 
@@ -113,6 +121,7 @@ public class AcceptThread extends Thread {
                 System.out.println("got socket");
                 Game.socket=socket;
                 Game.color=1;
+                Game.firstGame = true;
                 activity.startActivity(new Intent("chess.game"));
 
                 // Do work to manage the connection (in a separate thread)

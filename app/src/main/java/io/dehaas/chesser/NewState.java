@@ -86,7 +86,10 @@ public class NewState{
 
     void createNewState(){
 
+        TextView turnNotifier = (TextView)activity.findViewById(R.id.turnNotifier);
+
         Vibrator v = (Vibrator) activity.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+
         // If vibrate is on
         if(Game.vibrate) {
             // Vibrate for 500 milliseconds
@@ -98,8 +101,6 @@ public class NewState{
         for (int id = 100; id < 7000; id += 100) {
             rl.removeView(activity.findViewById(id));
         }
-
-        TextView turnNotifier = (TextView)activity.findViewById(R.id.turnNotifier);
 
         u= new Utils(activity);
 
@@ -124,7 +125,7 @@ public class NewState{
         if(state[4].equals("false")) Game.castlingRook2 = false;
         if(state[4].equals("true")) Game.castlingRook2 = true;
 
-        System.out.println("state: " + s);
+//        System.out.println("state: " + s);
 
         if(state.length>5 && !state[5].equals(".")){
             String[] ids = state[5].split(",");
@@ -144,17 +145,28 @@ public class NewState{
 //            System.out.println(array[i]);
         }
 
+//        System.out.println("Game.myTurn: " + Game.myTurn);
         // Notify turn and in-check status.
         if(Game.myTurn) {
+//            System.out.println("my turn");
             if (u.myKingInCheck()) {
+ //               System.out.println("my turn: in check");
                 // Player's king in check - show that is player's turn and that the king is in check.
                 Game.kingInCheck = true;
                 if (Game.color == 1) {
-                    turnNotifier.setText(R.string.white_you_in_check);
+//                    System.out.println("game color: white");
+                    try {
+                        turnNotifier.setText(R.string.white_you_in_check);
+                    }
+                    catch (Exception e){
+                        System.out.println(e);
+                    }
+//                    System.out.println("notifier text has been set");
                 } else {
                     turnNotifier.setText(R.string.black_you_in_check);
                 }
             } else {
+//                System.out.println("my turn: not in check");
                 // Player's king not in check - show that it is player's turn.
                 turnNotifier.setText(R.string.player_turn);
             }
@@ -174,7 +186,7 @@ public class NewState{
             }
         }
 
-        // Run the OpponentKingInCheckmate thread in case its chake mate
+        // Run the MyKingInCheckmate thread in case its chake mate
         MyKingInMateThread myKingInMateThreadThread = new MyKingInMateThread(activity);
         myKingInMateThreadThread.start();
 

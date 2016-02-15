@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="org">#b6ddd7</color> <!-- original #b6ddd7 -->
+    <color name="background1">#b6d8dd</color> <!-- original #b6ddd7 -->
+    <color name="background2">#d8e6ff</color> <!-- original #b6ddd7 -->
+    <color name="background2Dark">#7e93b9</color> <!-- original #b6ddd7 -->
+    <color name="customPrimary">#1565C0</color>
+    <color name="customPrimaryDark">#0D47A1</color>
+    <color name="customAccent">#d32f2f</color>
+    <color name="customText">#001e1a</color>
+</resources>

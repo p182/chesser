@@ -17,24 +17,16 @@
 
 package io.dehaas.chesser;
 
-import android.bluetooth.BluetoothSocket;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 
 /**
  *  UI to activate the listener on AcceptThread server.
  */
 public class OpenServer extends ActionBarActivity {
 
-    public static BluetoothSocket socket;
+    AcceptThread acceptThread = new AcceptThread(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +37,13 @@ public class OpenServer extends ActionBarActivity {
 
 
     public void startServer(View v) {
-            AcceptThread acceptThread = new AcceptThread(this);
             System.out.println("Starting");
             acceptThread.start();
+    }
+
+    @Override
+    public void onBackPressed() {
+        acceptThread.cancel();
+        super.onBackPressed();
     }
 }

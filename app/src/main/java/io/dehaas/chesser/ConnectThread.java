@@ -22,6 +22,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -38,7 +39,7 @@ public class ConnectThread extends Thread {
 
     UUID MY_UUID = UUID.fromString("427c2fb7-c2a3-4d25-ac0d-81dc6a77525a");
 
-    public ConnectThread(BluetoothDevice device,Activity _activity) {
+    public ConnectThread(BluetoothDevice device, Activity _activity) {
         this.activity = _activity;
 
         // Use a temporary object that is later assigned to mmSocket,
@@ -48,9 +49,10 @@ public class ConnectThread extends Thread {
 
         // Get a BluetoothSocket to connect with the given BluetoothDevice
         try {
-            // MY_UUID is the app'movesCoor UUID string, also used by the server code
+            // MY_UUID is the app's UUID string, also used by the server code
             tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
-        } catch (IOException e) { }
+        } catch (IOException e) {
+        }
         mmSocket = tmp;
     }
 
@@ -62,28 +64,48 @@ public class ConnectThread extends Thread {
             // Connect the device through the socket. This will block
             // until it succeeds or throws an exception
             mmSocket.connect();
+
         } catch (IOException connectException) {
             // Unable to connect; close the socket and get out
-            System.out.println("Cannot connect");
+//            System.out.println("Cannot connect");
+//            Toast.makeText(activity, "Cannot connect", Toast.LENGTH_LONG).show();
             try {
                 mmSocket.close();
-            } catch (IOException closeException) { }
+                System.out.println("Socket closed: " + mmSocket);
+            } catch (IOException closeException) {
+            }
             return;
         }
 
-        Game.socket=mmSocket;
-        Game.color=-1;
-        activity.startActivity(new Intent("chess.game"));
+        // only pass on socket if it's not null
+        if (mmSocket != null) {
+            Game.socket = mmSocket;
+            Game.color = -1;
+            Game.firstGame = true;
+            activity.startActivity(new Intent("chess.game"));
+        } else {
+            activity.runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    Toast.makeText(activity, "Cannot connect", Toast.LENGTH_LONG).show();
+                }
+            });
+            System.out.println("Cannot connect");
+        }
 
 
         // Do work to manage the connection (in a separate thread)
 //        manageConnectedSocket(mmSocket);
     }
 
-    /** Will cancel an in-progress connection, and close the socket */
+    /**
+     * Will cancel an in-progress connection, and close the socket
+     */
     public void cancel() {
         try {
             mmSocket.close();
-        } catch (IOException e) { }
+        } catch (IOException e) {
+        }
     }
 }

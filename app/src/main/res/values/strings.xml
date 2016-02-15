@@ -6,8 +6,8 @@
     <string name="title_activity_welcome">Chesser</string>
     <string name="play">Click To Play</string>
     <string name="title_activity_paired_devices">PairedDevices</string>
-    <string name="title_activity_open_server">OpenServer</string>
-    <string name="title_activity_connect_to_server">ConnectToServer</string>
+    <string name="title_activity_open_server">Open Server</string>
+    <string name="title_activity_connect_to_server">Connect To Server</string>
     <string name="player_turn">Your turn</string>
     <string name="opponent_turn">Opponent\'s turn</string>
     <string name="white_you_in_check">Your turn - white in check</string>
@@ -38,6 +38,7 @@
     <string name="stalemate_won">Its a draw!</string>
     <string name="stalemate_lost">Its a draw...</string>
     <string name="exit_confirm">Are you sure you want to exit? All your progress will be lost.</string>
+    <string name="resart_game">new game</string>
 
     <!-- use as source for google play description -->
     <string name="info_welcome">

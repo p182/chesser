@@ -38,7 +38,9 @@ public class MyKingInMateThread extends Thread {
     Utils u = new Utils(activity);
 
     public void run() {
+//        System.out.println("myKingInMate thread started");
         if (u.myKingInMate()) {
+//            System.out.println("king is in mate");
             activity.runOnUiThread(
                     new Runnable() {
                         @Override
@@ -49,7 +51,8 @@ public class MyKingInMateThread extends Thread {
 
                                 @Override
                                 public void run() {
-                                    Game.myTurn = false;
+//                                    System.out.println("showing lost sign");
+                                    Game.piecesClickable = false;
                                     LinearLayout gameFinishedLayout = (LinearLayout) activity.findViewById(R.id.gameFinishedLayout);
                                     // Set the game finished dialog accordingly
                                     TextView title = (TextView)activity.findViewById(R.id.gameFinishedTitle);
@@ -64,6 +67,7 @@ public class MyKingInMateThread extends Thread {
 
                                     TextView turnNotifier = (TextView) activity.findViewById(R.id.turnNotifier);
 
+//                                    System.out.println("setting notifier");
                                     if (Game.color == 1) {
                                         if (u.myKingInCheck()) turnNotifier.setText(R.string.white_you_is_mated);
                                         else turnNotifier.setText(R.string.white_you_is_stalemated);
@@ -79,5 +83,6 @@ public class MyKingInMateThread extends Thread {
                     }
             );
         }
+//        System.out.println("myKingInMate thread completed");
     }
 }

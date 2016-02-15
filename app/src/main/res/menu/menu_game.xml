@@ -9,6 +9,11 @@
         app:showAsAction="always"/>
 -->
     <item
+        android:id="@+id/action_newGame"
+        android:title="Save"
+        android:icon="@drawable/ic_refresh_white_48dp"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/action_saveMenu"
         android:title="Save"
         android:icon="@drawable/ic_save_white_48dp"

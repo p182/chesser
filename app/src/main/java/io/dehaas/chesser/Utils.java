@@ -495,6 +495,7 @@ public class Utils {
      * Checks if own king in mate.
      */
     public boolean myKingInMate() {
+//        System.out.println("checking if king is in mate");
 //        Game.kingInCheckmate = true;
         int count = 0;
 
@@ -515,7 +516,7 @@ public class Utils {
             // Scan all coor moves of the piece
             for (String coor : cmoves) {
 
-                System.out.println(cmoves.length);
+//                System.out.println(cmoves.length);
                 count++;
 
                 if (!coor.equals("")) {
@@ -548,9 +549,9 @@ public class Utils {
 
                         kingInCheckMate = false;
 
-                        System.out.println("Not checkmate");
+//                        System.out.println("Not checkmate");
 
-                        System.out.println("x,y:  " + piece.x + "," + piece.y);
+//                        System.out.println("x,y:  " + piece.x + "," + piece.y);
 
                         if(tmpRemovedPiece!=null) {
                             tmpRemovedPiece.x = tmpxRemovedPiece;
@@ -577,7 +578,8 @@ public class Utils {
 
         }
 
-        System.out.println("count: " + count);
+//        System.out.println("count: " + count);
+//        System.out.println("finished checking");
         return kingInCheckMate;
 
     }
@@ -644,9 +646,9 @@ public class Utils {
 
                         kingInCheckMate = false;
 
-                        System.out.println("Not checkmate");
+//                        System.out.println("Not checkmate");
 
-                        System.out.println("x,y:  " + piece.x + "," + piece.y);
+//                        System.out.println("x,y:  " + piece.x + "," + piece.y);
 
                         if(tmpRemovedPiece!=null) {
                             tmpRemovedPiece.x = tmpxRemovedPiece;
@@ -673,7 +675,7 @@ public class Utils {
 
         }
 
-        System.out.println("count: " + count);
+//        System.out.println("count: " + count);
         return kingInCheckMate;
 
     }
@@ -874,8 +876,6 @@ public class Utils {
             Game.removedPiece.x = Game.removedPieceX;
             Game.removedPiece.y = Game.removedPieceY;
 
-            RelativeLayout rl = (RelativeLayout) activity.findViewById(R.id.fragment);
-//                        rl.addView(removedPiece);
             Game.removedPiece.setVisibility(View.VISIBLE);
 
             Game.removedPiece = null;
@@ -944,6 +944,44 @@ public class Utils {
         String state = piecesCoordinates +";"+ color +";"+ turn + ";" + Game.castlingRook1 + ";" + Game.castlingRook2 + ";" + Game.enPassant1+","+Game.enPassant2 + ";" + Game.enPassantXCoor;
 
         return state;
+    }
+
+    /** Sets up the pieces for a new game. */
+    public void newGame(){
+
+        // set all pieces to visible
+        Game.wr1.setVisibility(View.VISIBLE);
+        Game.wr2.setVisibility(View.VISIBLE);
+        Game.wn1.setVisibility(View.VISIBLE);
+        Game.wn2.setVisibility(View.VISIBLE);
+        Game.wb1.setVisibility(View.VISIBLE);
+        Game.wb2.setVisibility(View.VISIBLE);
+        Game.wk.setVisibility(View.VISIBLE);
+        Game.wq.setVisibility(View.VISIBLE);
+        Game.wp1.setVisibility(View.VISIBLE);
+        Game.wp2.setVisibility(View.VISIBLE);
+        Game.wp3.setVisibility(View.VISIBLE);
+        Game.wp4.setVisibility(View.VISIBLE);
+        Game.wp5.setVisibility(View.VISIBLE);
+        Game.wp6.setVisibility(View.VISIBLE);
+        Game.wp7.setVisibility(View.VISIBLE);
+        Game.wp8.setVisibility(View.VISIBLE);
+        Game.br1.setVisibility(View.VISIBLE);
+        Game.br2.setVisibility(View.VISIBLE);
+        Game.bn1.setVisibility(View.VISIBLE);
+        Game.bn2.setVisibility(View.VISIBLE);
+        Game.bb1.setVisibility(View.VISIBLE);
+        Game.bb2.setVisibility(View.VISIBLE);
+        Game.bk.setVisibility(View.VISIBLE);
+        Game.bq.setVisibility(View.VISIBLE);
+        Game.bp1.setVisibility(View.VISIBLE);
+        Game.bp2.setVisibility(View.VISIBLE);
+        Game.bp3.setVisibility(View.VISIBLE);
+        Game.bp4.setVisibility(View.VISIBLE);
+        Game.bp5.setVisibility(View.VISIBLE);
+        Game.bp6.setVisibility(View.VISIBLE);
+        Game.bp7.setVisibility(View.VISIBLE);
+        Game.bp8.setVisibility(View.VISIBLE);
     }
 
 }

@@ -57,7 +57,7 @@ public class ConnectToServer extends ActionBarActivity {
                 String btName = device.getName();
                 if (device.getBluetoothClass().getMajorDeviceClass() == BluetoothClass.Device.Major.PHONE) {
 //                    list.add(btName+"  --  "+device.toString());
-                    list.add(device.getAddress()+"  --  "+btName);
+                    list.add(btName);
                 }
             }
         }

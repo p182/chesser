@@ -25,5 +25,4 @@
         android:title="Delete Game"
         app:showAsAction="never"
         android:onClick="deleteGame"/>
-        -->
-</menu>
+        --></menu>

@@ -2,8 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="io.dehaas.chesser.Welcome"
-    android:longClickable="true"
-    android:background="#b6ddd7">
+    android:longClickable="true">
 
 
     <ImageView
@@ -65,17 +64,11 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/info_welcome"
-                android:textColor="#00363b"
+                android:textColor="@color/customText"
                 android:textSize="17sp"
                 android:fontFamily="sans-serif-light"
                 android:id="@+id/textView5" />
         </ScrollView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView6"
-            android:text="Roni Harel 2015" />
 
     </LinearLayout>
 
@@ -96,10 +89,10 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Chesser"
             android:id="@+id/textView3"
-            android:textColor="#00363b"
+            android:textColor="@color/customText"
             android:textSize="85sp"
             android:fontFamily="sans-serif-light"
-            android:background="#b3ffffff"
+            android:background="#cfe7f1ef"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"

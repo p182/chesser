@@ -46,23 +46,38 @@ import java.util.ArrayList;
 public class Game extends AppCompatActivity {
 
     public static BluetoothSocket socket;
-    ConnectedThread connectThread;
-    IncomingStateListenerThread incomingStateListenerThread = new IncomingStateListenerThread(this);
+    public static ConnectedThread connectedThread;
+    static IncomingStateListenerThread incomingStateListenerThread;
     Utils u = new Utils(this);
+
+    public static Boolean firstGame = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        System.out.println("Game onCreate()");
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ConnectedThread tmp = new ConnectedThread(socket);
-        connectThread=tmp;
-        connectThread.start();
-        incomingStateListenerThread.start();
+        // only when this is the first game between the devices create new ConnectedThread and IncomingStateListenerThread
+        if(firstGame) {
+            System.out.println("first game");
+            ConnectedThread tmp = new ConnectedThread(socket);
+            connectedThread = tmp;
+            connectedThread.start();
 
-        System.out.println("Game started");
+            incomingStateListenerThread = new IncomingStateListenerThread(this);
+            incomingStateListenerThread.start();
+
+            firstGame = false;
+        }
+        // if it is a new game but with same device only update the activity pointer in incomingStateListenerThread
+        else {
+            incomingStateListenerThread.activity = this;
+        }
+        //TODO: remove tmp
 
         setupPieces();
 
@@ -85,6 +100,9 @@ public class Game extends AppCompatActivity {
 
         castlingRook1 = true;
         castlingRook2 = true;
+
+        piecesClickable = true;
+
     }
 
     @Override
@@ -93,9 +111,6 @@ public class Game extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_game, menu);
 //        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    public void onSaveMenuClicked(MenuItem menuItem){
     }
 
     @Override
@@ -118,7 +133,7 @@ public class Game extends AppCompatActivity {
                     .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             incomingStateListenerThread.cancel();
-                            connectThread.cancel();
+                            connectedThread.cancel();
                             startActivity(new Intent("first.activity"));
                         }
                     })
@@ -158,6 +173,10 @@ public class Game extends AppCompatActivity {
                     dialog.dismiss();
                 }
             });
+        }
+        if(id == R.id.action_newGame){
+            connectedThread.stringWrite("message:restartRequest");
+            System.out.println("Requesting restart");
         }
 
         return super.onOptionsItemSelected(item);
@@ -540,7 +559,7 @@ public class Game extends AppCompatActivity {
                         String oppCoor;
                         if(color==1) oppCoor = enPassantXCoor + "" + (pressedPiece.y-1) ;
                         else oppCoor = enPassantXCoor + "" + (pressedPiece.y+1) ;
-                        System.out.println(oppCoor);
+//                        System.out.println(oppCoor);
                         u.removePieceByCoor(oppCoor);
                     }
                     // disable en-passant
@@ -578,8 +597,8 @@ public class Game extends AppCompatActivity {
                     mDbHelper.autoSave(getResources().getText(R.string.autosave_sent).toString());
 
                     // Send game to opponent
-                    connectThread.stringWrite(state);
-                    System.out.println("Castling: " + castlingRook1 +", "+ castlingRook2);
+                    connectedThread.stringWrite(state);
+//                    System.out.println("Castling: " + castlingRook1 +", "+ castlingRook2);
 
                     // Run the OpponentKingInCheckmate thread
                     OpponentKingInMateThread opponentKingInMateThreadThread = new OpponentKingInMateThread(this);
@@ -862,16 +881,17 @@ public class Game extends AppCompatActivity {
 
         // Prepare a new game state string and send it to opponent
         String state = u.getState();
-        connectThread.stringWrite(state);
+        connectedThread.stringWrite(state);
     }
 
     public void gameFinishedCloseOnClick(View v){
+        piecesClickable = true;
         LinearLayout wonLayout = (LinearLayout) findViewById(R.id.gameFinishedLayout);
         wonLayout.setVisibility(View.INVISIBLE);
     }
     public void checkmateExitOnClick(View v){
         incomingStateListenerThread.cancel();
-        connectThread.cancel();
+        connectedThread.cancel();
         startActivity(new Intent("first.activity"));
     }
 
@@ -947,6 +967,12 @@ public class Game extends AppCompatActivity {
         piecesClickable=true;
         LinearLayout info = (LinearLayout)findViewById(R.id.linearLayout2);
         info.setVisibility(View.INVISIBLE);
+    }
+
+    /** Restars a new game. */
+    public void restartGame(View v){
+        connectedThread.stringWrite("message:restartRequest");
+        System.out.println("Requesting restart");
     }
 
 }

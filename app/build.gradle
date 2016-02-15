@@ -8,8 +8,8 @@ android {
         applicationId "io.dehaas.chesser"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 15
-        versionName "0.1.15"
+        versionCode 16
+        versionName "0.1.16"
     }
     buildTypes {
         release {
