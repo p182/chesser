@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -60,6 +61,9 @@ public class ConnectToServer extends ActionBarActivity {
                     list.add(btName);
                 }
             }
+        }
+        else{
+            Toast.makeText(ConnectToServer.this, R.string.bluetooth_off, Toast.LENGTH_LONG).show();
         }
         final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.custom_list_item, list);
         listview.setAdapter(adapter);

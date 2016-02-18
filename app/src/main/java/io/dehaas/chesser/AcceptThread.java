@@ -37,13 +37,19 @@ public class AcceptThread extends Thread {
 
     public Activity activity;
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private final BluetoothServerSocket mmServerSocket;
+    BluetoothServerSocket mmServerSocket;
+    boolean started;
 
     String NAME = "game";
     UUID MY_UUID = UUID.fromString("427c2fb7-c2a3-4d25-ac0d-81dc6a77525a");
 
     public AcceptThread(Activity _activity) {
         this.activity = _activity;
+        started = false;
+    }
+
+    public void run() {
+        started=true;
 
         // Use a temporary object that is later assigned to mmServerSocket,
         // because mmServerSocket is final
@@ -53,9 +59,7 @@ public class AcceptThread extends Thread {
             tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);
         } catch (IOException e) { }
         mmServerSocket = tmp;
-    }
 
-    public void run() {
         System.out.println("thread is running");
 
         BluetoothSocket socket = null;
@@ -90,6 +94,8 @@ public class AcceptThread extends Thread {
                     }
                 });
 
+                System.out.println("asked to cancel thread");
+                cancel();
                 break;
             } catch (Exception e){
                 final String eror = e.toString();
@@ -130,13 +136,17 @@ public class AcceptThread extends Thread {
                 break;
             }
         }
+        return;
     }
 
     /** Will cancel the listening socket, and cause the thread to finish */
     public void cancel() {
         try {
+//            if (mmServerSocket != null) {
+            OpenServer.acceptThread = null;
             mmServerSocket.close();
-        } catch (IOException e) { }
+//            }
+        } catch (Exception e) { }
     }
 
 }

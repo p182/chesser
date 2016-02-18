@@ -17,33 +17,38 @@
 
 package io.dehaas.chesser;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 
 /**
  *  UI to activate the listener on AcceptThread server.
  */
-public class OpenServer extends ActionBarActivity {
+public class OpenServer extends Activity {
 
-    AcceptThread acceptThread = new AcceptThread(this);
+    public static AcceptThread acceptThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_server);
+        acceptThread = new AcceptThread(this);
     }
 
 
 
     public void startServer(View v) {
+        System.out.println(acceptThread);
+        if(acceptThread==null) acceptThread = new AcceptThread(this);
+        if(!acceptThread.isAlive()) {
             System.out.println("Starting");
             acceptThread.start();
+        }
     }
 
     @Override
     public void onBackPressed() {
-        acceptThread.cancel();
+        if(acceptThread!=null) acceptThread.cancel();
         super.onBackPressed();
     }
 }
