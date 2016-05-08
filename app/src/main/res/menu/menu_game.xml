@@ -1,16 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".Game">
-<!--
+
     <item
         android:id="@+id/action_undo"
-        android:title="Undo"
+        android:title="Undo Turn"
         android:icon="@drawable/ic_undo_white_48dp"
         app:showAsAction="always"/>
--->
     <item
         android:id="@+id/action_newGame"
-        android:title="Save"
+        android:title="New Game"
         android:icon="@drawable/ic_refresh_white_48dp"
         app:showAsAction="always"/>
     <item

@@ -33,6 +33,8 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     Activity activity;
+    //SQLiteDatabase dbRead;
+    //SQLiteDatabase dbWrite;
 
     Utils u = new Utils(activity);
 
@@ -44,6 +46,8 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(FeedReaderContract.SQL_CREATE_ENTRIES);
+        //this.dbWrite = getWritableDatabase();
+        //this.dbRead = getReadableDatabase();
 //        System.out.println(FeedReaderContract.SQL_CREATE_ENTRIES);
     }
 
@@ -62,7 +66,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
             String gameState = u.getStateForDb();
 
             // Gets the data repository in write mode
-            SQLiteDatabase db = this.getWritableDatabase();
+            SQLiteDatabase dbWrite = this.getWritableDatabase();
 //            System.out.println(db.toString());
 
 //            System.out.println(FeedReaderContract.SQL_CREATE_ENTRIES);
@@ -74,7 +78,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
             // Insert the new row, returning the primary key value of the new row
             long newRowId;
-            newRowId = db.insert(
+            newRowId = dbWrite.insert(
                     FeedReaderContract.FeedEntry.TABLE_NAME,
                     FeedReaderContract.FeedEntry.GAME_STATE,
                     values);
@@ -85,7 +89,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 //            System.out.println(newRowId);
 
 
-            db.close();
+            //if(db.isOpen()) close();
         }
         else{
             // There is already an entry with the same name. Notify the problem.
@@ -98,7 +102,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
     /** Deletes a game state from the database. */
     public void deleteGame(String gameName){
         // Gets the data repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase dbWrite = this.getWritableDatabase();
 
         // DELETE FROM Games WHERE game_name='test2'
 
@@ -106,7 +110,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         String selection = FeedReaderContract.FeedEntry.GAME_NAME + " = ?";
         String[] selectionArgs = { gameName };
 
-        int deleteCount = db.delete(
+        int deleteCount = dbWrite.delete(
                 FeedReaderContract.FeedEntry.TABLE_NAME,
                 selection,
                 selectionArgs);
@@ -116,13 +120,13 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         Toast.makeText(activity, R.string.successfully_deleted,
                 Toast.LENGTH_LONG).show();
 
-        db.close();
+//        if(db.isOpen()) close();
     }
 
     /** Returns a list of all game names. */
     public ArrayList getGameNames(){
         // Gets the data repository in read mode
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase dbRead = this.getReadableDatabase();
 
         // select game_name from Games
         // SELECT game_name, game_pieces_placement FROM Games ORDER BY game_name ASC
@@ -137,7 +141,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         // How you want the results sorted in the resulting Cursor
         String sortOrder = FeedReaderContract.FeedEntry.GAME_NAME + " ASC";
 
-        Cursor c = db.query(
+        Cursor c = dbRead.query(
                 FeedReaderContract.FeedEntry.TABLE_NAME,    // The table to query
                 projection,                                 // The columns to return
                 null,                                       // The columns for the WHERE clause
@@ -161,6 +165,9 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
         }
 
+        c.close();
+//        if(db.isOpen()) close();
+
         return gameNames;
 
     }
@@ -168,7 +175,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
     /** Returns a specific game state from the database. */
     public String getGameStateFromDb(int i){
         // Gets the data repository in read mode
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase dbRead = this.getReadableDatabase();
 
         // select game_name from Games
         // SELECT game_name, game_pieces_placement FROM Games ORDER BY game_name ASC
@@ -183,7 +190,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         // How you want the results sorted in the resulting Cursor
         String sortOrder = FeedReaderContract.FeedEntry.GAME_NAME + " ASC";
 
-        Cursor c = db.query(
+        Cursor c = dbRead.query(
                 FeedReaderContract.FeedEntry.TABLE_NAME,    // The table to query
                 projection,                                 // The columns to return
                 null,                                       // The columns for the WHERE clause
@@ -197,6 +204,10 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
         String gameState = c.getString(1);
 
+        c.close();
+
+//        if(db.isOpen()) close();
+
         return gameState;
 
     }
@@ -204,7 +215,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
     /** Update an existing game state saved in the database. */
     public void updateGame(String gameName){
         // Gets the data repository in read mode
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase dbRead = this.getReadableDatabase();
 
         // UPDATE Games game_state='...' WHERE game_name='test2'
         // DELETE FROM Games WHERE game_name='test2'
@@ -220,7 +231,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
         String selection = FeedReaderContract.FeedEntry.GAME_NAME + " = ?";
         String[] selectionArgs = { gameName };
 
-        int updateCount = db.update(
+        int updateCount = dbRead.update(
                 FeedReaderContract.FeedEntry.TABLE_NAME,
                 values,
                 selection,
@@ -230,7 +241,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
         Toast.makeText(activity, R.string.successfully_saved, Toast.LENGTH_LONG).show();
 
-        db.close();
+//        if(db.isOpen()) close();
     }
 
     /** Save to the autosave value the current game state. */
@@ -241,7 +252,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 //        System.out.println(gameState);
 
         // Gets the data repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase dbWrite = this.getWritableDatabase();
 
 
         // Check if there is no entry with the same game name.
@@ -255,7 +266,7 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
             // Insert the new row, returning the primary key value of the new row
             long newRowId;
-            newRowId = db.insert(
+            newRowId = dbWrite.insert(
                     FeedReaderContract.FeedEntry.TABLE_NAME,
                     FeedReaderContract.FeedEntry.GAME_STATE,
                     values);
@@ -272,14 +283,18 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
             String selection = FeedReaderContract.FeedEntry.GAME_NAME + " = ?";
             String[] selectionArgs = { name };
 
-            db.update(
-                    FeedReaderContract.FeedEntry.TABLE_NAME,
-                    values,
-                    selection,
-                    selectionArgs);
+
+
+            //synchronized (dbWrite) {
+                dbWrite.update(
+                        FeedReaderContract.FeedEntry.TABLE_NAME,
+                        values,
+                        selection,
+                        selectionArgs);
+            //}
 
         }
 
-        db.close();
+//        if(db.isOpen()) db.close();
     }
 }

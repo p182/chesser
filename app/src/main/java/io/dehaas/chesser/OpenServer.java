@@ -39,7 +39,9 @@ public class OpenServer extends Activity {
 
     public void startServer(View v) {
         System.out.println(acceptThread);
-        if(acceptThread==null) acceptThread = new AcceptThread(this);
+//        if(acceptThread==null)
+
+        acceptThread = new AcceptThread(this);
         if(!acceptThread.isAlive()) {
             System.out.println("Starting");
             acceptThread.start();

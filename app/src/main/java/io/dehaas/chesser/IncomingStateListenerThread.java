@@ -25,9 +25,11 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 /**
- * Checks if new state string arrived and passes it on to NewState.
+ * Checks if new state string arrived and passes it on to NewState, NOT IN USE WILL BE REMOVED.
  */
 public class IncomingStateListenerThread extends Thread {
+
+    // todo delete class and replace with simpler class
 
     public static String s = "";
     Activity activity;
@@ -90,6 +92,27 @@ public class IncomingStateListenerThread extends Thread {
                                         }
                                 );
                                 break;
+                            case "undoRequest":
+                                activity.runOnUiThread(
+                                        new Runnable() {
+                                            public void run() {
+                                                new AlertDialog.Builder(activity)
+                                                        .setTitle("Do you grant your opponent permission to undo there move?")
+                                                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                Game.connectedThread.stringWrite("message:undoAccepted");
+                                                            }
+                                                        })
+                                                        .setNegativeButton("no", new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                // Do nothing
+                                                            }
+                                                        })
+                                                        .create().show();
+                                            }
+                                        }
+                                );
+
                         }
                     }
                     // not message

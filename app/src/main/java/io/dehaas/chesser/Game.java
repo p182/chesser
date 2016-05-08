@@ -37,6 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -47,7 +48,7 @@ public class Game extends AppCompatActivity {
 
     public static BluetoothSocket socket;
     public static ConnectedThread connectedThread;
-    static IncomingStateListenerThread incomingStateListenerThread;
+    public static Menu menu;
     Utils u = new Utils(this);
 
     public static Boolean firstGame = true;
@@ -64,18 +65,19 @@ public class Game extends AppCompatActivity {
         // only when this is the first game between the devices create new ConnectedThread and IncomingStateListenerThread
         if(firstGame) {
             System.out.println("first game");
-            ConnectedThread tmp = new ConnectedThread(socket);
+            ConnectedThread tmp = new ConnectedThread(socket, this);
             connectedThread = tmp;
             connectedThread.start();
 
-            incomingStateListenerThread = new IncomingStateListenerThread(this);
-            incomingStateListenerThread.start();
+//            incomingStateListenerThread = new IncomingStateListenerThread(this);
+//            incomingStateListenerThread.start();
 
             firstGame = false;
         }
         // if it is a new game but with same device only update the activity pointer in incomingStateListenerThread
         else {
-            incomingStateListenerThread.activity = this;
+//            incomingStateListenerThread.activity = this;
+            connectedThread.activity = this;
         }
         //TODO: remove tmp
 
@@ -103,6 +105,7 @@ public class Game extends AppCompatActivity {
 
         piecesClickable = true;
 
+        stateNumber = 1;
     }
 
     @Override
@@ -110,6 +113,8 @@ public class Game extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_game, menu);
 //        getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu = menu;
+        this.menu.findItem(R.id.action_undo).setEnabled(false);
         return true;
     }
 
@@ -132,7 +137,7 @@ public class Game extends AppCompatActivity {
                     .setTitle(R.string.exit_confirm)
                     .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            incomingStateListenerThread.cancel();
+//                            incomingStateListenerThread.cancel();
                             connectedThread.cancel();
                             startActivity(new Intent("first.activity"));
                         }
@@ -177,6 +182,9 @@ public class Game extends AppCompatActivity {
         if(id == R.id.action_newGame){
             connectedThread.stringWrite("message:restartRequest");
             System.out.println("Requesting restart");
+        }if(id == R.id.action_undo){
+            connectedThread.stringWrite("message:undoRequest");
+            System.out.println("Requesting undo");
         }
 
         return super.onOptionsItemSelected(item);
@@ -230,6 +238,8 @@ public class Game extends AppCompatActivity {
     public static Piece wp6 , bp6;
     public static Piece wp7 , bp7;
     public static Piece wp8 , bp8;
+
+    public static int stateNumber;
 
     /** Returns a string of all the white pieces coordinates+IDs. */
     public static String getWPCIDs(){
@@ -571,7 +581,7 @@ public class Game extends AppCompatActivity {
                         if(Math.abs(pressedPiece.y - tmpY)==2){
                             Boolean first = true;
                             for(Piece piece : u.getAllOpponentsPieces()){
-                                if((pressedPiece.y==piece.y && Math.abs(pressedPiece.x-piece.x)==1)&&(piece.getId() > 8 && piece.getId() < 17) || (piece.getId() > 24 && piece.getId() < 33)){
+                                if((pressedPiece.y==piece.y && Math.abs(pressedPiece.x-piece.x)==1)&&((piece.getId() > 8 && piece.getId() < 17) || (piece.getId() > 24 && piece.getId() < 33))){
                                     if(first){
                                         first=false;
                                         opponentEnPassant =""+piece.getId();
@@ -587,6 +597,9 @@ public class Game extends AppCompatActivity {
 
                     opponentTurnNotifier();
 
+                    // set new state number
+                    stateNumber++;
+
                     // Prepare a new game state string and send it to opponent
                     String state = u.getState();
 
@@ -596,9 +609,12 @@ public class Game extends AppCompatActivity {
                     // Autosave game
                     mDbHelper.autoSave(getResources().getText(R.string.autosave_sent).toString());
 
+
                     // Send game to opponent
                     connectedThread.stringWrite(state);
-//                    System.out.println("Castling: " + castlingRook1 +", "+ castlingRook2);
+
+                    if(stateNumber!=2) Game.menu.findItem(R.id.action_undo).setEnabled(true);
+
 
                     // Run the OpponentKingInCheckmate thread
                     OpponentKingInMateThread opponentKingInMateThreadThread = new OpponentKingInMateThread(this);
@@ -701,11 +717,29 @@ public class Game extends AppCompatActivity {
 
         listview.setOnItemClickListener(new ListView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3) {
-                String gameSate = mDbHelper.getGameStateFromDb(position);
-                NewState state = new NewState(gameSate, activity);
 
-                state.createNewState();
-                dialog.dismiss();
+                String gameSate = mDbHelper.getGameStateFromDb(position);
+                String[] stateString = gameSate.split(";");
+
+                try {
+                    System.out.println(Game.stateNumber);
+                    System.out.println(Integer.parseInt(stateString[7]));
+                    // check if player has attempted undo
+                    if (Game.stateNumber == (Integer.parseInt(stateString[7]) + 1)) {
+                        // send a undo request and exit method
+                        Game.connectedThread.stringWrite("message:undoRequest");
+                        Toast.makeText(activity, "you have attempted to undo your turn", Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                    } else {
+                        Game.stateNumber = Integer.parseInt(stateString[7]);
+                        NewState state = new NewState(gameSate, activity);
+                        state.createNewState();
+                        dialog.dismiss();
+                    }
+                }
+                catch(IndexOutOfBoundsException e){
+                    Toast.makeText(activity, "Game from an older version, some functions may not work.", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -890,7 +924,7 @@ public class Game extends AppCompatActivity {
         wonLayout.setVisibility(View.INVISIBLE);
     }
     public void checkmateExitOnClick(View v){
-        incomingStateListenerThread.cancel();
+//        incomingStateListenerThread.cancel();
         connectedThread.cancel();
         startActivity(new Intent("first.activity"));
     }

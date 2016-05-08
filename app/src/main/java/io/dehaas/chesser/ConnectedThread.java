@@ -17,6 +17,7 @@
 
 package io.dehaas.chesser;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
 
 import java.io.IOException;
@@ -32,7 +33,10 @@ public class ConnectedThread extends Thread {
     private final InputStream mmInStream;
     private final OutputStream mmOutStream;
 
-    public ConnectedThread(BluetoothSocket socket) {
+    Activity activity;
+    IncomingStateManager incomingStateManager;
+
+    public ConnectedThread(BluetoothSocket socket, Activity a) {
 
         mmSocket = socket;
         InputStream tmpIn = null;
@@ -47,6 +51,9 @@ public class ConnectedThread extends Thread {
 
         mmInStream = tmpIn;
         mmOutStream = tmpOut;
+
+        activity = a;
+        incomingStateManager = new IncomingStateManager(activity);
     }
 
     public void run() {
@@ -61,7 +68,8 @@ public class ConnectedThread extends Thread {
                 // Read from the InputStream
                 bytes = mmInStream.read(buffer);
                 String inMessage = new String(buffer, 0, bytes,"UTF-8");
-                IncomingStateListenerThread.s=inMessage;
+                incomingStateManager.activity = activity; // keep activity pointer up to date
+                incomingStateManager.manageState(inMessage);
 
                 // Send the obtained bytes to the UI activity
             } catch (IOException e) {

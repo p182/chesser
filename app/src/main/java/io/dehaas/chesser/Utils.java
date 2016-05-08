@@ -22,6 +22,8 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+
 /**
  * Collection of utility methods.
  */
@@ -608,7 +610,7 @@ public class Utils {
             // Scan all coor moves of the piece
             for (String coor : cmoves) {
 
-                System.out.println(cmoves.length);
+//                System.out.println(cmoves.length);
                 count++;
 
                 if (!coor.equals("")) {
@@ -918,7 +920,7 @@ public class Utils {
     /** Return the current game state string. */
     public String getState(){
         String Coor = Game.getWPCIDs() + "," + Game.getBPCIDs();
-        String state = Coor + ";" + null + ";" + null + ";" + null + ";" + null + ";" + Game.opponentEnPassant + ";" + Game.enPassantXCoorForOpp;
+        String state = Coor + ";" + null + ";" + null + ";" + null + ";" + null + ";" + Game.opponentEnPassant + ";" + Game.enPassantXCoorForOpp + ";" + Game.stateNumber;
         return state;
     }
 
@@ -941,7 +943,7 @@ public class Utils {
         else{
             turn = "opTurn";
         }
-        String state = piecesCoordinates +";"+ color +";"+ turn + ";" + Game.castlingRook1 + ";" + Game.castlingRook2 + ";" + Game.enPassant1+","+Game.enPassant2 + ";" + Game.enPassantXCoor;
+        String state = piecesCoordinates +";"+ color +";"+ turn + ";" + Game.castlingRook1 + ";" + Game.castlingRook2 + ";" + Game.enPassant1+","+Game.enPassant2 + ";" + Game.enPassantXCoor + ";" + Game.stateNumber;
 
         return state;
     }
@@ -982,6 +984,28 @@ public class Utils {
         Game.bp6.setVisibility(View.VISIBLE);
         Game.bp7.setVisibility(View.VISIBLE);
         Game.bp8.setVisibility(View.VISIBLE);
+    }
+
+    /* Sets new state by its name in database. */
+    public void setStateByName(String stateName){
+        ChesserDbOperations mDbHelper = new ChesserDbOperations(activity);
+        ArrayList<String> list = mDbHelper.getGameNames();
+        for (String name : list) {
+            if (name.equals(stateName)) {
+                String gameState = mDbHelper.getGameStateFromDb(list.indexOf(name));
+                final NewState newState = new NewState(gameState, activity);
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        // creat the state
+                        newState.createNewState();
+                    }
+                });
+                // set new state number
+                String[] stateString = gameState.split(";");
+                Game.stateNumber = (Integer.parseInt(stateString[7]));
+                System.out.println(gameState);
+            }
+        }
     }
 
 }

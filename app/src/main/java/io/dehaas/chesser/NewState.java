@@ -92,7 +92,7 @@ public class NewState{
 
         // If vibrate is on
         if(Game.vibrate) {
-            // Vibrate for 500 milliseconds
+            // Vibrate for 50 milliseconds
             v.vibrate(50);
         }
 
@@ -136,6 +136,7 @@ public class NewState{
         if(state.length>6 && !state[6].equals("0")){
             Game.enPassantXCoor = Integer.parseInt(state[6]);
         }
+
 
         String[] array = state[0].split(",");
 //        System.out.println(state[0]);

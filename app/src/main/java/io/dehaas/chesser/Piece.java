@@ -119,7 +119,7 @@ public class Piece extends ImageView{
         return moves;
     }
 
-    /** Returns a string array  */
+    /** Returns a string array of all the coordinates a pawn can move to. */
     public String pawnMoves(int pieceColor){
 
         String S = x+""+(y+pieceColor);
