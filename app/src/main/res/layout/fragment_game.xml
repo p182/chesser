@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
-    android:layout_height="wrap_content" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:layout_height="fill_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".GameFragment"
-    android:id="@+id/layout1"
+    android:id="@+id/parentLayout"
     android:clickable="false">
 
 
@@ -14,11 +14,7 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:id="@+id/board"
-        android:src="@drawable/board3"
-        android:scaleType="fitEnd"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerInParent="true" />
 
 
     <CheckBox
@@ -29,7 +25,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:onClick="setVibrate" />
+        android:onClick="setVibrate"
+        android:visibility="invisible" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -41,17 +38,62 @@
         android:layout_toStartOf="@+id/vibrateCB"
         android:visibility="gone" />
 
+    <Chronometer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playerClock"
+        android:visibility="gone" />
+
+    <Chronometer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/oppClock"
+        android:visibility="gone" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
         android:id="@+id/turnNotifier"
-        android:layout_above="@+id/board"
         android:layout_centerHorizontal="true"
         android:textSize="20sp"
-        android:textColor="#002e25"
-        android:layout_marginBottom="10dp"
-        android:textStyle="bold" />
+        android:textColor="@color/customAccent"
+        android:textStyle="bold"
+        android:text="test"
+        android:layout_below="@+id/board"
+        android:layout_marginTop="5dp" />
+
+<!--
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/board"
+        android:layout_centerHorizontal="true">
+
+        <DigitalClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/digitalClock"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/board"
+            android:textSize="40dp"
+            android:textColor="@color/customAccent" />
+
+        <Space
+            android:layout_width="50dp"
+            android:layout_height="20px" />
+
+        <DigitalClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/digitalClock2"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/board"
+            android:textSize="40dp"
+            android:textColor="@color/customAccent" />
+    </LinearLayout>
+-->
 
     <LinearLayout
         android:orientation="horizontal"
@@ -59,8 +101,8 @@
         android:layout_height="42dp"
         android:gravity="center"
         android:id="@+id/linearLayout"
-        android:layout_alignParentBottom="true"
-        android:visibility="invisible">
+        android:visibility="invisible"
+        android:layout_alignBottom="@+id/board">
 
         <ImageView
             android:layout_width="40dp"
@@ -97,15 +139,16 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
         android:gravity="center_vertical|center_horizontal"
         android:visibility="invisible"
         android:id="@+id/gameFinishedLayout"
         android:background="#bcffffff"
-        android:layout_alignTop="@+id/board"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="false"
+        android:layout_alignBottom="@+id/board"
+        android:layout_alignTop="@+id/board">
 
         <ImageButton
             style="@style/Base.Widget.AppCompat.Button.Borderless"
@@ -116,7 +159,7 @@
             android:src="@drawable/abc_ic_clear_mtrl_alpha"
             android:layout_marginRight="30dp"
             android:layout_marginTop="10dp"
-            android:tint="#007a9f"
+            android:tint="@color/customAccent"
             android:onClick="gameFinishedCloseOnClick"
             android:focusable="false" />
 
@@ -167,13 +210,15 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#ebfff2"
+        android:background="@color/background2"
         android:touchscreenBlocksFocus="false"
         android:visibility="invisible"
         android:gravity="center"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="10dp" >
+        android:paddingBottom="10dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp">
 
         <ImageButton
             style="@style/Base.Widget.AppCompat.Button.Borderless"
@@ -182,11 +227,11 @@
             android:id="@+id/imageButton3"
             android:layout_gravity="center_horizontal|end"
             android:src="@drawable/abc_ic_clear_mtrl_alpha"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="10dp"
-            android:tint="#007a9f"
+            android:tint="@color/customAccent"
             android:onClick="closeHelp"
-            android:focusable="false" />
+            android:focusable="false"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp" />
 
         <ScrollView
             android:layout_width="wrap_content"
@@ -208,11 +253,6 @@
                 android:autoLink="web"/>
         </ScrollView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView8"
-            android:text="Roni Harel 2015" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -6,7 +6,7 @@
 
     <!-- android:color="#b3008796" -->
     <solid
-        android:color="#b3008796"
+        android:color="@color/customButtonColor"
         />
     <padding
         android:left="0dp"

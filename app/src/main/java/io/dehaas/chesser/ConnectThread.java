@@ -104,6 +104,7 @@ public class ConnectThread extends Thread {
      */
     public void cancel() {
         try {
+            System.out.println("cancel called");
             mmSocket.close();
         } catch (IOException e) {
         }

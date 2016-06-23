@@ -23,4 +23,10 @@
         android:title="Help"
         app:showAsAction="never"
         android:onClick="help"/>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="4"
+        android:title="Settings"
+        app:showAsAction="never"
+        android:onClick="settings"/>
 </menu>

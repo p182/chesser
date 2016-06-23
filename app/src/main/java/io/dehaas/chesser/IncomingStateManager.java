@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.LinearLayout;
 
 /**
@@ -55,6 +56,14 @@ public class IncomingStateManager {
                         // Save the current state in auto save received.
                         ChesserDbOperations mDbHelper = new ChesserDbOperations(activity);
                         mDbHelper.autoSave(activity.getResources().getText(R.string.autosave_received).toString());
+
+
+                        Chronometer playerClock = (Chronometer) activity.findViewById(R.id.playerClock);
+                        Chronometer oppClock = (Chronometer) activity.findViewById(R.id.oppClock);
+                        playerClock.start();
+                        oppClock.stop();
+                        oppClock.setAlpha(0.4f);
+                        playerClock.setAlpha(1f);
                     }
                 }
         );

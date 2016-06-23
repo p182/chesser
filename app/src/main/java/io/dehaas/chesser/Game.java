@@ -19,23 +19,30 @@ package io.dehaas.chesser;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
+import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,25 +59,24 @@ public class Game extends AppCompatActivity {
     Utils u = new Utils(this);
 
     public static Boolean firstGame = true;
+    Boolean running = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_game);
 
         System.out.println("Game onCreate()");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // only when this is the first game between the devices create new ConnectedThread and IncomingStateListenerThread
+        // only when this is the first game between the devices create new ConnectedThread
         if(firstGame) {
             System.out.println("first game");
             ConnectedThread tmp = new ConnectedThread(socket, this);
             connectedThread = tmp;
             connectedThread.start();
-
-//            incomingStateListenerThread = new IncomingStateListenerThread(this);
-//            incomingStateListenerThread.start();
 
             firstGame = false;
         }
@@ -81,7 +87,20 @@ public class Game extends AppCompatActivity {
         }
         //TODO: remove tmp
 
-        setupPieces();
+        //setupPieces();
+
+        // setup shared preferences
+        SharedPreferences settings = getSharedPreferences("chesserSettings", 0);
+        boardNum = settings.getInt("boardNum", 3);
+        vibrate = settings.getBoolean("vibrate", true);
+
+        // setup board
+        ImageView board = (ImageView)findViewById(R.id.board);
+        switch (boardNum){
+            case 1: board.setImageResource(R.drawable.board3); break;
+            case 2: board.setImageResource(R.drawable.board4); break;
+            case 3: board.setImageResource(R.drawable.board5); break;
+        }
 
         TextView turnNotifier = (TextView)findViewById(R.id.turnNotifier);
 
@@ -95,10 +114,12 @@ public class Game extends AppCompatActivity {
             turnNotifier.setText(R.string.opponent_turn);
         }
 
+        /*
         CheckBox c = (CheckBox)findViewById(R.id.vibrateCB);
         c.setChecked(true);
         c = (CheckBox)findViewById(R.id.soundCB);
         c.setChecked(true);
+        */
 
         castlingRook1 = true;
         castlingRook2 = true;
@@ -216,6 +237,7 @@ public class Game extends AppCompatActivity {
     public static Boolean myTurn;
     public static Boolean piecesClickable=true;
     public static Boolean vibrate = true;
+    int boardNum = 0;
 
     public static Piece pressedPiece;
     public static Piece removedPiece;
@@ -600,6 +622,14 @@ public class Game extends AppCompatActivity {
                     // set new state number
                     stateNumber++;
 
+
+                    Chronometer playerClock = (Chronometer) findViewById(R.id.playerClock);
+                    Chronometer oppClock = (Chronometer) findViewById(R.id.oppClock);
+                    playerClock.stop();
+                    oppClock.start();
+                    oppClock.setAlpha(1f);
+                    playerClock.setAlpha(0.4f);
+
                     // Prepare a new game state string and send it to opponent
                     String state = u.getState();
 
@@ -785,16 +815,23 @@ public class Game extends AppCompatActivity {
 
     /** Disable enable vibration in game. */
     public void setVibrate(View v){
-        CheckBox vibrateRB = (CheckBox)v;
+        Switch vibrateRB = (Switch) v;
 
         boolean checked = vibrateRB.isChecked();
 
         if (checked){
             vibrate = true;
+
         }
         else {
             vibrate = false;
         }
+
+        // save to shared preferences
+        SharedPreferences settings = getSharedPreferences("chesserSettings", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("vibrate", vibrate);
+        editor.commit();
     }
 
     /** Display a bar at the bottom of the screen for prommoting a pawn. */
@@ -988,12 +1025,28 @@ public class Game extends AppCompatActivity {
 
     /** Show the help dialog. */
     public void help(MenuItem item){
+
+        final Dialog settingsDialog = new Dialog(this);
+        settingsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        settingsDialog.setContentView(R.layout.game_help_dialog);
+        settingsDialog.show();
+
+        Button ok = (Button) settingsDialog.findViewById(R.id.ok);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                settingsDialog.dismiss();
+            }
+        });
+
+        /*
         piecesClickable=false;
         LinearLayout info = (LinearLayout)findViewById(R.id.linearLayout2);
         info.bringToFront();
 
         if(info.getVisibility()==View.INVISIBLE) info.setVisibility(View.VISIBLE);
         else info.setVisibility(View.INVISIBLE);
+        */
     }
 
     /** Close the help dialog. */
@@ -1009,4 +1062,101 @@ public class Game extends AppCompatActivity {
         System.out.println("Requesting restart");
     }
 
+    /** Show the settings dialog. */
+    public void settings(MenuItem item){
+        final Dialog settingsDialog = new Dialog(this);
+        settingsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        settingsDialog.setContentView(R.layout.setting_board_dialog);
+        settingsDialog.show();
+
+        RadioButton board1 = (RadioButton) settingsDialog.findViewById(R.id.board1);
+        RadioButton board2 = (RadioButton) settingsDialog.findViewById(R.id.board2);
+        RadioButton board3 = (RadioButton) settingsDialog.findViewById(R.id.board3);
+
+        switch (boardNum){
+            case 1: board1.setChecked(true); break;
+            case 2: board2.setChecked(true); break;
+            case 3: board3.setChecked(true); break;
+        }
+
+        Switch switch1 = (Switch) settingsDialog.findViewById(R.id.switch1);
+        switch1.setChecked(vibrate);
+        switch1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setVibrate(v);
+            }
+        });
+
+        board1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boardPickerOnClick(v, settingsDialog);
+            }
+        });
+        board2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boardPickerOnClick(v, settingsDialog);
+            }
+        });
+        board3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boardPickerOnClick(v, settingsDialog);
+            }
+        });
+
+        Button ok = (Button) settingsDialog.findViewById(R.id.button4);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                settingsDialog.dismiss();
+            }
+        });
+    }
+
+    /** Board picker onClick. */
+    public void boardPickerOnClick(View view, Dialog settingsDialog){
+        int selectedId = view.getId();
+        ImageView board = (ImageView)findViewById(R.id.board);
+
+        RadioButton board1 = (RadioButton) settingsDialog.findViewById(R.id.board1);
+        RadioButton board2 = (RadioButton) settingsDialog.findViewById(R.id.board2);
+        RadioButton board3 = (RadioButton) settingsDialog.findViewById(R.id.board3);
+
+        board1.setChecked(false);
+        board2.setChecked(false);
+        board3.setChecked(false);
+
+        RadioButton currentRadioButton = (RadioButton)view;
+        currentRadioButton.setChecked(true);
+
+        switch (selectedId){
+            case R.id.board1: board.setImageResource(R.drawable.board3); boardNum = 1; break;
+            case R.id.board2: board.setImageResource(R.drawable.board4); boardNum = 2; break;
+            case R.id.board3: board.setImageResource(R.drawable.board5); boardNum = 3; break;
+        }
+
+        // save to shared preferences
+        SharedPreferences settings = getSharedPreferences("chesserSettings", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("boardNum", boardNum);
+        editor.commit();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (running) {
+            setupPieces();
+
+            Chronometer playerClock = (Chronometer) findViewById(R.id.playerClock);
+            Chronometer oppClock = (Chronometer) findViewById(R.id.oppClock);
+            playerClock.start();
+            oppClock.setAlpha(0.4f);
+
+            running = false;
+        }
+        super.onWindowFocusChanged(hasFocus);
+    }
 }

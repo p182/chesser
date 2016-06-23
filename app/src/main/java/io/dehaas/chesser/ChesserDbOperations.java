@@ -33,8 +33,6 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     Activity activity;
-    //SQLiteDatabase dbRead;
-    //SQLiteDatabase dbWrite;
 
     Utils u = new Utils(activity);
 
@@ -46,8 +44,6 @@ public class ChesserDbOperations extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(FeedReaderContract.SQL_CREATE_ENTRIES);
-        //this.dbWrite = getWritableDatabase();
-        //this.dbRead = getReadableDatabase();
 //        System.out.println(FeedReaderContract.SQL_CREATE_ENTRIES);
     }
 

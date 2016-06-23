@@ -20,6 +20,7 @@ package io.dehaas.chesser;
 import android.app.Activity;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -44,14 +45,15 @@ public class Utils {
     public RelativeLayout.LayoutParams getPlaceParams(int x, int y) {
         int color = Game.color;
 
-        final DisplayMetrics metrics;
-        DisplayMetrics _metrics = activity.getApplicationContext().getResources().getDisplayMetrics();
-        metrics = _metrics;
+        final DisplayMetrics metrics = activity.getApplicationContext().getResources().getDisplayMetrics();
+        View content = activity.getWindow().findViewById(Window.ID_ANDROID_CONTENT);
 
         float density = metrics.density;
 //        System.out.println(density);
-        int width = metrics.widthPixels;
-        int height = metrics.heightPixels;
+        //int width = metrics.widthPixels;
+        //int height = metrics.heightPixels;
+        int width = content.getWidth();
+        int height = content.getHeight();
 
 
 //        double d = 36.9*density;
@@ -73,11 +75,10 @@ public class Utils {
         double Y;
 //        if(color==1){Y = 18.4;}
         if (color == 1) {
-            Y = ((width - dp(32)) * 23 / 388);
+            Y = ((width - dp(32)) * 23 / 388 + (height - width) / 2);
         } else {
-            Y = ((width - dp(32)) * 23 / 388) + d * 7;
+            Y = ((width - dp(32)) * 23 / 388 + (height - width) / 2) + d * 7;
         }
-
 
         RelativeLayout.LayoutParams L = new RelativeLayout.LayoutParams(0,0);
         L.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);

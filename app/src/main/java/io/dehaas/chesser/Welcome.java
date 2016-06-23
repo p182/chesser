@@ -17,10 +17,14 @@
 
 package io.dehaas.chesser;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 /**
@@ -32,6 +36,7 @@ public class Welcome extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         System.out.println("onCreate completed");
     }
@@ -41,11 +46,19 @@ public class Welcome extends ActionBarActivity {
     public void buttonOnClick3(View v){ startActivity(new Intent("chess.openServer")); }
 
     public void showInfo(View v){
-        LinearLayout info = (LinearLayout)findViewById(R.id.linearLayout);
-        info.bringToFront();
+        final Dialog settingsDialog = new Dialog(this);
+        settingsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        settingsDialog.setContentView(R.layout.welcome_help_dialog);
+        settingsDialog.show();
 
-        if(info.getVisibility()==View.INVISIBLE) info.setVisibility(View.VISIBLE);
-        else info.setVisibility(View.INVISIBLE);
+        Button ok = (Button) settingsDialog.findViewById(R.id.button5);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                settingsDialog.dismiss();
+            }
+        });
+
     }
 
     public void closeInfo(View v){

@@ -1,15 +1,77 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="io.dehaas.chesser.ConnectToServer">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView18"
+        android:visibility="visible"
+        android:gravity="center_vertical|center_horizontal|left"
+        android:fontFamily="sans-serif-light"
+        android:textColor="#000000"
+        android:text="Chose your opponent&apos;s device:"
+        android:textSize="22dp"
+        android:layout_marginBottom="10dp"
+        android:onClick="openBluetoothSettings"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold" />
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listView"
+        android:visibility="visible"
+        android:layout_alignParentBottom="false"
+        android:layout_above="@+id/textView17"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/textView18" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Bluetooth is off, turn on to continue."
+        android:id="@+id/textView15"
+        android:layout_below="@+id/turnOnBluetooth"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:visibility="invisible"
+        android:layout_marginTop="5dp" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:text="Turn on bluetooth"
+        android:id="@+id/turnOnBluetooth"
+        android:onClick="turnOnBluetooth"
+        android:background="@drawable/custombutton"
+        android:textColor="#fff"
+        android:fontFamily="sans-serif-light"
+        android:textSize="15dp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView17"
+        android:visibility="visible"
+        android:gravity="center_vertical|center_horizontal"
+        android:fontFamily="sans-serif-light"
+        android:textColor="#181818"
+        android:text="Pair your device to others using the Bluetooth settings in order to see them in the list."
+        android:textSize="15dp"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true" />
+        android:layout_marginBottom="10dp"
+        android:onClick="openBluetoothSettings" />
+
 </RelativeLayout>

@@ -9,4 +9,4 @@
     android:fontFamily="sans-serif-light"
     android:textSize="20sp"
     android:text="9c:A3:AF:4F"
-    android:textColor="#002e25" />
+    android:textColor="@color/customAccent" />

@@ -38,18 +38,20 @@ public class AcceptThread extends Thread {
     public Activity activity;
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     BluetoothServerSocket mmServerSocket;
-    boolean started;
+    //boolean started;
+    boolean running;
 
     String NAME = "game";
     UUID MY_UUID = UUID.fromString("427c2fb7-c2a3-4d25-ac0d-81dc6a77525a");
 
     public AcceptThread(Activity _activity) {
         this.activity = _activity;
-        started = false;
+        //started = false;
+        running = true;
     }
 
     public void run() {
-        started=true;
+        //started=true;
 
         // Use a temporary object that is later assigned to mmServerSocket,
         // because mmServerSocket is final
@@ -65,7 +67,7 @@ public class AcceptThread extends Thread {
         BluetoothSocket socket = null;
         // Keep listening until exception occurs or a socket is returned
 
-        while (true) {
+        while (running) {
             try {
                 activity.runOnUiThread(new Runnable() {
 
@@ -79,7 +81,7 @@ public class AcceptThread extends Thread {
                 socket = mmServerSocket.accept();
 
             } catch (IOException e) {
-                System.out.println(e);
+                e.printStackTrace();
                 break;
             } catch (NullPointerException e) {
 
@@ -87,7 +89,7 @@ public class AcceptThread extends Thread {
 
                     @Override
                     public void run() {
-                        Toast.makeText(activity, R.string.bluetooth_off, Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity, R.string.bluetooth_off_open, Toast.LENGTH_LONG).show();
 
                         TextView textView = (TextView) activity.findViewById(R.id.textView);
                         textView.setVisibility(View.INVISIBLE);
@@ -98,16 +100,7 @@ public class AcceptThread extends Thread {
                 cancel();
                 break;
             } catch (Exception e){
-                final String eror = e.toString();
-                activity.runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        Toast.makeText(activity, eror, Toast.LENGTH_LONG).show();
-                        TextView textView = (TextView) activity.findViewById(R.id.textView);
-                        textView.setVisibility(View.INVISIBLE);
-                    }
-                });
+                e.printStackTrace();
             }
 
             // If a connection was accepted
@@ -130,9 +123,9 @@ public class AcceptThread extends Thread {
                 Game.firstGame = true;
                 activity.startActivity(new Intent("chess.game"));
 
-                // Do work to manage the connection (in a separate thread)
-                try{mmServerSocket.close();}
-                catch (IOException e){}
+                // Cancel thread
+                cancel();
+
                 break;
             }
         }
@@ -143,8 +136,10 @@ public class AcceptThread extends Thread {
     public void cancel() {
         try {
 //            if (mmServerSocket != null) {
+            System.out.println("closing");
             OpenServer.acceptThread = null;
             mmServerSocket.close();
+            running = false;
 //            }
         } catch (Exception e) { }
     }

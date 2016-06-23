@@ -30,45 +30,16 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#ebfff2"
+        android:background="@color/background2"
         android:touchscreenBlocksFocus="false"
         android:visibility="invisible"
         android:gravity="center"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp">
-
-        <ImageButton
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/imageButton2"
-            android:layout_gravity="center_horizontal|end"
-            android:src="@drawable/abc_ic_clear_mtrl_alpha"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="10dp"
-            android:tint="#007a9f"
-            android:onClick="closeInfo"
-            android:focusable="false" />
-
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/scrollView"
-            android:layout_centerVertical="true"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/info_welcome"
-                android:textColor="@color/customText"
-                android:textSize="17sp"
-                android:fontFamily="sans-serif-light"
-                android:id="@+id/textView5" />
-        </ScrollView>
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentEnd="false">
 
     </LinearLayout>
 
@@ -92,7 +63,7 @@
             android:textColor="@color/customText"
             android:textSize="85sp"
             android:fontFamily="sans-serif-light"
-            android:background="#cfe7f1ef"
+            android:background="@color/backgroundTransparent"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"

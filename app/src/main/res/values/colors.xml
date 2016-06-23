@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="org">#b6ddd7</color> <!-- original #b6ddd7 -->
-    <color name="background1">#b6d8dd</color> <!-- original #b6ddd7 -->
-    <color name="background2">#d8e6ff</color> <!-- original #b6ddd7 -->
+    <color name="background1">#ecdeda</color> <!-- original #b6ddd7 -->
+    <color name="background2">#c6b6b2</color> <!-- original #b6ddd7 -->
+    <color name="backgroundTransparent">#beffffff</color>
+    <color name="backgroundGame">#815f5f</color>
     <color name="background2Dark">#7e93b9</color> <!-- original #b6ddd7 -->
-    <color name="customPrimary">#1565C0</color>
-    <color name="customPrimaryDark">#0D47A1</color>
-    <color name="customAccent">#d32f2f</color>
-    <color name="customText">#001e1a</color>
+    <color name="customPrimary">#631717</color>
+    <color name="customPrimaryDark">#3D3B3C</color>
+    <color name="customAccent">#631717</color> <!-- original accent #007a9f -->
+    <color name="customButtonColor">#e0711b1b</color> <!-- like accent but with transparency -->
+    <color name="customText">#000000</color>
 </resources>

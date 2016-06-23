@@ -3,11 +3,22 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <!--
         <item name="colorPrimary">#003856</item>
         <item name="colorPrimaryDark">#002033</item>
-        <item name="colorAccent">#007a9f</item>
-        <item name="android:windowBackground">@color/org</item>
-        <item name="android:colorBackground">@color/org</item>
+        -->
+        <item name="colorPrimary">@color/customPrimary</item>
+        <item name="colorPrimaryDark">@color/customPrimaryDark</item>
+        <item name="colorAccent">@color/customAccent</item>
+        <item name="android:windowBackground">@color/background1</item>
+        <item name="android:colorBackground">@color/background1</item>
+        <item name="android:buttonStyle">@style/AppButton</item>
+    </style>
+
+
+    <style name="AppButton" parent="android:style/Widget.Button">
+        <item name="android:background">@color/customButtonColor</item>
+        <item name="android:innerRadius">4dp</item>
     </style>
 
 
@@ -23,12 +34,15 @@
 
     <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
-        <item name="colorPrimaryDark">#ba003554</item>
         <!--
+        <item name="colorPrimaryDark">#ba003554</item>
         <item name="colorPrimaryDark">#3e67b6</item>
         -->
-        <item name="android:windowBackground">@color/org</item>
-        <item name="android:colorBackground">@color/org</item>
+        <item name="colorPrimary">@color/customPrimary</item>
+        <item name="colorPrimaryDark">@color/customPrimaryDark</item>
+        <item name="colorAccent">@color/customAccent</item>
+        <item name="android:windowBackground">@color/background1</item>
+        <item name="android:colorBackground">@color/background1</item>
     </style>
 
 </resources>
