@@ -1,4 +1,4 @@
-# Wlecome to Cheseer source code! #
+# Wlecome to Chesser source code! #
 
 Chesser is a free open source android multiplayer chess game, designed to be simple and fun to use!
 

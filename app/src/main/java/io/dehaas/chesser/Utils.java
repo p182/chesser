@@ -21,6 +21,8 @@ import android.app.Activity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -442,7 +444,6 @@ public class Utils {
 
         return currentId;
     }
-
 
     /**
      * Check if own king is in check change.
@@ -1006,6 +1007,38 @@ public class Utils {
                 Game.stateNumber = (Integer.parseInt(stateString[7]));
                 System.out.println(gameState);
             }
+        }
+    }
+
+    public void movePieceWithAnimation(final int x, final int y, final Piece piece, int xOld, int yOld){
+        int xDeltaPixels = getPlaceParams(x,y).leftMargin - getPlaceParams(xOld,yOld).leftMargin;
+        int yDeltaPixels =getPlaceParams(xOld,yOld).bottomMargin - getPlaceParams(x,y).bottomMargin;
+
+        TranslateAnimation anim = new TranslateAnimation(0, xDeltaPixels, 0, yDeltaPixels);
+        anim.setFillAfter(false);
+        anim.setDuration(Game.aniTime);
+
+        anim.setAnimationListener(new TranslateAnimation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) { }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+                piece.clearAnimation();
+                piece.setLayoutParams(getPlaceParams(x, y));
+                //removeOpponent();
+            }
+        });
+
+        if (xOld == 0 && yOld == 0 || x==0 && y==0) piece.setLayoutParams(getPlaceParams(x, y));
+        else {
+            piece.bringToFront();
+            piece.startAnimation(anim);
         }
     }
 

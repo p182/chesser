@@ -42,6 +42,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -93,6 +94,7 @@ public class Game extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences("chesserSettings", 0);
         boardNum = settings.getInt("boardNum", 3);
         vibrate = settings.getBoolean("vibrate", true);
+        aniTime = settings.getInt("aniTime", 500);
 
         // setup board
         ImageView board = (ImageView)findViewById(R.id.board);
@@ -238,6 +240,7 @@ public class Game extends AppCompatActivity {
     public static Boolean piecesClickable=true;
     public static Boolean vibrate = true;
     int boardNum = 0;
+    public static int aniTime = 0;
 
     public static Piece pressedPiece;
     public static Piece removedPiece;
@@ -519,8 +522,9 @@ public class Game extends AppCompatActivity {
             pressedPiece.x = s.x;
             pressedPiece.y = s.y;
 
-            pressedPiece.setLayoutParams(u.getPlaceParams(s.x, s.y));
-            pressedPiece.bringToFront();
+            //pressedPiece.setLayoutParams(u.getPlaceParams(s.x, s.y));
+            //pressedPiece.bringToFront();
+            u.movePieceWithAnimation(s.x, s.y, pressedPiece, tmpX, tmpY);
             u.removeOpponent();
 
             // if the player has chosen a castling move but its puts the king in danger set castling1SquaresSafe to false
@@ -563,23 +567,31 @@ public class Game extends AppCompatActivity {
                     // if castling happened then move the rook accordingly
                     if(castlingRook1Happened){
                         if(color==1) {
+                            u.movePieceWithAnimation(wk.x+1, wr1.y, wr1, wr1.x, wr1.y);
+
                             wr1.x = wk.x+1;
-                            wr1.setLayoutParams(u.getPlaceParams(wr1.x, wr1.y));
+                            //wr1.setLayoutParams(u.getPlaceParams(wr1.x, wr1.y));
                         }
                         if(color==-1) {
+                            u.movePieceWithAnimation(bk.x+1, br1.y, br1, br1.x, br1.y);
+
                             br1.x = bk.x+1;
-                            br1.setLayoutParams(u.getPlaceParams(br1.x, br1.y));
+                            //br1.setLayoutParams(u.getPlaceParams(br1.x, br1.y));
                         }
                         castlingRook1Happened=false;
                     }
                     if(castlingRook2Happened){
                         if(color==1) {
+                            u.movePieceWithAnimation(wk.x-1, wr2.y, wr2, wr2.x, wr2.y);
+
                             wr2.x = wk.x-1;
-                            wr2.setLayoutParams(u.getPlaceParams(wr2.x, wr2.y));
+                            //wr2.setLayoutParams(u.getPlaceParams(wr2.x, wr2.y));
                         }
                         if(color==-1) {
+                            u.movePieceWithAnimation(bk.x-1, br2.y, br2, br2.x, br2.y);
+
                             br2.x = bk.x-1;
-                            br2.setLayoutParams(u.getPlaceParams(br2.x, br2.y));
+                            //br2.setLayoutParams(u.getPlaceParams(br2.x, br2.y));
                         }
                         castlingRook2Happened=false;
                     }
@@ -653,14 +665,19 @@ public class Game extends AppCompatActivity {
             } else{
                 // King is checked or illegal castling attempted, the piece will undo the move after delay
                 Handler handler = new Handler();
+                int delay = 500;
+                if(aniTime > 500){
+                    delay = aniTime;
+                }
                 handler.postDelayed(new Runnable() {
 
                     @Override
                     public void run() {
+                        //pressedPiece.setLayoutParams(u.getPlaceParams(tmpX, tmpY));
+                        u.movePieceWithAnimation(tmpX, tmpY, pressedPiece, pressedPiece.x, pressedPiece.y);
+
                         pressedPiece.x = tmpX;
                         pressedPiece.y = tmpY;
-
-                        pressedPiece.setLayoutParams(u.getPlaceParams(tmpX, tmpY));
 
                         // If an opponent piece was removed return it
                         u.returnOpponent();
@@ -671,7 +688,7 @@ public class Game extends AppCompatActivity {
                         myTurn = true; // Enable other pieces to respond to clicks
                     }
 
-                }, 500); // delay
+                }, delay); // delay
             }
 
         }
@@ -1066,8 +1083,35 @@ public class Game extends AppCompatActivity {
     public void settings(MenuItem item){
         final Dialog settingsDialog = new Dialog(this);
         settingsDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        settingsDialog.setContentView(R.layout.setting_board_dialog);
+        settingsDialog.setContentView(R.layout.settings_dialog);
         settingsDialog.show();
+
+        SeekBar seekBar = (SeekBar) settingsDialog.findViewById(R.id.seekBar);
+        seekBar.setProgress(aniTime/25);
+        final TextView textView = (TextView) settingsDialog.findViewById(R.id.textView20);
+        textView.setText(aniTime + "ms");
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textView.setText(progress*25 + "ms");
+                aniTime = progress*25;
+
+                SharedPreferences settings = getSharedPreferences("chesserSettings", 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putInt("aniTime", aniTime);
+                editor.apply();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         RadioButton board1 = (RadioButton) settingsDialog.findViewById(R.id.board1);
         RadioButton board2 = (RadioButton) settingsDialog.findViewById(R.id.board2);
@@ -1142,7 +1186,7 @@ public class Game extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences("chesserSettings", 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("boardNum", boardNum);
-        editor.commit();
+        editor.apply();
     }
 
     @Override

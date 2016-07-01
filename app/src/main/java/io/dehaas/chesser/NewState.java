@@ -72,15 +72,12 @@ public class NewState{
         rl.removeView(piece);
         rl.addView(piece);
 */
-        piece.x = x;
-        piece.y = y;
-        if(x==0&&y==0){
-//            rl.removeView(piece);
-            piece.setVisibility(View.INVISIBLE);
-        }
-        else {
-            piece.setLayoutParams(u.getPlaceParams(x, y));
-            piece.setVisibility(View.VISIBLE);
+        if (piece.x != x || piece.y != y) {
+            if (x == 0 && y == 0) piece.setVisibility(View.INVISIBLE);
+            else piece.setVisibility(View.VISIBLE);
+            u.movePieceWithAnimation(x, y, piece, piece.x, piece.y);
+            piece.x = x;
+            piece.y = y;
         }
     }
 
