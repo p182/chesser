@@ -21,6 +21,8 @@ import android.app.Activity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
@@ -827,7 +829,7 @@ public class Utils {
         }
     }
 
-    /** Remove opponents that have been atacked by one piece. */
+    /** Remove opponents that have been attacked by one piece, but do not set them to be invisible. */
     public void removeOpponent(){
 
         String[] opponentc;
@@ -855,7 +857,10 @@ public class Utils {
                 p.y = 0;
 //                RelativeLayout rl = (RelativeLayout)activity.findViewById(R.id.fragment);
 //                rl.removeView(p);
-                p.setVisibility(View.INVISIBLE);
+//                p.setVisibility(View.INVISIBLE);
+
+                // fade out piece according to moving animation
+                removePieceWithAnimation(p);
 
             }
         }
@@ -871,7 +876,8 @@ public class Utils {
         p.x = 0;
         p.y = 0;
 
-        p.setVisibility(View.INVISIBLE);
+//        p.setVisibility(View.INVISIBLE);
+        removePieceWithAnimation(p);
     }
 
     /** Return last opponent that has been removed. */
@@ -880,7 +886,7 @@ public class Utils {
             Game.removedPiece.x = Game.removedPieceX;
             Game.removedPiece.y = Game.removedPieceY;
 
-            Game.removedPiece.setVisibility(View.VISIBLE);
+            revivePieceWithAnimation(Game.removedPiece);
 
             Game.removedPiece = null;
         }
@@ -998,6 +1004,8 @@ public class Utils {
                 final NewState newState = new NewState(gameState, activity);
                 activity.runOnUiThread(new Runnable() {
                     public void run() {
+                        Game.menu.findItem(R.id.action_undo).setEnabled(false);
+
                         // creat the state
                         newState.createNewState();
                     }
@@ -1011,6 +1019,8 @@ public class Utils {
     }
 
     public void movePieceWithAnimation(final int x, final int y, final Piece piece, int xOld, int yOld){
+        Game.piecesClickable = false;
+
         int xDeltaPixels = getPlaceParams(x,y).leftMargin - getPlaceParams(xOld,yOld).leftMargin;
         int yDeltaPixels =getPlaceParams(xOld,yOld).bottomMargin - getPlaceParams(x,y).bottomMargin;
 
@@ -1031,7 +1041,14 @@ public class Utils {
             {
                 piece.clearAnimation();
                 piece.setLayoutParams(getPlaceParams(x, y));
+
+                Game.piecesClickable = true;
                 //removeOpponent();
+                /*
+                if (Game.removedPiece != null){
+                    Game.removedPiece.setVisibility(View.INVISIBLE);
+                }
+                */
             }
         });
 
@@ -1042,4 +1059,51 @@ public class Utils {
         }
     }
 
+    /* Fades out Piece according to animation time and sets visibility to invisible. */
+    public void removePieceWithAnimation(final Piece piece){
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new AccelerateInterpolator());
+        fadeOut.setStartOffset(Game.aniTime/2);
+        fadeOut.setDuration(Game.aniTime/2);
+
+        piece.startAnimation(fadeOut);
+        fadeOut.setAnimationListener(new TranslateAnimation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) { }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+                piece.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    /* Fades in Piece according to animation time and sets visibility to visible. */
+    public void revivePieceWithAnimation(final Piece piece){
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new AccelerateInterpolator());
+//        fadeIn.setStartOffset(Game.aniTime/2);
+        fadeIn.setDuration(Game.aniTime/2);
+
+        piece.startAnimation(fadeIn);
+        fadeIn.setAnimationListener(new TranslateAnimation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) { }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+                piece.setVisibility(View.VISIBLE);
+            }
+        });
+    }
 }

@@ -59,6 +59,8 @@ public class Game extends AppCompatActivity {
     public static Menu menu;
     Utils u = new Utils(this);
 
+    boolean backButtonEnabled = false;
+
     public static Boolean firstGame = true;
     Boolean running = true;
 
@@ -70,7 +72,19 @@ public class Game extends AppCompatActivity {
 
         System.out.println("Game onCreate()");
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        backButtonEnabled = false;
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
+        else backButtonEnabled = true;
+
+        /*
+        if(color==1){
+            final Dialog timerDialog = new Dialog(this);
+            //timerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            timerDialog.setContentView(R.layout.timer_dialog);
+            timerDialog.show();
+        }
+        */
 
         // only when this is the first game between the devices create new ConnectedThread
         if(firstGame) {
@@ -557,71 +571,70 @@ public class Game extends AppCompatActivity {
                     // Valid move and pawn not at end of board
 
                     // if king or rook moved disable accordingly the castling options
-                    if((pressedPiece==wr1 || pressedPiece==wk)&&color==1 || (pressedPiece==br1 || pressedPiece==bk)&&color==-1){
+                    if ((pressedPiece == wr1 || pressedPiece == wk) && color == 1 || (pressedPiece == br1 || pressedPiece == bk) && color == -1) {
                         castlingRook1 = false;
                     }
-                    if((pressedPiece==wr2 || pressedPiece==wk)&&color==1 || (pressedPiece==br2 || pressedPiece==bk)&&color==-1){
+                    if ((pressedPiece == wr2 || pressedPiece == wk) && color == 1 || (pressedPiece == br2 || pressedPiece == bk) && color == -1) {
                         castlingRook2 = false;
                     }
 
                     // if castling happened then move the rook accordingly
-                    if(castlingRook1Happened){
-                        if(color==1) {
-                            u.movePieceWithAnimation(wk.x+1, wr1.y, wr1, wr1.x, wr1.y);
+                    if (castlingRook1Happened) {
+                        if (color == 1) {
+                            u.movePieceWithAnimation(wk.x + 1, wr1.y, wr1, wr1.x, wr1.y);
 
-                            wr1.x = wk.x+1;
+                            wr1.x = wk.x + 1;
                             //wr1.setLayoutParams(u.getPlaceParams(wr1.x, wr1.y));
                         }
-                        if(color==-1) {
-                            u.movePieceWithAnimation(bk.x+1, br1.y, br1, br1.x, br1.y);
+                        if (color == -1) {
+                            u.movePieceWithAnimation(bk.x + 1, br1.y, br1, br1.x, br1.y);
 
-                            br1.x = bk.x+1;
+                            br1.x = bk.x + 1;
                             //br1.setLayoutParams(u.getPlaceParams(br1.x, br1.y));
                         }
-                        castlingRook1Happened=false;
+                        castlingRook1Happened = false;
                     }
-                    if(castlingRook2Happened){
-                        if(color==1) {
-                            u.movePieceWithAnimation(wk.x-1, wr2.y, wr2, wr2.x, wr2.y);
+                    if (castlingRook2Happened) {
+                        if (color == 1) {
+                            u.movePieceWithAnimation(wk.x - 1, wr2.y, wr2, wr2.x, wr2.y);
 
-                            wr2.x = wk.x-1;
+                            wr2.x = wk.x - 1;
                             //wr2.setLayoutParams(u.getPlaceParams(wr2.x, wr2.y));
                         }
-                        if(color==-1) {
-                            u.movePieceWithAnimation(bk.x-1, br2.y, br2, br2.x, br2.y);
+                        if (color == -1) {
+                            u.movePieceWithAnimation(bk.x - 1, br2.y, br2, br2.x, br2.y);
 
-                            br2.x = bk.x-1;
+                            br2.x = bk.x - 1;
                             //br2.setLayoutParams(u.getPlaceParams(br2.x, br2.y));
                         }
-                        castlingRook2Happened=false;
+                        castlingRook2Happened = false;
                     }
 
                     //if en-passant happened move remove the opp pawn accordingly
-                    if(enPassantHappened){
-                        enPassantHappened=false;
+                    if (enPassantHappened) {
+                        enPassantHappened = false;
 
                         String oppCoor;
-                        if(color==1) oppCoor = enPassantXCoor + "" + (pressedPiece.y-1) ;
-                        else oppCoor = enPassantXCoor + "" + (pressedPiece.y+1) ;
+                        if (color == 1) oppCoor = enPassantXCoor + "" + (pressedPiece.y - 1);
+                        else oppCoor = enPassantXCoor + "" + (pressedPiece.y + 1);
 //                        System.out.println(oppCoor);
                         u.removePieceByCoor(oppCoor);
                     }
                     // disable en-passant
-                    enPassant1=0;
-                    enPassant2=0;
+                    enPassant1 = 0;
+                    enPassant2 = 0;
 
                     // if opponent can do a en-passant move ad the according opp pieces ids to opponentEnPassant
-                    if((pressedPiece.getId() > 8 && pressedPiece.getId() < 17) || (pressedPiece.getId() > 24 && pressedPiece.getId() < 33)){
-                        if(Math.abs(pressedPiece.y - tmpY)==2){
+                    if ((pressedPiece.getId() > 8 && pressedPiece.getId() < 17) || (pressedPiece.getId() > 24 && pressedPiece.getId() < 33)) {
+                        if (Math.abs(pressedPiece.y - tmpY) == 2) {
                             Boolean first = true;
-                            for(Piece piece : u.getAllOpponentsPieces()){
-                                if((pressedPiece.y==piece.y && Math.abs(pressedPiece.x-piece.x)==1)&&((piece.getId() > 8 && piece.getId() < 17) || (piece.getId() > 24 && piece.getId() < 33))){
-                                    if(first){
-                                        first=false;
-                                        opponentEnPassant =""+piece.getId();
-                                    }
-                                    else{
-                                        opponentEnPassant = opponentEnPassant +","+piece.getId();
+                            for (Piece piece : u.getAllOpponentsPieces()) {
+                                if ((pressedPiece.y == piece.y && Math.abs(pressedPiece.x - piece.x) == 1) && ((piece.getId() > 8 && piece.getId() < 17) || (piece.getId() > 24 && piece.getId() < 33))) {
+                                    if (first) {
+                                        first = false;
+                                        opponentEnPassant = "" + piece.getId();
+                                    } else {
+                                        opponentEnPassant = opponentEnPassant + "," + piece.getId();
                                     }
                                     enPassantXCoorForOpp = pressedPiece.x;
                                 }
@@ -633,7 +646,6 @@ public class Game extends AppCompatActivity {
 
                     // set new state number
                     stateNumber++;
-
 
                     Chronometer playerClock = (Chronometer) findViewById(R.id.playerClock);
                     Chronometer oppClock = (Chronometer) findViewById(R.id.oppClock);
@@ -651,20 +663,19 @@ public class Game extends AppCompatActivity {
                     // Autosave game
                     mDbHelper.autoSave(getResources().getText(R.string.autosave_sent).toString());
 
-
                     // Send game to opponent
                     connectedThread.stringWrite(state);
 
-                    if(stateNumber!=2) Game.menu.findItem(R.id.action_undo).setEnabled(true);
-
+                    if (stateNumber != 2) Game.menu.findItem(R.id.action_undo).setEnabled(true);
 
                     // Run the OpponentKingInCheckmate thread
                     OpponentKingInMateThread opponentKingInMateThreadThread = new OpponentKingInMateThread(this);
                     opponentKingInMateThreadThread.start();
                 }
-            } else{
+
+            } else {
                 // King is checked or illegal castling attempted, the piece will undo the move after delay
-                Handler handler = new Handler();
+                final Handler handler = new Handler();
                 int delay = 500;
                 if(aniTime > 500){
                     delay = aniTime;
@@ -682,10 +693,17 @@ public class Game extends AppCompatActivity {
                         // If an opponent piece was removed return it
                         u.returnOpponent();
 
+                        // Enable other selected squares to respond to clicks after piece has returned to place
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                myTurn = true;
+                            }
+                        }, aniTime);
+
                         if (castlingRook1Happened) castlingRook1Happened=false;
                         if (castlingRook2Happened) castlingRook2Happened=false;
 
-                        myTurn = true; // Enable other pieces to respond to clicks
                     }
 
                 }, delay); // delay
@@ -851,7 +869,7 @@ public class Game extends AppCompatActivity {
         editor.commit();
     }
 
-    /** Display a bar at the bottom of the screen for prommoting a pawn. */
+    /** Display a bar at the bottom of the screen for promoting a pawn. */
     public void displayNewPieceChooser(){
         LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout);
 
@@ -953,23 +971,23 @@ public class Game extends AppCompatActivity {
         LinearLayout ll = (LinearLayout) findViewById(R.id.linearLayout);
         ll.setVisibility(View.INVISIBLE);
 
-        TextView turnNotifier = (TextView) findViewById(R.id.turnNotifier);
-        // Notify opponent's turn and whether opponent is in check.
-        if (u.opponentKingInCheck()) {
-            if (Game.color == 1) {
-                turnNotifier.setText(R.string.black_opponent_in_check);
-//                        turnNotifier.setText(R.string.autosave_received);
-            } else {
-                turnNotifier.setText(R.string.white_opponent_in_check);
-            }
-        } else {
-            // Opponent not in check.
-            turnNotifier.setText(R.string.opponent_turn);
-        }
+        opponentTurnNotifier();
+
+        // set new state number
+        stateNumber++;
 
         // Prepare a new game state string and send it to opponent
         String state = u.getState();
         connectedThread.stringWrite(state);
+
+        // Autosave game
+        mDbHelper.autoSave(getResources().getText(R.string.autosave_sent).toString());
+
+        if (stateNumber != 2) Game.menu.findItem(R.id.action_undo).setEnabled(true);
+
+        // Run the OpponentKingInCheckmate thread
+        OpponentKingInMateThread opponentKingInMateThreadThread = new OpponentKingInMateThread(this);
+        opponentKingInMateThreadThread.start();
     }
 
     public void gameFinishedCloseOnClick(View v){
@@ -1002,6 +1020,7 @@ public class Game extends AppCompatActivity {
     /** Override the onBackPressed method and do nothing. */
     @Override
     public void onBackPressed() {
+        if(backButtonEnabled) getParent().onBackPressed();
     }
 
     public boolean[] castlingAvailable(){
